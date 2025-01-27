@@ -159,6 +159,33 @@ const PublishArticleManageContent = () => {
     }
   };
 
+  const toggleCheck = async (articleId) => {
+    try {
+      // API 호출해서 체크 상태 변경
+      const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/editor-pick/"+articleId, 
+        {}, 
+        {
+          headers: {
+            Authorization: `Bearer ${cookie.accessToken}`,
+          },
+        });
+
+      // 응답 처리
+      if (response.status === 200) {
+        setArticles(prevArticles => 
+          prevArticles.map(article => 
+            article.articleId === articleId 
+              ? { ...article, isEditorsPick: response.data.data.isEditorsPick } // 상태 업데이트
+              : article
+          )
+        );
+      }
+    } catch (error) {
+      console.error("체크 상태 변경 오류:", error);
+    }
+  };
+
+
   return (
     <Container>
       <Title>기사</Title>

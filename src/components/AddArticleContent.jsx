@@ -264,7 +264,7 @@ const AddArticleContent = () => {
     const cursorPosition = textarea.selectionStart;
     const beforeText = content.substring(0, cursorPosition);
     const afterText = content.substring(cursorPosition);
-    const imgTag = `<img src="${process.env.REACT_APP_BACK_URL}/image?path=${imageName}" />`;
+    const imgTag = `<img src="https://api.thegachonherald.com/image?path=${imageName}" />`;
     setContent(beforeText + imgTag + afterText);
     setTimeout(() => {
       textarea.selectionStart = cursorPosition + imgTag.length;
