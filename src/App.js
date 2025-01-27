@@ -10,6 +10,14 @@ import ReportersPage from "./pages/user/ReportersPage";
 import Archive from "./pages/user/Archive";
 import AddArticle from "./pages/user/AddArticle";
 import UpdateArticle from "./pages/user/UpdateArticle";
+import WorkSpace from "./pages/user/WorkSpace";
+import PublishManage from "./pages/user/PublishManage";
+import SectionManage from "./pages/user/SectionManage";
+import UserManage from "./pages/user/UserManage";
+import ArticleManage from "./pages/user/ArticleManage";
+import CommnetManage from "./pages/user/CommentManage";
+import ArticleCheck from "./pages/user/ArticleCheck";
+import PublishArticleManage from "./pages/user/PublishArticleManage";
 /* eslint-disable */
 function App() {
   return (
@@ -25,7 +33,16 @@ function App() {
         <Route path="/reporter/manage" Component={ReportersPage} />
         <Route path="/archive" Component={Archive} />
         <Route path="/edit" Component={AddArticle} />
+        <Route path="/workspace" Component={WorkSpace} />
+        <Route path="/publish" Component={PublishManage} />
+        <Route path="/publish/article" Component={PublishArticleManage} />
         <Route path="/edit/:articleId" Component={UpdateArticle} />
+        <Route path="/check/:articleId" Component={ArticleCheck} />
+
+        <Route path="/manage/section" Component={SectionManage} />
+        <Route path="/manage/user" Component={UserManage} />
+        <Route path="/manage/article" Component={ArticleManage} />
+        <Route path="/manage/comment" Component={CommnetManage} />
       </Routes>
     </BrowserRouter>
   );

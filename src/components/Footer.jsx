@@ -4,20 +4,20 @@ import { Container} from "./StyledComponents";
 
 
 const Dummy = styled.div`
-  height: 200px;
+  /* height: 200px; */
 `;
 const Layout = styled.div`
-    margin-top: 100px;
+    margin-top: 20px;
     position: absolute;
     left: 0;
     width: 100%;
     height:200px;
-    background: #f1f1f1;
+    background: #bcbcbc;
 
 `;
 const Content = styled.div`
   padding: 20px 20px;
-  max-width: 1200px;
+  max-width: 1000px;
   margin: 0px auto;
   display: flex;
     align-items: center; 

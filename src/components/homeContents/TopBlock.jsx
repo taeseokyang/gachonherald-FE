@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Text1 = styled.div`
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 800;
   margin-left: 20px;
   color: #ffffff;
@@ -27,18 +27,18 @@ const Text2 = styled.div`
 `;
 
 const Section = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   color: #ffffff;
   margin-left: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   @media screen and (max-width: 600px) {
     font-size: 12px;
     margin-left: 10px;
   }
 `;
 const Text3 = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   margin-bottom: 15px;
   background: ${({ isActive }) => (isActive ? "#f5f5f5" : "transparent")};
@@ -53,7 +53,7 @@ const EditorsPick = styled.div`
   /* border-bottom: 3px solid #3e5977; */
   /* padding-bottom: 7px; */
   color: #3e5977;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 700;
   margin-bottom: 20px;
   display: flex;
@@ -67,7 +67,7 @@ const EditorsPickText = styled.div`
 const UnderLine = styled.div`
   display: inline-block;
   flex: 1;
-  height: 21px;
+  height: 18px;
   margin-left: 3px;
   border-bottom: 2.5px solid #3e5977;
 `;
@@ -75,7 +75,7 @@ const UnderLine = styled.div`
 
 const BigImageBox = styled.div`
   width: 100%;
-  height: 400px;
+  height: 350px;
   position: relative;
   border-radius: 17px;
   overflow: hidden;

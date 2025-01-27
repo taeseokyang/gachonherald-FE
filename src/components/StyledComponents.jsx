@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   margin: 0px auto;
   padding: 10px 20px;
-  max-width: 1200px;
+  max-width: 1000px;
   min-height: 800px;
 `;
 
@@ -22,7 +22,7 @@ export const ContentFit = styled.div`
 export const ArticleItem = styled.div`
   margin: 0px auto;
   padding: 10px 20px;
-  max-width: 1200px;
+  max-width: 1000px;
 `;
 
 export const BlockBox = styled.div`
@@ -123,11 +123,11 @@ export const BigImageBox = styled.div`
 
 export const Section = styled.div`
   display: inline-block;
-  font-size: 16px;
+  font-size: 14px;
   /* height: 25px; */
   font-weight: 900;
   color: #3E5977;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
   margin-top: 10px;
   &:hover{
     text-decoration: underline;
@@ -148,13 +148,13 @@ export const Date = styled.div`
 display: inline-block;
   font-size: 14px;
   font-weight: 600;
-  color: #767676;
+  color: #bcbcbc;
   margin-bottom: 5px;
 `;
 export const Title1 = styled.div`
   font-size: 16px;
   font-weight: 700;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   &:hover{
     text-decoration: underline;
   }
@@ -162,16 +162,16 @@ export const Title1 = styled.div`
 
 export const SubTitle1 = styled.div`
   font-size: 14px;
-  font-weight: 700;
-  color: #bcbcbc;
-  margin-bottom: 10px;
+  font-weight: 500;
+  color: #828282;
+  margin-bottom: 5px;
 `;
 
 export const Reporter1 = styled.div`
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 500;
-  color: #767676;
-  margin-bottom: 10px;
+  color: #bcbcbc;
+  /* margin-bottom: 10px; */
   &:hover{
     text-decoration: underline;
   }
@@ -188,7 +188,7 @@ export const ThinContainer = styled.div`
 
 export const BoxContainer = styled.div`
     margin: 0px auto;
-    max-width: 1200px;
+    max-width: 1000px;
     padding: 0px 20px;
 `;
 

@@ -15,7 +15,7 @@ background: #3E5977;
 const Content = styled.div`
     margin: 0px auto;
     padding: 0px 20px;
-    max-width: 1200px;
+    max-width: 1000px;
     
     display: flex;
     justify-content: center;
@@ -25,7 +25,7 @@ const Content = styled.div`
 `;
 
 const SectionBar = styled.div`
-padding: 15px 0px;
+padding: 10px 0px;
 height: 100%;
     width: 100%;
     display: flex;
@@ -60,7 +60,7 @@ const InActiveSetions = styled.div`
     position: relative;
     color: #ffffff;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     white-space: nowrap;
    
 `;
@@ -70,7 +70,7 @@ const SectionTitle = styled.div`
     position: relative;
     color: #ffffff;
     font-weight: 400;
-    font-size: 16px;
+    font-size: 14px;
     white-space: nowrap;
 `;
 const Section = styled.div`
