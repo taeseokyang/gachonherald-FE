@@ -242,7 +242,7 @@ const AddArticleContent = () => {
     const formData = new FormData();
     formData.append('pic', file);
     axios
-      .post(process.env.REACT_APP_BACK_URL + '/image', formData)
+      .post('https://api.thegachonherald.com/image', formData)
       .then((response) => {
         setImages((prev) => [...prev, response.data.data.imageName]);
         handleImageDrag(response.data.data.imageName);
@@ -391,7 +391,7 @@ const AddArticleContent = () => {
         {images.map((image, index) => (
           <ImagePreviewContainer key={index}>
             <ImagePreview
-              src={process.env.REACT_APP_BACK_URL + '/image?path=' + image}
+              src={'https://api.thegachonherald.com/image?path=' + image}
               alt={`Uploaded ${image}`}
               onClick={() => handleSetMainImage(image)}
               isMain={mainImage === image}  

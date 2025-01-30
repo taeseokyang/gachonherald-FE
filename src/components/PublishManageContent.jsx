@@ -104,6 +104,7 @@ const PublishManageContent = () => {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/list/ready", {
