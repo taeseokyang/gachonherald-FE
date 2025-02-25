@@ -7,20 +7,22 @@ const Dummy = styled.div`
   /* height: 200px; */
 `;
 const Layout = styled.div`
-    margin-top: 20px;
+    margin-top: 50px;
     position: absolute;
     left: 0;
     width: 100%;
-    height:200px;
-    background: #bcbcbc;
+    /* height:100px; */
+    background: #eeeeee;
 
 `;
 const Content = styled.div`
-  padding: 20px 20px;
+  padding: 100px 20px 20px 20px;
   max-width: 1000px;
   margin: 0px auto;
+  /* text-align: center; */
   display: flex;
-    align-items: center; 
+  justify-content: center;
+    /* align-items: center;  */
     flex-direction: row;
     gap: 15px;
 `;
@@ -44,7 +46,7 @@ const Footer = () => {
     <Container>
       <Layout>
           <Content>
-            <Item>ⓒ 2024 The Gachon Herald</Item>
+            <Item>ⓒ 2025 The Gachon Herald</Item>
             <Link to={"/contactus"}>
             <ClickItem>Contact Us</ClickItem>
             </Link>

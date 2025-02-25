@@ -78,13 +78,17 @@ const MainImageLabel = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 7px;
   font-weight: 700;
+  font-size: 14px;
   background-color: #3e5977;
   color: white;
   border: none;
+  float: right;
+  margin-left: 10px;
   cursor: pointer;
 `;
+
 
 const DropzoneArea = styled.div`
   width: 100%;
@@ -342,6 +346,35 @@ const UpdateArticleContent = () => {
         },
       });
       // navigate("/article/"+articleId);
+      alert("수정 완료되었습니다.");
+      navigate("/workspace");
+    } catch (error) {
+      console.error("기사 저장 오류:", error);
+      removeCookie('accessToken', { path: "/" }); 
+      removeCookie('userId', { path: "/" }); 
+      removeCookie('id', { path: "/" }); 
+      removeCookie('nickname', { path: "/" }); 
+      removeCookie('roles', { path: "/" }); 
+      navigate("/Login");
+    }
+  };
+  const handleDelete = async () => {
+
+    const isConfirmed = window.confirm("작성중인 기사를 삭제 하시겠습니까?");
+  
+    if (!isConfirmed) {
+      return; 
+    }
+
+    try {
+      await axios.delete(`${process.env.REACT_APP_BACK_URL}/articles/${articleId}`, {
+        headers: {
+          Authorization: `Bearer ${cookie.accessToken}`,
+        },
+      });
+      // navigate("/article/"+articleId);
+      alert("삭제 되었습니다.");
+      navigate("/workspace");
     } catch (error) {
       console.error("기사 저장 오류:", error);
       removeCookie('accessToken', { path: "/" }); 
@@ -450,7 +483,11 @@ const UpdateArticleContent = () => {
 
       {/* 기사 저장 버튼 */}
       {articleStatus != 'PENDING' ? 
-      <Button onClick={handleSave}>수정하기</Button>
+      <>
+      <Button onClick={handleSave}>수정완료</Button>
+      <Button style={{ backgroundColor: "#bcbcbc" }} onClick={handleDelete}>삭제하기</Button>
+      </>
+      
       : null }
     </Container>
   );

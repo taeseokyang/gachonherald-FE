@@ -78,11 +78,14 @@ const MainImageLabel = styled.div`
 
 const Button = styled.button`
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 7px;
   font-weight: 700;
+  font-size: 14px;
   background-color: #3e5977;
   color: white;
   border: none;
+  float: right;
+  margin-left: 5px;
   cursor: pointer;
 `;
 
@@ -361,7 +364,7 @@ const ArticleCheckContent = () => {
       {articleStatus == 'PENDING' ?
         <>
           <Button onClick={handleApprove}>승인</Button>
-          <Button onClick={handleDeny}>거절</Button>
+          <Button style={{ backgroundColor: "#bcbcbc" }}onClick={handleDeny}>거절</Button>
         </>
         : null}
     </Container>

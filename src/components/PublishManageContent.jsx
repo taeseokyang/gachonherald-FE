@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
 import VerticalLine from './homeContents/VerticalLine';
 import HorizontalLine from './homeContents/HorizontalLine2';
-
+import { useNavigate } from "react-router-dom";
 const Container = styled.div`
   padding: 20px;
   max-width: 800px;
@@ -65,6 +65,7 @@ const Info = styled.div`
   color: #828282;
   font-size: 14px;
   font-weight: 700;
+  margin-left: 10px;
   cursor: pointer;
 `;
 
@@ -102,7 +103,7 @@ const EditorsPick = styled.div`
 const PublishManageContent = () => {
   const [cookie] = useCookies();
   const [articles, setArticles] = useState([]);
-
+  const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
@@ -149,8 +150,13 @@ const PublishManageContent = () => {
   };
 
   const publish = async () => {
+
+    const isConfirmed = window.confirm("현재 발간되어 있는 기사들이, 현재 승인된 기사들로 대체됩니다.\n최소 한개의 기사를 에디터 픽으로 설정하여주세요.\n정말 발간 하시겠습니까?");
+  
+    if (!isConfirmed) {
+      return; 
+    }
     try {
-      // API 호출해서 체크 상태 변경
       const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/publish", 
         {}, 
         {
@@ -160,7 +166,7 @@ const PublishManageContent = () => {
         });
 
       if (response.status === 200) {
-        
+        navigate("/");
       }
     } catch (error) {
       console.error("체크 상태 변경 오류:", error);
@@ -169,7 +175,7 @@ const PublishManageContent = () => {
 
   return (
     <Container>
-      <Title>기사 {articles.length}</Title>
+      <Title>편집중인 기사 {articles.length}</Title>
       <List>
         {articles.map((article) => (
           <Article key={article.articleId}>
@@ -179,7 +185,7 @@ const PublishManageContent = () => {
                 <ArticleTitle>{article.title}</ArticleTitle>
               </Link>
             </ArticleInfo>
-            <Info>{article.reporterName}</Info>
+            <Info>{article.reporterName+", "}</Info>
             <Info>{article.sectionName}</Info>
 
             <EditorsPick
@@ -190,9 +196,10 @@ const PublishManageContent = () => {
         ))}
       </List>
 
-      <Button onClick={publish}>기사 발간</Button>
-      <HorizontalLine />
+      
+      {/* <HorizontalLine /> */}
       <Link to={"/publish/article?page=1"}><Button>발간 수정</Button></Link>
+      <Button style={{ backgroundColor: "#3e5977", color:"#ffffff" }} onClick={publish}>발간 하기</Button>
     </Container>
   );
 };

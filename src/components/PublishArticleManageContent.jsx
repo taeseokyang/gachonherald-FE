@@ -51,9 +51,19 @@ const ArticleInfo = styled.div`
 `;
 
 const Status = styled.div`
+  
   font-size: 14px;
   margin-right: 10px;
   font-weight: 700;
+  & select{
+    font-size: 12px;
+    font-weight: 500;
+    border: none;
+    outline: none;
+    background: #eeeeee;
+    border-radius: 5px;
+    padding: 2px 5px;
+  }
 `;
 
 const Info = styled.div`
@@ -61,6 +71,7 @@ const Info = styled.div`
   color: #828282;
   font-size: 14px;
   font-weight: 700;
+  margin-left: 10px;
   cursor: pointer;
 `;
 
@@ -194,6 +205,7 @@ const PublishArticleManageContent = () => {
           <Article key={article.articleId}>
             <Status>
               <select
+                style={{ backgroundColor: article.status == "PUBLISHED" ?"#3e5977" : "#eeeeee", color: article.status == "PUBLISHED" ?"#ffffff" : "#000000"}}
                 value={article.status}
                 onChange={(e) => handleStatusChange(article.articleId, e.target.value)}
               >
@@ -205,11 +217,12 @@ const PublishArticleManageContent = () => {
               </select>
             </Status>
             <ArticleInfo>
-              <Link to={"/check/" + article.articleId}>
+              
+              <Link to={"/edit/" + article.articleId}>
                 <ArticleTitle>{article.title}</ArticleTitle>
               </Link>
             </ArticleInfo>
-            <Info>{article.reporterName}</Info>
+            <Info>{article.reporterName+", "}</Info>
             <Info>{article.sectionName}</Info>
 
             <EditorsPick

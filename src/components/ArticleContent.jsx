@@ -105,7 +105,6 @@ const ArticleContent = () => {
   return (
     <ThinContainer>
       <Content>
-      { cookie.roles == 'REPORTER'  ? <Link to={"/add/"+article.articleId}>수정</Link> : null}
       <Link to={"/section/" + article.sectionId+"?page=1"}>
       <SectionTitle>{article.sectionName}</SectionTitle>
       </Link>

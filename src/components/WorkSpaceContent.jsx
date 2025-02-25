@@ -92,23 +92,31 @@ const WorkSpaceContent = () => {
       <List>
         {articles.map((article) => (
           <Article key={article.articleId}>
-            <Link to={"/edit/"+article.articleId}>
+            <Link to={"/edit/" + article.articleId}>
               <Status>{article.status}</Status>{article.title}
               <Info> {article.sectionName}</Info>
-              </Link>
+            </Link>
           </Article>
         ))}
       </List>
 
 
 
-      <Link to={"/edit"}><Button>신규 기사 작성</Button></Link>
-      <Link to={"/publish"}><Button>발간 관리</Button></Link>
-      <HorizontalLine></HorizontalLine>
-      <Link to={"/manage/section"}><Button>섹션 관리</Button></Link>
-      <Link to={"/manage/user"}><Button>유저 관리</Button></Link>
-      <Link to={"/manage/article"}><Button>기사 관리</Button></Link>
-      <Link to={"/manage/comment"}><Button>댓글 관리</Button></Link>
+      <Link to={"/edit"}><Button style={{ backgroundColor: "#3e5977", color: "#ffffff" }} >기사 작성</Button></Link>
+      {cookie.roles == 'ADMIN' ?
+  
+      
+            <>
+          <HorizontalLine></HorizontalLine>
+          <Link to={"/publish"}><Button>발간 관리</Button></Link>
+          <Link to={"/manage/section"}><Button>섹션 관리</Button></Link>
+          <Link to={"/manage/user"}><Button>유저 관리</Button></Link>
+          <Link to={"/manage/article"}><Button>기사 관리</Button></Link>
+          <Link to={"/manage/comment"}><Button>댓글 관리</Button></Link>
+        </>
+        : null
+        }
+
     </Container>
   );
 };

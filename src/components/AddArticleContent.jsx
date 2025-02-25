@@ -36,20 +36,26 @@ const DeleteButton = styled.button`
   position: absolute;
   top: 5px;
   right: 5px;
-  background: #828282;
+  background: #bcbcbc;
   color: white;
   border: none;
   border-radius: 50%;
   width: 20px;
   height: 20px;
-  font-weight: 500;
-  font-size: 12px;
   cursor: pointer;
   display: ${props => (props.visible ? 'block' : 'none')};
   &:hover {
     background: #eeeeee;
   }
+  padding: 0px;
 `;
+
+const XIcon = styled.img`
+
+width: 80%;
+height: 80%;
+`;
+
 
 const MainImageButton = styled.button`
   position: absolute;
@@ -68,20 +74,23 @@ const MainImageLabel = styled.div`
   position: absolute;
   top: 5px;
   left: 5px;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   color: white;
   font-size: 12px;
-  padding: 2px 5px;
+  font-weight: 500;
+  padding: 5px 7px;
   border-radius: 5px;
 `;
 
 const Button = styled.button`
   padding: 10px 20px;
-  border-radius: 10px;
+  border-radius: 7px;
   font-weight: 700;
+  font-size: 14px;
   background-color: #3e5977;
   color: white;
   border: none;
+  float: right;
   cursor: pointer;
 `;
 
@@ -307,7 +316,8 @@ const AddArticleContent = () => {
       setMainImage(""); // 메인 이미지 초기화
       setImages([]);
       setArticleStatus('EDITING'); // 상태 초기화
-      alert("작성 완료");
+      alert("작성 완료되었습니다.");
+      navigate("/workspace");
     } catch (error) {
       console.error("기사 저장 오류:", error);
       removeCookie('accessToken', { path: "/" }); 
@@ -403,11 +413,8 @@ const AddArticleContent = () => {
               visible={true}
               onClick={() => handleImageDelete(image)}
             >
-              X
+              <XIcon src="/images/x.svg"></XIcon>
             </DeleteButton>
-            {/* <MainImageButton onClick={() => handleSetMainImage(image)}>
-              메인 이미지로 설정
-            </MainImageButton> */}
           </ImagePreviewContainer>
         ))}
       </ImagePreviewBox>

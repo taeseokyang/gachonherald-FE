@@ -12,6 +12,9 @@ import WorkSpaceContent from "../../components/WorkSpaceContent";
 
 
 const WorkSpace = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   return (
     <PageContainer>
       <TopHeader></TopHeader>
