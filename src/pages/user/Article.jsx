@@ -21,7 +21,7 @@ const Article = () => {
         <Title></Title>
         <Nav></Nav>
         <ArticleContent></ArticleContent>
-        <Comment></Comment>
+        {/* <Comment></Comment> */}
         <Footer></Footer>
     </PageContainer>
   );

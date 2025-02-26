@@ -109,10 +109,10 @@ const WorkSpaceContent = () => {
             <>
           <HorizontalLine></HorizontalLine>
           <Link to={"/publish"}><Button>발간 관리</Button></Link>
-          <Link to={"/manage/section"}><Button>섹션 관리</Button></Link>
+          {/* <Link to={"/manage/section"}><Button>섹션 관리</Button></Link>
           <Link to={"/manage/user"}><Button>유저 관리</Button></Link>
-          <Link to={"/manage/article"}><Button>기사 관리</Button></Link>
-          <Link to={"/manage/comment"}><Button>댓글 관리</Button></Link>
+          <Link to={"/manage/article"}><Button>기사 관리</Button></Link> */}
+          {/* <Link to={"/manage/comment"}><Button>댓글 관리</Button></Link> */}
         </>
         : null
         }
