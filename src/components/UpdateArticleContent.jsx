@@ -337,6 +337,7 @@ const UpdateArticleContent = () => {
         articleId,
         title,
         subtitle,
+        mainImage,
         content,
         sectionId,
         status: status,
@@ -372,7 +373,6 @@ const UpdateArticleContent = () => {
           Authorization: `Bearer ${cookie.accessToken}`,
         },
       });
-      // navigate("/article/"+articleId);
       alert("삭제 되었습니다.");
       navigate("/workspace");
     } catch (error) {
