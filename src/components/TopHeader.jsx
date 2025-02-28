@@ -63,7 +63,7 @@ const TopHeader = () => {
     <Container>
       <Layout>
         <Content>
-          <Item>Published At 2024.11.11</Item>
+          <Item>Published At 2025.02.28</Item>
           
           <Item>
           {/* <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ? <Link to={"/reporter/manage"}>{cookie.nickname} </Link> : cookie.nickname : null}</span> */}
