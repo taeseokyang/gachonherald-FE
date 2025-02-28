@@ -60,7 +60,7 @@ const Footer = () => {
            
             <Line style={{justifyContent: "space-between"}}>
             <Item>ⓒ 2025 The Gachon Herald</Item>
-            <a href={"https://yangsoft.netlify.app"}>
+            <a href={"www.yangsoft.co.kr"}>
             <ClickItem >POWERED BY YANGSOFT</ClickItem>
             </a>
             </Line>
