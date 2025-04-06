@@ -115,6 +115,7 @@ const Login = () => {
   const [code, setCode] = useState('');
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loginStatus, setLoginStatus] = useState(0);
@@ -191,7 +192,7 @@ const Login = () => {
       return;
     }
 
-    if (!password || !nickname) {
+    if (!password || !nickname || !phone) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
@@ -205,6 +206,7 @@ const Login = () => {
       const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/account/email/signup`, {
         email,
         nickname,
+        phone,
         password,
         code
       });
@@ -304,6 +306,11 @@ const Login = () => {
               placeholder="Name" 
               value={nickname} 
               onChange={(e) => setNickname(e.target.value)} 
+            />
+            <InputBox 
+              placeholder="Phone" 
+              value={phone} 
+              onChange={(e) => setPhone(e.target.value)} 
             />
             <InputBox 
               placeholder="Password" 
