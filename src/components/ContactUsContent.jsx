@@ -99,7 +99,7 @@ const ContactUsContent = () => {
         <Box>
             <Title>Info</Title>
             <Info><InfoName>Location</InfoName>경기 성남시 수정구 성남대로 1342 중앙도서관 411호</Info>
-            <Info><InfoName>Phone</InfoName>010-5239-5132</Info>
+            <Info><InfoName>Phone</InfoName>010-7371-2061</Info>
             <Info><InfoName>Instagram</InfoName>@thegachonherald</Info>
         </Box>
       </Content>
