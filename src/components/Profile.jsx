@@ -22,7 +22,7 @@ const ReporterImg = styled.div`
 const ReporterTextBox = styled.div`
   font-size: 20px;
   font-weight: 600;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 `;
 
 const ReporterName = styled.div`
@@ -126,8 +126,8 @@ const Profile = () => {
     <Container>
       <Content>
         <ReporterBox>
-          <ReporterImg>
-          </ReporterImg>
+          {/* <ReporterImg>
+          </ReporterImg> */}
           <ReporterTextBox>
             <ReporterName>
             {reporter.nickname}

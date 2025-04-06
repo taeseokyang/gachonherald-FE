@@ -66,7 +66,7 @@ const ReporterImg = styled.div`
 const ReporterName = styled.div`
   font-size: 14px;
   font-weight: 600;
-  margin-left: 10px;
+  /* margin-left: 10px; */
 `;
 
 const PublishedDate = styled.div`
@@ -118,9 +118,9 @@ const ArticleContent = () => {
 
 
 
-              <ReporterImg>
+              {/* <ReporterImg>
 
-              </ReporterImg>
+              </ReporterImg> */}
               <ReporterName>
                 By {article.reporterName}
               </ReporterName>
