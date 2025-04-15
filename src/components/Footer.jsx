@@ -7,7 +7,7 @@ const Dummy = styled.div`
   /* height: 200px; */
 `;
 const Layout = styled.div`
-    margin-top: 50px;
+    margin-top: 150px;
     position: absolute;
     left: 0;
     width: 100%;
@@ -59,7 +59,7 @@ const Footer = () => {
             </Line>
            
             <Line style={{justifyContent: "space-between"}}>
-            <Item>ⓒ 2025 The Gachon Herald</Item>
+            <Item><Link to={"/Login"}>ⓒ</Link> 2025 The Gachon Herald</Item>
             <a href={"https://yangsoft.co.kr"}>
             <ClickItem >POWERED BY YANGSOFT</ClickItem>
             </a>

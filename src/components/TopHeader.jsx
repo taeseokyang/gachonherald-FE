@@ -71,7 +71,7 @@ const TopHeader = () => {
             <ItemBtn>
               {cookie.nickname != null ? 
                 <span onClick={handleLogout}>Logout</span> : 
-                <Link to={"/Login"}>Login</Link>
+               null
               }
             </ItemBtn>
           </Item>
