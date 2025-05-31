@@ -170,7 +170,7 @@ export const SubTitle1 = styled.div`
 export const Reporter1 = styled.div`
   font-size: 12px;
   font-weight: 500;
-  color: #bcbcbc;
+  color: #828282;
   /* margin-bottom: 10px; */
   &:hover{
     text-decoration: underline;

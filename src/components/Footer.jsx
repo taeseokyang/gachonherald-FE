@@ -7,13 +7,13 @@ const Dummy = styled.div`
   /* height: 200px; */
 `;
 const Layout = styled.div`
-    margin-top: 150px;
+    margin-top: 200px;
     position: absolute;
     left: 0;
     width: 100%;
     /* height:100px; */
     
-    background: #eeeeee;
+    background: #3E5977;
 
 `;
 const Content = styled.div`
@@ -23,8 +23,11 @@ const Content = styled.div`
 `;
 const Item = styled.div`
   font-size: 13px;
-  color: #5c5c5c;
+  color: #ffffff;
   white-space: nowrap;
+  & a{
+    color: #ffffff;
+  }
 `;
 
 const Line = styled.div`
@@ -36,11 +39,11 @@ display: flex;
 
 const ClickItem = styled.div`
   font-size: 13px;
-  color: #5c5c5c;
+  color: #ffffff;
   white-space: nowrap;
-  border-bottom: 1px solid #eeeeee;
+  border-bottom: 1px solid #3E5977;
   &:hover{
-      border-bottom: 1px solid #5c5c5c;
+      border-bottom: 1px solid #ffffff;
     }
 `;
 

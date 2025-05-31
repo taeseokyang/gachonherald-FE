@@ -5,7 +5,7 @@ import NavBar from "./NavBar";
 
 export const Content = styled.div`
   margin: 0px auto;
-  padding: 40px 20px;
+  padding: 50px 20px;
   max-width: 1000px;
   text-align: center;
   @media screen and (max-width: 600px) {

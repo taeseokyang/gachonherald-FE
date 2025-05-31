@@ -34,7 +34,7 @@ const Title = styled.div`
 const List = styled.ul`
   list-style: none;
   padding: 0;
-  margin-bottom: 200px;
+  margin-bottom: 50px;
 `;
 
 const Article = styled.li`
@@ -106,7 +106,7 @@ const EditorsPick = styled.div`
 `;
 
 const Pages = styled.div`
-  margin-top: 50px;
+  /* margin-top: 50px; */
   width: 100%;
   display: flex;
   justify-content: center;
@@ -139,7 +139,7 @@ const PublishArticleManageContent = () => {
       try {
         const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/list/all?pageNumber=" + (page - 1));
         setArticles(response.data.data.articles);
-        setPageNumbers(Array.from({ length: 10 }, (_, index) => index + 1));
+        setPageNumbers(Array.from({ length: response.data.data.pageCount }, (_, index) => index + 1));
       } catch (error) {
         console.error("오류 발생:", error);
       }

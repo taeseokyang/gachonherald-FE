@@ -16,6 +16,7 @@ const Content = styled.div`
   max-width: 1200px;
   min-height: 500px;
   margin: 0px auto;
+  margin-top: 100px;
   flex-direction: column;
   padding: 10px 20px;
 `;
@@ -114,7 +115,9 @@ const Login = () => {
   const intervalIdRef = useRef(null);
   const [code, setCode] = useState('');
   const [email, setEmail] = useState('');
+  const [generation, setGeneration] = useState('');
   const [nickname, setNickname] = useState('');
+  const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -193,7 +196,7 @@ const Login = () => {
       return;
     }
 
-    if (!password || !nickname || !phone) {
+    if (!password || !nickname || !phone || !generation || !name) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
@@ -207,8 +210,10 @@ const Login = () => {
       const response = await axios.post(`${process.env.REACT_APP_BACK_URL}/account/email/signup`, {
         email,
         nickname,
+        name,
         phone,
         password,
+        generation,
         code
       });
       if (response.data.code === 200) {
@@ -304,7 +309,20 @@ const Login = () => {
               </SendEmail>
             </VerifyBox>
             <InputBox 
-              placeholder="Name" 
+              type="number" 
+              placeholder="Generation" 
+              min="1" 
+              step="1" 
+              value={generation} 
+              onChange={(e) => setGeneration(e.target.value)} 
+            />
+            <InputBox 
+              placeholder="Korean Name" 
+              value={name} 
+              onChange={(e) => setName(e.target.value)} 
+            />
+            <InputBox 
+              placeholder="English Name" 
               value={nickname} 
               onChange={(e) => setNickname(e.target.value)} 
             />

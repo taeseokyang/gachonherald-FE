@@ -12,7 +12,7 @@ const Layout = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  height: 22px;
+  height: 30px;
   border-bottom: 1px solid #e8e8e8;
 `;
 
@@ -20,7 +20,7 @@ const Content = styled.div`
   margin: 0px auto;
   padding: 0px 20px;
   max-width: 1000px;
-  height: 22px;
+  height: 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,20 +29,20 @@ const Content = styled.div`
 `;
 
 const Item = styled.div`
-  color: #bcbcbc;
+  color: #828282;
   span{
     a{
-      color: #bcbcbc;
+      color: #828282;
     }
   }
 `;
 
 const ItemBtn = styled.span`
   margin-left: 10px;
-  color: #bcbcbc;
+  color: #828282;
   cursor: pointer;
   a {
-    color: #bcbcbc;
+    color: #828282;
   }
 `;
 
@@ -63,7 +63,7 @@ const TopHeader = () => {
     <Container>
       <Layout>
         <Content>
-          <Item>Published At 2025.02.28</Item>
+          <Item>Published At 2025.05.30</Item>
           
           <Item>
           {/* <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ? <Link to={"/reporter/manage"}>{cookie.nickname} </Link> : cookie.nickname : null}</span> */}
