@@ -302,9 +302,11 @@ const SectionTitle = styled.div`
 `;
 
 const ToolIcon = styled.img`
+  cursor: pointer;
   width: 18px;
   margin-right: 15px;
   padding: 5px;
+  /* background-color: #f5f5f5; */
   border-radius: 5px;
 
   &:hover {
@@ -312,9 +314,24 @@ const ToolIcon = styled.img`
   }
 `;
 
+const ToolText = styled.span`
+  cursor: pointer;
+  margin-right: 15px;
+  font-size: 18px;
+  padding: 5px;
+  /* background-color: #f5f5f5; */
+  border-radius: 5px;
+  font-weight: 700;
+  color: #828282;
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
 const Tools = styled.div`
   margin-top: 20px;
-
+  display: flex;
+  align-items: center;    
 `;
 
 
@@ -405,7 +422,7 @@ const applyTagToSelection = (tagName) => {
 };
 
 function getSectionNameById(sectionId, sectionList) {
-  const section = sectionList.find(item => item.sectionId === sectionId);
+  const section = sectionList.find(item => item.sectionId == sectionId);
   return section ? section.name : null;
 }
 
@@ -586,10 +603,13 @@ function getSectionNameById(sectionId, sectionList) {
         disabled={articleStatus === 'PENDING'}
       />
 
-        <Tools>
-            <ToolIcon src={"/images/bold.svg"} onClick={() => applyTagToSelection('strong')} />
-            <ToolIcon src={"/images/italic.svg"} onClick={() => applyTagToSelection('em')} />
-          </Tools>
+ <Tools>
+          <ToolText onClick={() => applyTagToSelection('H1')} title="h1">H1</ToolText>
+          <ToolText onClick={() => applyTagToSelection('H2')} title="h2">H2</ToolText>
+          <ToolText onClick={() => applyTagToSelection('H3')} title="h3">H3</ToolText>
+          <ToolIcon src="/images/bold.svg" onClick={() => applyTagToSelection('strong')} title="굵게" />
+          <ToolIcon src="/images/italic.svg" onClick={() => applyTagToSelection('em')} title="기울임" />
+        </Tools>
 
       <DropzoneArea {...getRootProps()}>
         <TextArea
