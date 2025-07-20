@@ -13,7 +13,7 @@ const Layout = styled.div`
     width: 100%;
     /* height:100px; */
     
-    background: #3E5977;
+    background: #f5f5f5;
 
 `;
 const Content = styled.div`
@@ -23,10 +23,10 @@ const Content = styled.div`
 `;
 const Item = styled.div`
   font-size: 13px;
-  color: #ffffff;
+  color: #bcbcbc;
   white-space: nowrap;
   & a{
-    color: #ffffff;
+    color: #bcbcbc;
   }
 `;
 
@@ -39,11 +39,11 @@ display: flex;
 
 const ClickItem = styled.div`
   font-size: 13px;
-  color: #ffffff;
+  color: #bcbcbc;
   white-space: nowrap;
-  border-bottom: 1px solid #3E5977;
+  border-bottom: 1px solid #f5f5f5;
   &:hover{
-      border-bottom: 1px solid #ffffff;
+      border-bottom: 1px solid #bcbcbc;
     }
 `;
 
