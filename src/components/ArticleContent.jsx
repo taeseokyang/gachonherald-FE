@@ -30,12 +30,14 @@ const ArticleBody = styled.div`
   line-height: 150%;
   color: #000000;
   white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
-  & img{
-    align-items: center; 
-    /* margin: 20px auto; */
-    width: 100%;
-    border-radius: 17px;
-  }
+  & img {
+  display: block;
+  margin: 20px auto 5px auto;
+  /* border-radius: 10px; */
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
   & strong{
     /* margin: 10px 0px; */
   }

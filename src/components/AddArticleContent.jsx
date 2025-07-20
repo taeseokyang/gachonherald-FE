@@ -294,12 +294,14 @@ const ArticleBody = styled.div`
   line-height: 150%;
   color: #000000;
   white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
-  & img{
-    align-items: center; 
-    /* margin: 20px auto; */
-    width: 100%;
-    border-radius: 17px;
-  }
+  & img {
+  display: block;
+  margin: 20px auto 5px auto;
+  /* border-radius: 10px; */
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
   & strong{
     /* margin: 10px 0px; */
   }
@@ -562,10 +564,6 @@ const applyTagToSelection = (tagName) => {
           <ToolText onClick={() => applyTagToSelection('H3')} title="h3">H3</ToolText>
           <ToolIcon src="/images/bold.svg" onClick={() => applyTagToSelection('strong')} title="굵게" />
           <ToolIcon src="/images/italic.svg" onClick={() => applyTagToSelection('em')} title="기울임" />
-
-         
-          
-          
         </Tools>
 
       <DropzoneArea {...getRootProps()}>

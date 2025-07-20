@@ -49,7 +49,7 @@ export const ImageBox = styled.div`
   width: 100%;
   height: 200px;
   position: relative;
-  border-radius: 17px;
+  border-radius: 5px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -154,17 +154,17 @@ display: inline-block;
 export const Title1 = styled.div`
   font-size: 16px;
   font-weight: 700;
-  /* margin-bottom: 5px; */
+  margin-bottom: 5px;
   &:hover{
     text-decoration: underline;
   }
 `;
 
 export const SubTitle1 = styled.div`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
   color: #828282;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
 
 export const Reporter1 = styled.div`

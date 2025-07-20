@@ -54,7 +54,7 @@ const EditorsPick = styled.div`
   /* padding-bottom: 7px; */
   color: #3e5977;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 900;
   margin-bottom: 20px;
   display: flex;
 `;
@@ -77,7 +77,7 @@ const BigImageBox = styled.div`
   width: 100%;
   height: 350px;
   position: relative;
-  border-radius: 17px;
+  border-radius: 10px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -194,7 +194,7 @@ const TopBlock = ({ articles }) => {
               ) : null}
             </BigImageBox>
           </Block2>
-          <VerticalLine />
+          {/* <VerticalLine /> */}
           <Block1>
             <EditorsPick><EditorsPickText>Editor's Picks</EditorsPickText><UnderLine></UnderLine></EditorsPick>
             {articles.map((article, index) => (
