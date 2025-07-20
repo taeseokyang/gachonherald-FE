@@ -6,10 +6,17 @@ import { useCookies } from "react-cookie";
 
 import { useParams, useNavigate } from "react-router-dom";
 
+const BigContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 const Container = styled.div`
   padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
+  flex: 1;
+  //max-width: 800px;
+  /* margin: 0 auto; */
+  border-right: 5px solid #f5f5f5;
 `;
 
 const ImagePreviewBox = styled.div`
@@ -84,7 +91,7 @@ const Button = styled.button`
   background-color: #3e5977;
   color: white;
   border: none;
-  float: right;
+  /* float: right; */
   margin-left: 10px;
   cursor: pointer;
 `;
@@ -124,7 +131,7 @@ const InputField = styled.input`
 `;
 
 const TextArea = styled.textarea`
-  margin-top: 30px;
+  margin-top: 20px;
   width: 100%;
   outline: none;
   font-size: 16px;
@@ -220,6 +227,97 @@ const RadioButton = styled.label`
   }
 `;
 
+const ArticleTitle = styled.div`
+  margin-top: 10px;
+  color: #000000;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 100%;
+`;
+const ArticleSubTitle = styled.div`
+  margin-top: 10px;
+  color: #828282;
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 100%;
+`;
+
+const ArticleBody = styled.div`
+  /* display: flex; */
+  /* flex-direction: column; */
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 150%;
+  color: #000000;
+  white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
+  & img{
+    align-items: center; 
+    /* margin: 20px auto; */
+    width: 100%;
+    border-radius: 17px;
+  }
+  & strong{
+    /* margin: 10px 0px; */
+  }
+`;
+
+const InfoBox = styled.div`
+  margin: 30px 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eeeeee;
+
+`;
+const ReporterBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const ReporterImg = styled.div`
+  width: 30px;
+  height: 30px;
+  border: 1px solid #eeeeee;
+  border-radius: 100px;
+
+`;
+const ReporterName = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  /* margin-left: 10px; */
+`;
+
+const PublishedDate = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  color: #bcbcbc;
+`;
+
+const SectionTitle = styled.div`
+  font-size: 16px;
+  font-weight: 900;
+  color: #3E5977;
+`;
+
+const ToolIcon = styled.img`
+  width: 18px;
+  margin-right: 15px;
+  padding: 5px;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
+
+const Tools = styled.div`
+  margin-top: 20px;
+
+`;
+
+
 const UpdateArticleContent = () => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
@@ -271,6 +369,45 @@ const UpdateArticleContent = () => {
     };
     fetchData();
   }, []);
+
+
+    function getTodayDate() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(today.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+const applyTagToSelection = (tagName) => {
+  const textarea = document.getElementById('articleContent');
+  const start = textarea.selectionStart;
+  const end = textarea.selectionEnd;
+  const selectedText = content.substring(start, end);
+
+  if (!selectedText) return; // 선택한 텍스트가 없으면 무시
+
+  const beforeText = content.substring(0, start);
+  const afterText = content.substring(end);
+
+  const tagWrapped = `<${tagName}>${selectedText}</${tagName}>`;
+
+  const updatedContent = beforeText + tagWrapped + afterText;
+  setContent(updatedContent);
+
+  // 커서 위치 업데이트
+  setTimeout(() => {
+    textarea.selectionStart = textarea.selectionEnd = start + tagWrapped.length;
+    textarea.focus();
+  }, 0);
+};
+
+function getSectionNameById(sectionId, sectionList) {
+  const section = sectionList.find(item => item.sectionId === sectionId);
+  return section ? section.name : null;
+}
 
   // 이미지 업로드 핸들러
   const handleImageUpload = (file) => {
@@ -397,6 +534,7 @@ const UpdateArticleContent = () => {
   };
 
   return (
+    <BigContainer>
     <Container>
       <StatusLabel>{articleStatus}</StatusLabel>
       {
@@ -448,6 +586,11 @@ const UpdateArticleContent = () => {
         disabled={articleStatus === 'PENDING'}
       />
 
+        <Tools>
+            <ToolIcon src={"/images/bold.svg"} onClick={() => applyTagToSelection('strong')} />
+            <ToolIcon src={"/images/italic.svg"} onClick={() => applyTagToSelection('em')} />
+          </Tools>
+
       <DropzoneArea {...getRootProps()}>
         <TextArea
           id="articleContent"
@@ -490,6 +633,31 @@ const UpdateArticleContent = () => {
       
       : null }
     </Container>
+     <Container>
+          <SectionTitle>{getSectionNameById(sectionId,sections)}</SectionTitle>
+            
+            <ArticleTitle>{title}</ArticleTitle>
+            <ArticleSubTitle>{subtitle}</ArticleSubTitle>
+            {/* <Separator></Separator> */}
+            <InfoBox>
+                <ReporterBox>
+    
+    
+    
+                  {/* <ReporterImg>
+    
+                  </ReporterImg> */}
+                  <ReporterName>
+                    By {cookie.nickname}
+                  </ReporterName>
+    
+                </ReporterBox>
+              <PublishedDate>{getTodayDate()}</PublishedDate>
+            </InfoBox>
+            <ArticleBody isOldArticle={false} dangerouslySetInnerHTML={{ __html: content }}>
+            </ArticleBody>
+        </Container>
+         </BigContainer>
   );
 };
 
