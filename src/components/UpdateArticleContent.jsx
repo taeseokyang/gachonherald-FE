@@ -474,6 +474,9 @@ function getSectionNameById(sectionId, sectionList) {
   // 이미지 삭제 핸들러
   const handleImageDelete = (imageName) => {
     setImages((prev) => prev.filter((image) => image !== imageName));
+    if (imageName == mainImage){
+      setMainImage("");
+    }
   };
 
   // 메인 이미지 설정 핸들러
