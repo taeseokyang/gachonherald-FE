@@ -7,7 +7,7 @@ import axios from "axios";
 
 const Text1 = styled.div`
   font-size: 20px;
-  font-weight: 800;
+  font-weight: 500;
   margin-left: 20px;
   color: #ffffff;
   @media screen and (max-width: 600px) {
@@ -17,7 +17,7 @@ const Text1 = styled.div`
 `;
 const Text2 = styled.div`
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 300;
   color: #ffffff;
   margin-left: 20px;
   @media screen and (max-width: 600px) {
@@ -39,12 +39,12 @@ const Section = styled.div`
 `;
 const Text3 = styled.div`
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 500;
   margin-bottom: 15px;
   background: ${({ isActive }) => (isActive ? "#f5f5f5" : "transparent")};
   color: ${({ isActive }) => (isActive ? "#3e5977" : "#828282")};
   border-radius: 10px;
-  padding: 10px;
+  padding: 7px;
   transition: background 0.3s;
   cursor: pointer; /* 마우스 커서를 포인터로 변경 */
 `;
@@ -54,7 +54,7 @@ const EditorsPick = styled.div`
   /* padding-bottom: 7px; */
   color: #3e5977;
   font-size: 20px;
-  font-weight: 900;
+  font-weight: 700;
   margin-bottom: 20px;
   display: flex;
 `;

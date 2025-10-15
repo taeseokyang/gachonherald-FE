@@ -123,15 +123,20 @@ export const BigImageBox = styled.div`
 
 export const Section = styled.div`
   display: inline-block;
-  font-size: 14px;
+  font-size: 16px;
   /* height: 25px; */
-  font-weight: 900;
+  font-weight: 700;
   color: #3E5977;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   margin-top: 10px;
   &:hover{
     text-decoration: underline;
   }
+  /* padding: 7px 10px; */
+  /* width: 20%; */
+  /* padding-right: 100px; */
+  border-radius: 3px;
+  /* background: #3E5977; */
 `;
 
 
@@ -153,8 +158,8 @@ display: inline-block;
 `;
 export const Title1 = styled.div`
   font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 5px;
+  font-weight: 500;
+  /* margin-bottom: 5px; */
   &:hover{
     text-decoration: underline;
   }
@@ -162,7 +167,7 @@ export const Title1 = styled.div`
 
 export const SubTitle1 = styled.div`
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 300;
   color: #828282;
   margin-bottom: 10px;
 `;

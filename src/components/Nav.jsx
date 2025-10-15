@@ -86,7 +86,7 @@ const Section = styled.div`
     }
     &:hover{
       border-bottom: 1px solid #ffffff;
-        /* background: #f0f0f0; */
+      /* background: #ffffff; */
     }
     a{
       color: #ffffff;
