@@ -150,11 +150,15 @@ export const SectionBox = styled.div`
 `;
 
 export const Date = styled.div`
-display: inline-block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #bcbcbc;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 300;
+  color: #828282;
   margin-bottom: 5px;
+
+  @media screen and (max-width: 600px) {
+     margin-top: 20px;
+    }
 `;
 export const Title1 = styled.div`
   font-size: 16px;
@@ -169,12 +173,12 @@ export const SubTitle1 = styled.div`
   font-size: 16px;
   font-weight: 300;
   color: #828282;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 `;
 
 export const Reporter1 = styled.div`
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 300;
   color: #828282;
   /* margin-bottom: 10px; */
   &:hover{

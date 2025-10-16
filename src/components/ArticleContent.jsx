@@ -68,13 +68,13 @@ const ReporterImg = styled.div`
 `;
 const ReporterName = styled.div`
   font-size: 14px;
-  font-weight: 500;
+  /* font-weight: 500; */
   /* margin-left: 10px; */
 `;
 
 const PublishedDate = styled.div`
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 300;
   color: #bcbcbc;
 `;
 
