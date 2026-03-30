@@ -219,10 +219,87 @@ const RadioButton = styled.label`
   }
 `;
 
+const ArticleBody = styled.div`
+  /* display: flex; */
+  /* flex-direction: column; */
+  font-size: 16px;
+  /* font-weight: 500; */
+  line-height: 150%;
+  color: #000000;
+  white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
+  & img {
+  display: block;
+  margin: 20px auto 5px auto;
+  /* border-radius: 10px; */
+  width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
+  & strong{
+    /* margin: 10px 0px; */
+  }
+`;
+
+
+const ArticleTitle = styled.div`
+  margin-top: 10px;
+  color: #000000;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 100%;
+`;
+const ArticleSubTitle = styled.div`
+  margin-top: 5px;
+  color: #828282;
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 100%;
+`;
+const InfoBox = styled.div`
+  margin: 30px 0px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eeeeee;
+
+`;
+const ReporterBox = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+const ReporterImg = styled.div`
+  width: 30px;
+  height: 30px;
+  border: 1px solid #eeeeee;
+  border-radius: 100px;
+
+`;
+const ReporterName = styled.div`
+  font-size: 14px;
+  /* font-weight: 500; */
+  /* margin-left: 10px; */
+`;
+
+const PublishedDate = styled.div`
+  font-size: 14px;
+  font-weight: 300;
+  color: #bcbcbc;
+`;
+
+const SectionTitle = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: #3E5977;
+`;
+
 const ArticleCheckContent = () => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [content, setContent] = useState('');
+  const [reporterName, setReporterName] = useState('');
   const [sectionId, setSectionId] = useState(2);
   const [mainImage, setMainImage] = useState('');
   const [images, setImages] = useState([]);
@@ -243,6 +320,7 @@ const ArticleCheckContent = () => {
         });
         setTitle(response.data.data.title);
         setSubtitle(response.data.data.subtitle);
+        setReporterName(response.data.data.reporterName);
         setSectionId(response.data.data.sectionId);
         setContent(response.data.data.content);
         if (response.data.data.mainImage != '') {
@@ -251,7 +329,7 @@ const ArticleCheckContent = () => {
         setMainImage(response.data.data.mainImage);
         setArticleStatus(response.data.data.status);
         setStatus(response.data.data.status);
-        console.log(response.data.data.status);
+        console.log(response.data.data);
       } catch (error) {
         console.error("오류 발생:", error);
       }
@@ -312,54 +390,49 @@ const ArticleCheckContent = () => {
     }
   };
 
+  function getTodayDate() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
+  const day = String(today.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
+
+function getSectionNameById(sectionId, sectionList) {
+  const section = sectionList.find(item => item.sectionId == sectionId);
+  return section ? section.name : null;
+}
+
 
   return (
     <Container>
       <StatusLabel>{articleStatus}</StatusLabel>
 
-      <Dropdown disabled={articleStatus !== 'EDITING'} value={sectionId} onChange={(e) => setSectionId(e.target.value)}>
-        {sections.map((section) => (
-          <option key={section.sectionId} value={section.sectionId}>{section.name}</option>
-        ))}
-      </Dropdown>
+      <SectionTitle>{getSectionNameById(sectionId,sections)}</SectionTitle>
 
-      <InputField
-        type="text"
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        disabled={articleStatus !== 'EDITING'}
-      />
-      <InputField
-        type="text"
-        placeholder="Subtitle"
-        value={subtitle}
-        onChange={(e) => setSubtitle(e.target.value)}
-        disabled={articleStatus !== 'EDITING'}
-      />
+            <ArticleTitle>{title}</ArticleTitle>
+            <ArticleSubTitle>{subtitle}</ArticleSubTitle>
+            {/* <Separator></Separator> */}
+            <InfoBox>
+                <ReporterBox>
+    
+    
+    
+                  {/* <ReporterImg>
+    
+                  </ReporterImg> */}
+                  <ReporterName>
+                    By {reporterName}
+                  </ReporterName>
+    
+                </ReporterBox>
+              <PublishedDate>{getTodayDate()}</PublishedDate>
+            </InfoBox>
 
-      <TextArea
-        id="articleContent"
-        placeholder="Write your article content here..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        disabled={articleStatus !== 'EDITING'}
-      />
-
-      <ImagePreviewBox>
-        {images.map((image, index) => (
-          <ImagePreviewContainer key={index}>
-            <ImagePreview
-              src={'https://api.thegachonherald.com/image?path=' + image}
-              alt={`Uploaded ${image}`}
-              isMain={mainImage === image}  // 메인 이미지 강조
-            />
-            {mainImage === image && (
-              <MainImageLabel>메인 이미지</MainImageLabel> // 메인 이미지 레이블
-            )}
-          </ImagePreviewContainer>
-        ))}
-      </ImagePreviewBox>
+      <ArticleBody isOldArticle={false} dangerouslySetInnerHTML={{ __html: content }}>
+            </ArticleBody>
 
       {articleStatus == 'PENDING' ?
         <>
@@ -368,6 +441,7 @@ const ArticleCheckContent = () => {
         </>
         : null}
     </Container>
+
   );
 };
 

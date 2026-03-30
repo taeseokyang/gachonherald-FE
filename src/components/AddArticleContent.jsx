@@ -175,7 +175,7 @@ const TextArea = styled.textarea`
   width: 100%;
   outline: none;
   font-size: 16px;
-  font-weight: 500;
+  /* font-weight: 500; */
   line-height: 150%;
   box-sizing: border-box;
   border: none;
@@ -267,46 +267,20 @@ const RadioButton = styled.label`
   }
 `;
 
-
-
-
-
 const ArticleTitle = styled.div`
   margin-top: 10px;
   color: #000000;
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 500;
   line-height: 100%;
 `;
 const ArticleSubTitle = styled.div`
-  margin-top: 10px;
+  margin-top: 5px;
   color: #828282;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 300;
   line-height: 100%;
 `;
-
-const ArticleBody = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 150%;
-  color: #000000;
-  white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
-  & img {
-  display: block;
-  margin: 20px auto 5px auto;
-  /* border-radius: 10px; */
-  width: 100%;
-  max-height: 500px;
-  object-fit: contain;
-}
-  & strong{
-    /* margin: 10px 0px; */
-  }
-`;
-
 const InfoBox = styled.div`
   margin: 30px 0px;
   display: flex;
@@ -331,20 +305,42 @@ const ReporterImg = styled.div`
 `;
 const ReporterName = styled.div`
   font-size: 14px;
-  font-weight: 600;
+  /* font-weight: 500; */
   /* margin-left: 10px; */
 `;
 
 const PublishedDate = styled.div`
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 300;
   color: #bcbcbc;
 `;
 
 const SectionTitle = styled.div`
   font-size: 16px;
-  font-weight: 900;
+  font-weight: 700;
   color: #3E5977;
+`;
+
+const ArticleBody = styled.div`
+  /* display: flex; */
+  /* flex-direction: column; */
+  font-size: 16px;
+  /* font-weight: 500; */
+  line-height: 150%;
+  color: #000000;
+  white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
+  & img {
+  display: block;
+  margin: 20px auto 5px auto;
+  /* border-radius: 10px; */
+  width: 100%;
+  max-height: 700px;
+  object-fit: contain;
+}
+  & strong{
+    /* font-weight: 500; */
+    /* margin: 10px 0px; */
+  }
 `;
 
 
