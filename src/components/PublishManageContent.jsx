@@ -63,8 +63,8 @@ const Status = styled.div`
 const Info = styled.div`
   border-radius: 5px;
   color: #828282;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   margin-left: 10px;
   cursor: pointer;
 `;
@@ -173,6 +173,15 @@ const PublishManageContent = () => {
     }
   };
 
+    const formatDate = (isoString) => {
+  const date = new Date(isoString);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 0부터 시작이라 +1
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
   return (
     <Container>
       <Title>편집중인 기사 {articles.length}</Title>
@@ -186,7 +195,8 @@ const PublishManageContent = () => {
               </Link>
             </ArticleInfo>
             <Info>{article.reporterName+", "}</Info>
-            <Info>{article.sectionName}</Info>
+            <Info>{article.sectionName+", "}</Info>
+             <Info>{formatDate(article.publishedAt)}</Info>
 
             <EditorsPick
               checked={article.isEditorsPick}

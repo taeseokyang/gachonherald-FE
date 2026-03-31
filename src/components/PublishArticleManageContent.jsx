@@ -69,8 +69,8 @@ const Status = styled.div`
 const Info = styled.div`
   border-radius: 5px;
   color: #828282;
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   margin-left: 10px;
   cursor: pointer;
 `;
@@ -133,12 +133,24 @@ const PublishArticleManageContent = () => {
   // 상태 리스트 (예시로 'draft', 'published' 등)
   const statusOptions = ['PUBLISHED', 'ARCHIVED'];
 
+  const formatDate = (isoString) => {
+  const date = new Date(isoString);
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 0부터 시작이라 +1
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
+
+
   useEffect(() => {
     window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
         const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/list/all?pageNumber=" + (page - 1));
         setArticles(response.data.data.articles);
+        console.log(response.data.data.articles);
         setPageNumbers(Array.from({ length: response.data.data.pageCount }, (_, index) => index + 1));
       } catch (error) {
         console.error("오류 발생:", error);
@@ -222,8 +234,10 @@ const PublishArticleManageContent = () => {
                 <ArticleTitle>{article.title}</ArticleTitle>
               </Link>
             </ArticleInfo>
+           
             <Info>{article.reporterName+", "}</Info>
-            <Info>{article.sectionName}</Info>
+            <Info>{article.sectionName+", "}</Info>
+             <Info>{formatDate(article.publishedAt)}</Info>
 
             <EditorsPick
               checked={article.isEditorsPick}

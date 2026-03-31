@@ -343,7 +343,9 @@ const UpdateArticleContent = () => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [content, setContent] = useState('');
+  const [reporterName, setReporterName] = useState('');
   const [sectionId, setSectionId] = useState(2);
+  const [publishedAt, setPublishedAt] = useState();
   const [mainImage, setMainImage] = useState('');
   const [images, setImages] = useState([]);
   const [sections, setSections] = useState([]);
@@ -364,14 +366,17 @@ const UpdateArticleContent = () => {
         setTitle(response.data.data.title);
         setSubtitle(response.data.data.subtitle);
         setSectionId(response.data.data.sectionId);
+        setPublishedAt(response.data.data.publishedAt);
         setContent(response.data.data.content);
+        setReporterName(response.data.data.reporterName);
         if (response.data.data.mainImage != ''){
           setImages([response.data.data.mainImage]);
         }
         setMainImage(response.data.data.mainImage);
         setArticleStatus(response.data.data.status);
         setStatus(response.data.data.status);
-        console.log(response.data.data.status);
+        console.log(response.data.data);
+        console.log(1);
       } catch (error) {
         console.error("오류 발생:", error);
       }
@@ -392,15 +397,15 @@ const UpdateArticleContent = () => {
   }, []);
 
 
-    function getTodayDate() {
-  const today = new Date();
+const formatDate = (isoString) => {
+  const date = new Date(isoString);
 
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = String(today.getDate()).padStart(2, '0');
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 0부터 시작이라 +1
+  const day = String(date.getDate()).padStart(2, '0');
 
   return `${year}-${month}-${day}`;
-}
+};
 
 const applyTagToSelection = (tagName) => {
   const textarea = document.getElementById('articleContent');
@@ -675,11 +680,11 @@ function getSectionNameById(sectionId, sectionList) {
     
                   </ReporterImg> */}
                   <ReporterName>
-                    By {cookie.nickname}
+                    By {reporterName}
                   </ReporterName>
     
                 </ReporterBox>
-              <PublishedDate>{getTodayDate()}</PublishedDate>
+              <PublishedDate>{formatDate(publishedAt)}</PublishedDate>
             </InfoBox>
             <ArticleBody isOldArticle={false} dangerouslySetInnerHTML={{ __html: content }}>
             </ArticleBody>

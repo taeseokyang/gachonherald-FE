@@ -60,10 +60,10 @@ const Info = styled.span`
   float: right;
   border-radius: 5px;
   color: #828282;
-  font-size: 14px;
+  font-size: 12px;
   /* padding: 5px 7px; */
   margin-left: 10px;
-  font-weight: 700;
+  font-weight: 500;
 `;
 
 const WorkSpaceContent = () => {
