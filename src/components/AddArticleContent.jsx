@@ -316,11 +316,10 @@ const PublishedDate = styled.div`
 `;
 
 const SectionTitle = styled.div`
-  font-size: 16px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 300;
   color: #3E5977;
 `;
-
 const ArticleBody = styled.div`
   /* display: flex; */
   /* flex-direction: column; */

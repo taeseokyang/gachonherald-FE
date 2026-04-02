@@ -12,8 +12,8 @@ const Layout = styled.div`
     left: 0;
     width: 100%;
     /* height:100px; */
-    
-    background: #f5f5f5;
+    border-top: 1px solid #eeeeee;
+    background: #ffffff;
 
 `;
 const Content = styled.div`
@@ -22,7 +22,7 @@ const Content = styled.div`
   margin: 0px auto;
 `;
 const Item = styled.div`
-  font-size: 13px;
+  font-size: 12px;
   color: #bcbcbc;
   white-space: nowrap;
   & a{
@@ -38,12 +38,12 @@ display: flex;
 `;
 
 const ClickItem = styled.div`
-  font-size: 13px;
+  font-size: 12px;
   color: #bcbcbc;
   white-space: nowrap;
-  border-bottom: 1px solid #f5f5f5;
+  /* border-bottom: 1px solid #ffffff; */
   &:hover{
-      border-bottom: 1px solid #bcbcbc;
+      color: #828282;
     }
 `;
 

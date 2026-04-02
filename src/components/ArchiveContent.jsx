@@ -15,15 +15,17 @@ const Info = styled.div`
     display: flex;
   flex-direction: row;
   align-items: center;
-  font-size: 16px;
-  font-weight: 500;
-  padding-bottom: 20px;
+  font-size: 14px;
+  padding-bottom: 10px;
 `;
 
 const InfoName = styled.div`
-font-weight: 500;
+/* font-weight: 5300; */
 margin-right: 10px;
 color: #828282;
+&:hover{
+  color: #000000;
+}
 `;
 
 

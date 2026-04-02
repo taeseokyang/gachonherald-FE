@@ -87,6 +87,7 @@ const Section = styled.div`
     &:hover{
       border-bottom: 1px solid #ffffff;
       /* background: #ffffff; */
+
     }
     a{
       color: #ffffff;

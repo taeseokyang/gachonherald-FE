@@ -27,26 +27,43 @@ const Text2 = styled.div`
 `;
 
 const Section = styled.div`
-  font-size: 14px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 300;
   color: #ffffff;
   margin-left: 20px;
-  margin-bottom: 5px;
+  /* margin-bottom: 5px; */
   @media screen and (max-width: 600px) {
     font-size: 12px;
     margin-left: 10px;
   }
 `;
 const Text3 = styled.div`
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 15px;
-  background: ${({ isActive }) => (isActive ? "#f5f5f5" : "transparent")};
+  font-size: 16px;
+  font-weight: ${({ isActive }) => (isActive ? 500 : 300)};
+  margin-bottom: 20px;
+  /* border-bottom: ${({ isActive }) => (isActive ? '1px solid #000'  : "None")}; */
+  /* background: ${({ isActive }) => (isActive ? "#f5f5f5" : "transparent")}; */
   color: ${({ isActive }) => (isActive ? "#3e5977" : "#828282")};
-  border-radius: 10px;
-  padding: 7px;
+  /* border-radius: 10px; */
+  /* padding: 10px 0px; */
   transition: background 0.3s;
+  display: flex;
+  align-items: center; 
   cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+`;
+
+const Point = styled.div`
+  width: 5px;
+  height: 5px;
+  border-radius: 100px;
+  background-color: #3e5977;
+  /* border: 1.5px solid #3e5977; */
+  flex-shrink: 0;
+  margin-right: 10px;
+`;
+
+const EditorsPickArticleTitle = styled.div`
+
 `;
 
 const EditorsPick = styled.div`
@@ -54,7 +71,7 @@ const EditorsPick = styled.div`
   /* padding-bottom: 7px; */
   color: #3e5977;
   font-size: 20px;
-  font-weight: 700;
+  font-weight: 300;
   margin-bottom: 20px;
   display: flex;
 `;
@@ -65,11 +82,22 @@ const EditorsPickText = styled.div`
 `;
 
 const UnderLine = styled.div`
-  display: inline-block;
-  flex: 1;
-  height: 18px;
-  margin-left: 3px;
-  border-bottom: 2.5px solid #3e5977;
+display: inline-block;
+flex: 1;
+height: 18px;
+margin-left: 3px;
+position: relative; /* 추가 */
+
+/* border-bottom 제거하고 아래 추가 */
+&::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(to right, #3e5977, transparent);
+}
 `;
 
 
@@ -176,6 +204,19 @@ const TopBlock = ({ articles }) => {
     <Container>
       <ArticleItem>
         <BlockBox>
+           <Block1>
+            <EditorsPick><EditorsPickText>Editor's Picks</EditorsPickText><UnderLine></UnderLine></EditorsPick>
+            {articles.map((article, index) => (
+              <Link to={"/article/" + article.articleId} key={article.articleId}>
+                <Text3 
+                  isActive={index === currentIndex} 
+                  onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시 인덱스 변경
+                >
+                 <Point/><EditorsPickArticleTitle>{article.title}</EditorsPickArticleTitle>
+                </Text3>
+              </Link>
+            ))}
+          </Block1>
           <Block2>
             <BigImageBox>
               {articles.length > 0 && articles[currentIndex]?.mainImage ? (
@@ -195,19 +236,7 @@ const TopBlock = ({ articles }) => {
             </BigImageBox>
           </Block2>
           {/* <VerticalLine /> */}
-          <Block1>
-            <EditorsPick><EditorsPickText>Editor's Picks</EditorsPickText><UnderLine></UnderLine></EditorsPick>
-            {articles.map((article, index) => (
-              <Link to={"/article/" + article.articleId} key={article.articleId}>
-                <Text3 
-                  isActive={index === currentIndex} 
-                  onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시 인덱스 변경
-                >
-                  {article.title}
-                </Text3>
-              </Link>
-            ))}
-          </Block1>
+         
         </BlockBox>
       </ArticleItem>
     </Container>

@@ -123,9 +123,9 @@ export const BigImageBox = styled.div`
 
 export const Section = styled.div`
   display: inline-block;
-  font-size: 16px;
+  font-size: 20px;
   /* height: 25px; */
-  font-weight: 700;
+  font-weight: 300;
   color: #3E5977;
   margin-bottom: 15px;
   margin-top: 10px;
@@ -170,10 +170,10 @@ export const Title1 = styled.div`
 `;
 
 export const SubTitle1 = styled.div`
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 300;
   color: #828282;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 `;
 
 export const Reporter1 = styled.div`

@@ -7,7 +7,7 @@ import axios from "axios";
 
 const SectionTitle = styled.div`
   font-size: 24px;
-  font-weight: 900;
+  font-weight: 300;
   margin-bottom: 30px;
   color: #3E5977;
 `;
