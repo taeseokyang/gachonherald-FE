@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Container, Content } from "./StyledComponents";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
 
 const SectionTitle = styled.div`
   font-size: 22px;
@@ -154,6 +155,9 @@ const ArticleList = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>{sectionName ? `${sectionName} | The Gachon Herald (가천헤럴드)` : "The Gachon Herald"}</title>
+      </Helmet>
       <Content>
         <SectionTitle>{sectionName}</SectionTitle>
 

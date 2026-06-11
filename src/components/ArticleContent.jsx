@@ -1,10 +1,10 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ThinContainer, Container, Content, Block1, Block2, BlockBox, ImageBox, Image, Section, Title1, SubTitle1, Reporter1, Copy, Date } from "./StyledComponents";
-import HorizontalLine from "./homeContents/HorizontalLine2";
+import { ThinContainer, Content } from "./StyledComponents";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { Helmet } from "react-helmet-async";
 
 
 const ArticleTitle = styled.div`
@@ -99,6 +99,10 @@ const ArticleContent = () => {
 
   return (
     <ThinContainer>
+      <Helmet>
+        <title>{article.title ? `${article.title} | The Gachon Herald (가천헤럴드)` : "The Gachon Herald"}</title>
+        {article.subtitle && <meta name="description" content={article.subtitle} />}
+      </Helmet>
       <Content>
       <Link to={"/section/" + article.sectionId+"?page=1"}>
       <SectionTitle>{article.sectionName}</SectionTitle>

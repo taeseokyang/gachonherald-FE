@@ -1,28 +1,27 @@
-import { Link, useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useState, useEffect } from 'react';
-import ArticleHeader from "../../components/ArticleHeader";
+import { useEffect } from 'react';
 import { PageContainer } from "../../components/StyledComponents";
 import Footer from "../../components/Footer";
 import Title from "../../components/Title";
 import Nav from "../../components/Nav";
 import TopHeader from "../../components/TopHeader";
-import Profile from "../../components/Profile";
 import AboutUsContent from "../../components/AboutUsContent";
-
+import { Helmet } from "react-helmet-async";
 
 const AboutUs = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
     <PageContainer>
-      <TopHeader></TopHeader>
-        <Title></Title>
-        <Nav></Nav>
-        <AboutUsContent></AboutUsContent>
-        <Footer></Footer>
+      <Helmet>
+        <title>기자 소개 | The Gachon Herald (가천헤럴드)</title>
+        <meta name="description" content="가천헤럴드(The Gachon Herald) 기자단을 소개합니다." />
+        <link rel="canonical" href="https://thegachonherald.com/aboutus" />
+      </Helmet>
+      <TopHeader />
+      <Title />
+      <Nav />
+      <AboutUsContent />
+      <Footer />
     </PageContainer>
   );
 };

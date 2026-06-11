@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Container, Content } from "./StyledComponents";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Helmet } from "react-helmet-async";
 
 /* ── Reporter header ── */
 const ReporterHeader = styled.div`
@@ -192,6 +193,9 @@ const Profile = () => {
 
   return (
     <Container>
+      <Helmet>
+        <title>{reporter.nickname ? `${reporter.nickname} | The Gachon Herald (가천헤럴드)` : "The Gachon Herald"}</title>
+      </Helmet>
       <Content>
         <ReporterHeader>
           <ReporterName>{reporter.nickname}</ReporterName>

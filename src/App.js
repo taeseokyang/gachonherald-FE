@@ -1,4 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import Home from "./pages/user/Home";
 import Section from "./pages/user/Section";
 import Article from "./pages/user/Article";
@@ -21,6 +22,7 @@ import PublishArticleManage from "./pages/user/PublishArticleManage";
 /* eslint-disable */
 function App() {
   return (
+    <HelmetProvider>
     <BrowserRouter>
       <Routes>
         <Route path="/" Component={Home} />
@@ -45,6 +47,7 @@ function App() {
         <Route path="/manage/comment" Component={CommnetManage} />
       </Routes>
     </BrowserRouter>
+    </HelmetProvider>
   );
 }
 export default App;
