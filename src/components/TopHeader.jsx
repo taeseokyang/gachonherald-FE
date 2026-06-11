@@ -19,7 +19,7 @@ const Layout = styled.div`
 const Content = styled.div`
   margin: 0px auto;
   padding: 0px 20px;
-  max-width: 1000px;
+  max-width: 1100px;
   height: 30px;
   display: flex;
   justify-content: space-between;
@@ -29,20 +29,29 @@ const Content = styled.div`
 `;
 
 const Item = styled.div`
-  color: #828282;
-  span{
-    a{
-      color: #828282;
+  color: #9b9b9b;
+  span {
+    a {
+      color: #9b9b9b;
+      &:hover {
+        color: #1a1a1a;
+      }
     }
   }
 `;
 
 const ItemBtn = styled.span`
   margin-left: 10px;
-  color: #828282;
+  color: #9b9b9b;
   cursor: pointer;
+  &:hover {
+    color: #1a1a1a;
+  }
   a {
-    color: #828282;
+    color: #9b9b9b;
+    &:hover {
+      color: #1a1a1a;
+    }
   }
 `;
 

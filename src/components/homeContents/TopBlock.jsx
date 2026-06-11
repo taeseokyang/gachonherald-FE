@@ -6,60 +6,62 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Text1 = styled.div`
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   margin-left: 20px;
   color: #ffffff;
+  line-height: 1.3;
   @media screen and (max-width: 600px) {
-    font-size: 16px;
+    font-size: 14px;
     margin-left: 10px;
   }
 `;
 const Text2 = styled.div`
-  font-size: 16px;
-  font-weight: 300;
-  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8);
   margin-left: 20px;
+  margin-top: 4px;
+  line-height: 1.4;
   @media screen and (max-width: 600px) {
-    font-size: 12px;
+    font-size: 11px;
     margin-left: 10px;
   }
 `;
 
 const Section = styled.div`
-  font-size: 20px;
-  font-weight: 300;
-  color: #ffffff;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
   margin-left: 20px;
-  /* margin-bottom: 5px; */
+  margin-bottom: 4px;
   @media screen and (max-width: 600px) {
-    font-size: 12px;
+    font-size: 9px;
     margin-left: 10px;
   }
 `;
 const Text3 = styled.div`
-  font-size: 16px;
-  font-weight: ${({ isActive }) => (isActive ? 500 : 300)};
-  margin-bottom: 20px;
-  /* border-bottom: ${({ isActive }) => (isActive ? '1px solid #000'  : "None")}; */
-  /* background: ${({ isActive }) => (isActive ? "#f5f5f5" : "transparent")}; */
-  color: ${({ isActive }) => (isActive ? "#3e5977" : "#828282")};
-  /* border-radius: 10px; */
-  /* padding: 10px 0px; */
-  transition: background 0.3s;
+  font-size: 14px;
+  font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
+  margin-bottom: 14px;
+  color: ${({ isActive }) => (isActive ? "#1a1a1a" : "#9b9b9b")};
+  line-height: 1.35;
+  transition: color 0.2s;
   display: flex;
-  align-items: center; 
-  cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+  align-items: flex-start;
+  cursor: pointer;
 `;
 
 const Point = styled.div`
-  width: 5px;
-  height: 5px;
-  border-radius: 100px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
   background-color: #3e5977;
-  /* border: 1.5px solid #3e5977; */
   flex-shrink: 0;
   margin-right: 10px;
+  margin-top: 5px;
 `;
 
 const EditorsPickArticleTitle = styled.div`
@@ -67,13 +69,14 @@ const EditorsPickArticleTitle = styled.div`
 `;
 
 const EditorsPick = styled.div`
-  /* border-bottom: 3px solid #3e5977; */
-  /* padding-bottom: 7px; */
   color: #3e5977;
-  font-size: 20px;
-  font-weight: 300;
-  margin-bottom: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
   display: flex;
+  align-items: center;
 `;
 
 const EditorsPickText = styled.div`
@@ -82,22 +85,12 @@ const EditorsPickText = styled.div`
 `;
 
 const UnderLine = styled.div`
-display: inline-block;
-flex: 1;
-height: 18px;
-margin-left: 3px;
-position: relative; /* 추가 */
-
-/* border-bottom 제거하고 아래 추가 */
-&::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  display: inline-block;
+  flex: 1;
   height: 1px;
+  margin-left: 10px;
   background: linear-gradient(to right, #3e5977, transparent);
-}
+  align-self: center;
 `;
 
 

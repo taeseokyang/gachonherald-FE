@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   margin: 0px auto;
   padding: 10px 20px;
-  max-width: 1000px;
+  max-width: 1100px;
   min-height: 800px;
 `;
 
@@ -22,7 +22,7 @@ export const ContentFit = styled.div`
 export const ArticleItem = styled.div`
   margin: 0px auto;
   padding: 10px 20px;
-  max-width: 1000px;
+  max-width: 1100px;
 `;
 
 export const BlockBox = styled.div`
@@ -47,13 +47,14 @@ export const Block3 = styled.div`
 
 export const ImageBox = styled.div`
   width: 100%;
-  height: 200px;
+  height: 210px;
   position: relative;
-  border-radius: 5px;
+  border-radius: 4px;
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #f5f5f5;
 `;
 
 export const Image = styled.img`
@@ -123,20 +124,16 @@ export const BigImageBox = styled.div`
 
 export const Section = styled.div`
   display: inline-block;
-  font-size: 20px;
-  /* height: 25px; */
-  font-weight: 300;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #3E5977;
-  margin-bottom: 15px;
-  margin-top: 10px;
-  &:hover{
-    text-decoration: underline;
+  margin-bottom: 12px;
+  margin-top: 8px;
+  &:hover {
+    color: #2a3f5a;
   }
-  /* padding: 7px 10px; */
-  /* width: 20%; */
-  /* padding-right: 100px; */
-  border-radius: 3px;
-  /* background: #3E5977; */
 `;
 
 
@@ -144,45 +141,45 @@ export const SectionBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-  /* margin-bottom: 5px; */
-  margin-bottom: 3px;
-  
+  margin-bottom: 4px;
 `;
 
 export const Date = styled.div`
   display: inline-block;
   font-size: 12px;
-  font-weight: 300;
-  color: #828282;
+  font-weight: 400;
+  color: #9b9b9b;
   margin-bottom: 5px;
 
   @media screen and (max-width: 600px) {
-     margin-top: 20px;
-    }
+    margin-top: 20px;
+  }
 `;
 export const Title1 = styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  /* margin-bottom: 5px; */
-  &:hover{
-    text-decoration: underline;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #1a1a1a;
+  margin-bottom: 4px;
+  &:hover {
+    color: #3E5977;
   }
 `;
 
 export const SubTitle1 = styled.div`
-  font-size: 14px;
-  font-weight: 300;
-  color: #828282;
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b6b6b;
   margin-bottom: 10px;
+  line-height: 1.4;
 `;
 
 export const Reporter1 = styled.div`
   font-size: 12px;
-  font-weight: 300;
-  color: #828282;
-  /* margin-bottom: 10px; */
-  &:hover{
-    text-decoration: underline;
+  font-weight: 400;
+  color: #6b6b6b;
+  &:hover {
+    color: #1a1a1a;
   }
 `;
 
@@ -197,7 +194,7 @@ export const ThinContainer = styled.div`
 
 export const BoxContainer = styled.div`
     margin: 0px auto;
-    max-width: 1000px;
+    max-width: 1100px;
     padding: 0px 20px;
 `;
 

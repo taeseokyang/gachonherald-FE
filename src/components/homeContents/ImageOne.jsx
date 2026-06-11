@@ -1,24 +1,95 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Container, ArticleItem, Block1, Block2, BlockBox, ImageBox, Image, Section, Title1, SubTitle1, Reporter1, Copy, SectionBox, Dot, BackgroundImage, Overlay } from "../StyledComponents";
-import VerticalLine from "./VerticalLine";
-import HorizontalLine2 from "./HorizontalLine2";
+import { Container, ArticleItem, Section } from "../StyledComponents";
 
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-
-const Mobile = styled.div` 
-    display: none;
-    @media screen and (max-width: 600px) {
-      display: block;
-    }
+const Grid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 `;
 
-const PC = styled.div` 
+const CardImageBox = styled.div`
+  width: 100%;
+  height: 220px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f0f0f0;
+  margin-bottom: 10px;
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     display: block;
-    @media screen and (max-width: 600px) {
-      display: none;
-    }
+    transition: transform 0.35s ease;
+  }
+  @media (max-width: 600px) {
+    height: 200px;
+  }
+`;
+
+const Card = styled.div`
+  &:hover ${CardImageBox} img {
+    transform: scale(1.04);
+  }
+`;
+
+const CardTitle = styled.div`
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+`;
+
+const CardSubtitle = styled.div`
+  font-size: 13px;
+  font-weight: 400;
+  color: #6b6b6b;
+  line-height: 1.4;
+`;
+
+const TextList = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
+const TextItem = styled.div`
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f0f0;
+  &:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+`;
+
+const TextTitle = styled.div`
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+  transition: color 0.2s;
+`;
+
+const TextSubtitle = styled.div`
+  font-size: 12px;
+  color: #6b6b6b;
+  line-height: 1.4;
+`;
+
+const TextLink = styled(Link)`
+  display: block;
+  &:hover ${TextTitle} {
+    color: #3e5977;
+  }
 `;
 
 const ImageOne = ({ sectionId, sectionName, imageArticles, articles }) => {
@@ -28,36 +99,27 @@ const ImageOne = ({ sectionId, sectionName, imageArticles, articles }) => {
         <Link to={"/section/" + sectionId + "?page=1"}>
           <Section>{sectionName}</Section>
         </Link>
-        <BlockBox>
-          <Block1>
-
-          <Link to={"/article/" + imageArticles[0].articleId}>
-            <Title1>{imageArticles[0].title}</Title1>
-            <SubTitle1>{imageArticles[0].subtitle}</SubTitle1>
-            <ImageBox>
-
-              <BackgroundImage src={"https://api.thegachonherald.com/image?path=" + imageArticles[0].mainImage} />
-              <Overlay />
-              <Image src={"https://api.thegachonherald.com/image?path=" + imageArticles[0].mainImage}></Image>
-
-            </ImageBox>
-            {/* <Copy>{imageArticles[0].copy}</Copy> */}
+        <Grid>
+          <Card>
+            <Link to={"/article/" + imageArticles[0].articleId}>
+              <CardImageBox>
+                <img src={"https://api.thegachonherald.com/image?path=" + imageArticles[0].mainImage} alt={imageArticles[0].title} />
+              </CardImageBox>
+              <CardTitle>{imageArticles[0].title}</CardTitle>
+              <CardSubtitle>{imageArticles[0].subtitle}</CardSubtitle>
             </Link>
-          </Block1>
-          <VerticalLine></VerticalLine>
-          <Block2>
-
-            {articles.slice(0, 3).map((article, index) => (
-              <Link to={"/article/" + article.articleId} key={index}>
-                <Title1>{article.title}</Title1>
-                <SubTitle1>{article.subtitle}</SubTitle1>
-                <HorizontalLine2></HorizontalLine2>
-              </Link>
-
+          </Card>
+          <TextList>
+            {articles.slice(0, 4).map((article, index) => (
+              <TextItem key={index}>
+                <TextLink to={"/article/" + article.articleId}>
+                  <TextTitle>{article.title}</TextTitle>
+                  <TextSubtitle>{article.subtitle}</TextSubtitle>
+                </TextLink>
+              </TextItem>
             ))}
-
-          </Block2>
-        </BlockBox>
+          </TextList>
+        </Grid>
       </ArticleItem>
     </Container>
   );

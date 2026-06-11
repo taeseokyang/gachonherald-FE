@@ -7,26 +7,24 @@ const Dummy = styled.div`
   /* height: 200px; */
 `;
 const Layout = styled.div`
-    margin-top: 200px;
+    margin-top: 80px;
     position: absolute;
     left: 0;
     width: 100%;
-    /* height:100px; */
-    border-top: 1px solid #eeeeee;
+    border-top: 1px solid #e8e8e8;
     background: #ffffff;
-
 `;
 const Content = styled.div`
-  padding: 100px 20px 10px 20px;
-  max-width: 1000px;
+  padding: 40px 20px 30px 20px;
+  max-width: 1100px;
   margin: 0px auto;
 `;
 const Item = styled.div`
   font-size: 12px;
-  color: #bcbcbc;
+  color: #9b9b9b;
   white-space: nowrap;
-  & a{
-    color: #bcbcbc;
+  & a {
+    color: #9b9b9b;
   }
 `;
 
@@ -39,12 +37,11 @@ display: flex;
 
 const ClickItem = styled.div`
   font-size: 12px;
-  color: #bcbcbc;
+  color: #9b9b9b;
   white-space: nowrap;
-  /* border-bottom: 1px solid #ffffff; */
-  &:hover{
-      color: #828282;
-    }
+  &:hover {
+    color: #1a1a1a;
+  }
 `;
 
 const Footer = () => {
