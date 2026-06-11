@@ -3,341 +3,340 @@ import styled from 'styled-components';
 import { useDropzone } from 'react-dropzone';
 import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
-
 import { useParams, useNavigate } from "react-router-dom";
 
-const BigContainer = styled.div`
+/* ─── Layout ─── */
+const EditorLayout = styled.div`
   display: flex;
   flex-direction: row;
+  min-height: calc(100vh - 120px);
 `;
 
-const Container = styled.div`
-  padding: 20px;
+const EditorPanel = styled.div`
   flex: 1;
-  //max-width: 800px;
-  /* margin: 0 auto; */
-  border-right: 5px solid #f5f5f5;
+  min-width: 0;
+  padding: 28px 32px;
+  border-right: 1px solid #e8e8e8;
+  overflow-y: auto;
 `;
 
-const ImagePreviewBox = styled.div`
+const PreviewPanel = styled.div`
+  width: 420px;
+  flex-shrink: 0;
+  padding: 28px 32px;
+  background: #fafafa;
+  overflow-y: auto;
+
+  @media (max-width: 900px) { display: none; }
+`;
+
+/* ─── Top bar ─── */
+const TopBar = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
-  padding-bottom: 10px;
 `;
 
-const ImagePreviewContainer = styled.div`
-  position: relative;
-  display: inline-block;
+const STATUS_COLOR = {
+  EDITING: { bg: '#fff8e6', text: '#b07d00' },
+  PENDING: { bg: '#e8f0f8', text: '#2e5a8a' },
+  APPROVED: { bg: '#eaf6ec', text: '#2a7a3a' },
+  REJECTED: { bg: '#fdecea', text: '#c0392b' },
+};
+
+const StatusBadge = styled.div`
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: ${({ $s }) => (STATUS_COLOR[$s] || STATUS_COLOR.EDITING).bg};
+  color: ${({ $s }) => (STATUS_COLOR[$s] || STATUS_COLOR.EDITING).text};
 `;
 
-const ImagePreview = styled.img`
-  height: 100px;
-  object-fit: cover;
+const StatusToggle = styled.div`
+  display: flex;
+  gap: 0;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  overflow: hidden;
+`;
+
+const ToggleBtn = styled.button`
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
   cursor: pointer;
-  border: 1px solid #eeeeee;
-  border-radius: 10px;
+  background: ${({ $active }) => ($active ? '#3e5977' : '#ffffff')};
+  color: ${({ $active }) => ($active ? '#ffffff' : '#555555')};
+  transition: background 0.15s, color 0.15s;
+  &:hover { background: ${({ $active }) => ($active ? '#3e5977' : '#f5f5f5')}; }
+`;
+
+const SectionSelect = styled.select`
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #3e5977;
+  border: 1px solid #d8d8d8;
+  border-radius: 6px;
+  outline: none;
+  background: #ffffff;
+  cursor: pointer;
+  &:disabled { background: #f5f5f5; color: #9b9b9b; cursor: not-allowed; }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+`;
+
+const SaveButton = styled.button`
+  padding: 8px 22px;
+  background: #3e5977;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #2e4666; }
 `;
 
 const DeleteButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #828282;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-weight: 500;
-  font-size: 12px;
+  padding: 8px 16px;
+  background: #ffffff;
+  color: #d0453a;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #e8c4c4;
+  border-radius: 6px;
   cursor: pointer;
-  display: ${props => (props.visible ? 'block' : 'none')};
-  &:hover {
-    background: #eeeeee;
-  }
+  transition: background 0.15s;
+  &:hover { background: #fdecea; }
 `;
 
-const MainImageButton = styled.button`
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  background: #000000;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-  font-size: 12px;
-  cursor: pointer;
-`;
-
-const MainImageLabel = styled.div`
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 12px;
-  padding: 2px 5px;
-  border-radius: 5px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  border-radius: 7px;
-  font-weight: 700;
-  font-size: 14px;
-  background-color: #3e5977;
-  color: white;
-  border: none;
-  /* float: right; */
-  margin-left: 10px;
-  cursor: pointer;
-`;
-
-
-const DropzoneArea = styled.div`
+/* ─── Text inputs ─── */
+const TitleInput = styled.input`
   width: 100%;
   box-sizing: border-box;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  margin-bottom: 20px;
-  color: #828282;
-`;
-
-const InputField = styled.input`
-  width: 100%;
-  font-size: 16px;
-  box-sizing: border-box;
-  padding: 10px 0px;
-  margin-top: 10px;
-  font-weight: 500;
-  outline: none;
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
   border: none;
-  border-bottom: 3px solid #eeeeee;
-
-  &::placeholder {
-    color: #bcbcbc; 
-    font-weight: 700; 
-  }
-
-  /* 비활성화 스타일 */
-  ${({ disabled }) => disabled && `
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-  `}
+  border-bottom: 2px solid #f0f0f0;
+  outline: none;
+  padding: 10px 0;
+  margin-bottom: 8px;
+  background: transparent;
+  transition: border-color 0.15s;
+  &:focus { border-color: #3e5977; }
+  &::placeholder { color: #d0d0d0; font-weight: 700; }
+  &:disabled { background: #f8f8f8; cursor: not-allowed; }
 `;
 
-const TextArea = styled.textarea`
-  margin-top: 20px;
+const SubtitleInput = styled.input`
   width: 100%;
-  outline: none;
-  font-size: 16px;
-  /* font-weight: 500; */
-  line-height: 150%;
   box-sizing: border-box;
+  font-size: 16px;
+  color: #555555;
   border: none;
-  resize: none;
-  min-height: 600px;
-
-  &::placeholder {
-    color: #bcbcbc; 
-    font-weight: 700; 
-  }
-
-  /* 비활성화 스타일 */
-  ${({ disabled }) => disabled && `
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-  `}
-`;
-
-const Dropdown = styled.select`
-  margin-top: 20px;
-  padding: 5px;
-  font-size: 16px;
-  color: #3E5977;
-  font-weight: 700;
+  border-bottom: 1px solid #f0f0f0;
   outline: none;
-  border: 3px solid #eeeeee;
-  border-radius: 5px;
-  width: 100%;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  background: transparent;
+  transition: border-color 0.15s;
+  &:focus { border-color: #3e5977; }
+  &::placeholder { color: #d0d0d0; }
+  &:disabled { background: #f8f8f8; cursor: not-allowed; }
 `;
 
-const StatusLabel = styled.div`
-  display: inline-block;
-  background: #3E5977;
-  border-radius: 5px;
-  color: #ffffff;
-  font-size: 14px;
-  padding: 5px 7px;
-  margin-bottom: 20px;
-  font-weight: 700;
-`;
-
-const RadioButtonGroup = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-`;
-
-const RadioButton = styled.label`
+/* ─── Toolbar ─── */
+const Toolbar = styled.div`
   display: flex;
   align-items: center;
+  gap: 4px;
+  padding: 8px 10px;
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px 6px 0 0;
+`;
+
+const ToolBtn = styled.button`
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555555;
+  background: transparent;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
-  color: #3E5977;
-  font-size: 14px;
-  font-weight: 700;
-
-  input[type="radio"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 2px solid #3E5977;
-    margin-right: 10px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
-
-  input[type="radio"]:checked {
-    background-color: #3E5977;
-    border: 2px solid #3E5977;
-  }
-
-  input[type="radio"]:hover {
-    background-color: #f0f0f0;
-    border-color: #3E5977;
-  }
-
-  input[type="radio"]:checked {
-    background-color: #3E5977;
-    border: 2px solid #fff;
-  }
-
-  span {
-    transition: all 0.3s ease;
-  }
-
-  input[type="radio"]:checked + span {
-    color: #3E5977;
-  }
+  &:hover { background: #eeeeee; color: #1a1a1a; }
 `;
 
-
-const ArticleTitle = styled.div`
-  margin-top: 10px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 100%;
-`;
-const ArticleSubTitle = styled.div`
-  margin-top: 5px;
-  color: #828282;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 100%;
-`;
-const InfoBox = styled.div`
-  margin: 30px 0px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eeeeee;
-
-`;
-const ReporterBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-const ReporterImg = styled.div`
-  width: 30px;
-  height: 30px;
-  border: 1px solid #eeeeee;
-  border-radius: 100px;
-
-`;
-const ReporterName = styled.div`
-  font-size: 14px;
-  /* font-weight: 500; */
-  /* margin-left: 10px; */
-`;
-
-const PublishedDate = styled.div`
-  font-size: 14px;
-  font-weight: 300;
-  color: #bcbcbc;
-`;
-
-const SectionTitle = styled.div`
-  font-size: 20px;
-  font-weight: 300;
-  color: #3E5977;
-`;
-
-
-const ArticleBody = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
-  font-size: 16px;
-  /* font-weight: 500; */
-  line-height: 150%;
-  color: #000000;
-  white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
-  & img {
-  display: block;
-  margin: 20px auto 5px auto;
-  /* border-radius: 10px; */
-  width: 100%;
-  max-height: 700px;
-  object-fit: contain;
-}
-  & strong{
-    /* font-weight: 500; */
-    /* margin: 10px 0px; */
-  }
+const ToolDivider = styled.div`
+  width: 1px;
+  height: 16px;
+  background: #d8d8d8;
+  margin: 0 4px;
 `;
 
 const ToolIcon = styled.img`
-  cursor: pointer;
-  width: 18px;
-  margin-right: 15px;
-  padding: 5px;
-  /* background-color: #f5f5f5; */
-  border-radius: 5px;
-
-  &:hover {
-    background-color: #f5f5f5;
-  }
+  width: 14px;
+  height: 14px;
 `;
 
-const ToolText = styled.span`
-  cursor: pointer;
-  margin-right: 15px;
-  font-size: 18px;
-  padding: 5px;
-  /* background-color: #f5f5f5; */
-  border-radius: 5px;
-  font-weight: 700;
-  color: #828282;
-  &:hover {
-    background-color: #f5f5f5;
-  }
+/* ─── Textarea ─── */
+const DropzoneArea = styled.div`
+  width: 100%;
+  box-sizing: border-box;
 `;
 
-const Tools = styled.div`
+const ContentArea = styled.textarea`
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 560px;
+  padding: 16px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #1a1a1a;
+  border: 1px solid #e8e8e8;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  outline: none;
+  resize: vertical;
+  font-family: inherit;
+  background: #ffffff;
+  &::placeholder { color: #c0c0c0; }
+  &:disabled { background: #f5f5f5; cursor: not-allowed; }
+`;
+
+/* ─── Image area ─── */
+const ImageSection = styled.div`
   margin-top: 20px;
-  display: flex;
-  align-items: center;    
 `;
 
+const ImageSectionLabel = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9b9b9b;
+  margin-bottom: 10px;
+`;
+
+const ImageGrid = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const ImageItem = styled.div`
+  position: relative;
+`;
+
+const ImageThumb = styled.img`
+  height: 90px;
+  width: auto;
+  border-radius: 6px;
+  border: 2px solid ${({ $isMain }) => ($isMain ? '#3e5977' : '#e8e8e8')};
+  cursor: pointer;
+  object-fit: cover;
+  transition: border-color 0.15s;
+`;
+
+const MainLabel = styled.div`
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: rgba(62,89,119,0.85);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+`;
+
+const DeleteBtn = styled.button`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 20px;
+  height: 20px;
+  background: rgba(0,0,0,0.5);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  &:hover { background: rgba(0,0,0,0.75); }
+`;
+
+/* ─── Preview ─── */
+const PreviewLabel = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9b9b9b;
+  margin-bottom: 20px;
+`;
+
+const PreviewSection = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #3e5977;
+  margin-bottom: 6px;
+`;
+
+const PreviewTitle = styled.div`
+  font-size: 22px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.25;
+  margin-bottom: 6px;
+`;
+
+const PreviewSubtitle = styled.div`
+  font-size: 16px;
+  color: #6b6b6b;
+  line-height: 1.4;
+  margin-bottom: 16px;
+`;
+
+const PreviewMeta = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #555555;
+`;
+
+const PreviewBody = styled.div`
+  font-size: 15px;
+  line-height: 1.8;
+  color: #1a1a1a;
+  white-space: pre-line;
+  & img { display: block; margin: 20px auto; width: 100%; object-fit: contain; }
+`;
+
+/* ─────────────────────────────── */
 
 const UpdateArticleContent = () => {
   const [title, setTitle] = useState('');
@@ -345,351 +344,193 @@ const UpdateArticleContent = () => {
   const [content, setContent] = useState('');
   const [reporterName, setReporterName] = useState('');
   const [sectionId, setSectionId] = useState(2);
-  const [publishedAt, setPublishedAt] = useState();
+  const [publishedAt, setPublishedAt] = useState('');
   const [mainImage, setMainImage] = useState('');
   const [images, setImages] = useState([]);
   const [sections, setSections] = useState([]);
-  const [cookie, setCookie, removeCookie] = useCookies(); 
-  const navigate = useNavigate(); 
-  const { articleId } = useParams();
-  const [articleStatus, setArticleStatus] = useState(''); // 기사 상태
+  const [articleStatus, setArticleStatus] = useState('');
   const [status, setStatus] = useState('');
+  const [cookie, , removeCookie] = useCookies();
+  const navigate = useNavigate();
+  const { articleId } = useParams();
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/reporter/" + articleId, {
-          headers: {
-            Authorization: `Bearer ${cookie.accessToken}`,
-          },
-        });
-        setTitle(response.data.data.title);
-        setSubtitle(response.data.data.subtitle);
-        setSectionId(response.data.data.sectionId);
-        setPublishedAt(response.data.data.publishedAt);
-        setContent(response.data.data.content);
-        setReporterName(response.data.data.reporterName);
-        if (response.data.data.mainImage != ''){
-          setImages([response.data.data.mainImage]);
-        }
-        setMainImage(response.data.data.mainImage);
-        setArticleStatus(response.data.data.status);
-        setStatus(response.data.data.status);
-        console.log(response.data.data);
-        console.log(1);
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
-    };
-    fetchData();
+    axios.get(process.env.REACT_APP_BACK_URL + "/articles/reporter/" + articleId, { headers: { Authorization: `Bearer ${cookie.accessToken}` } })
+      .then(r => {
+        const d = r.data.data;
+        setTitle(d.title); setSubtitle(d.subtitle); setSectionId(d.sectionId);
+        setPublishedAt(d.publishedAt); setContent(d.content); setReporterName(d.reporterName);
+        if (d.mainImage) setImages([d.mainImage]);
+        setMainImage(d.mainImage); setArticleStatus(d.status); setStatus(d.status);
+      })
+      .catch(console.error);
   }, [articleId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/sections/list");
-        setSections(response.data.data.activeSections);
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
-    };
-    fetchData();
+    axios.get(process.env.REACT_APP_BACK_URL + "/sections/list")
+      .then(r => setSections(r.data.data.activeSections))
+      .catch(console.error);
   }, []);
 
+  const isLocked = articleStatus === 'PENDING';
 
-const formatDate = (isoString) => {
-  const date = new Date(isoString);
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 0부터 시작이라 +1
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
-const applyTagToSelection = (tagName) => {
-  const textarea = document.getElementById('articleContent');
-  const start = textarea.selectionStart;
-  const end = textarea.selectionEnd;
-  const selectedText = content.substring(start, end);
-
-  if (!selectedText) return; // 선택한 텍스트가 없으면 무시
-
-  const beforeText = content.substring(0, start);
-  const afterText = content.substring(end);
-
-  const tagWrapped = `<${tagName}>${selectedText}</${tagName}>`;
-
-  const updatedContent = beforeText + tagWrapped + afterText;
-  setContent(updatedContent);
-
-  // 커서 위치 업데이트
-  setTimeout(() => {
-    textarea.selectionStart = textarea.selectionEnd = start + tagWrapped.length;
-    textarea.focus();
-  }, 0);
-};
-
-function getSectionNameById(sectionId, sectionList) {
-  const section = sectionList.find(item => item.sectionId == sectionId);
-  return section ? section.name : null;
-}
-
-  // 이미지 업로드 핸들러
-  const handleImageUpload = (file) => {
-    const formData = new FormData();
-    formData.append('pic', file);
-
-    // 이미지 업로드 API 호출
-    axios
-      .post(process.env.REACT_APP_BACK_URL + '/image', formData)
-      .then((response) => {
-        setImages((prev) => [...prev, response.data.data.imageName]);
-        handleImageDrag(response.data.data.imageName);
-      })
-      .catch((error) => console.error('이미지 업로드 실패', error));
-  };
-
-  // react-dropzone 설정
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      acceptedFiles.forEach((file) => {
-        handleImageUpload(file);
-      });
-    },
-    accept: 'image/*', // 이미지 파일만 업로드 가능
+    onDrop: (files) => { if (!isLocked) files.forEach(handleImageUpload); },
+    accept: 'image/*',
+    noClick: true,
   });
 
-  // 이미지 이름을 커서 위치에 삽입하는 함수
-  const handleImageDrag = (imageName) => {
-    const textarea = document.getElementById('articleContent');
-    const cursorPosition = textarea.selectionStart;
-
-    const beforeText = content.substring(0, cursorPosition);
-    const afterText = content.substring(cursorPosition);
-
-    const imgTag = `<img src="${process.env.REACT_APP_BACK_URL}/image?path=${imageName}" />`;
-    setContent(beforeText + imgTag + afterText);
-
-    setTimeout(() => {
-      textarea.selectionStart = cursorPosition + imgTag.length;
-      textarea.selectionEnd = textarea.selectionStart;
-      textarea.focus();
-    }, 0);
+  const handleImageUpload = (file) => {
+    const fd = new FormData();
+    fd.append('pic', file);
+    axios.post(process.env.REACT_APP_BACK_URL + '/image', fd)
+      .then(r => {
+        const name = r.data.data.imageName;
+        setImages(prev => [...prev, name]);
+        insertImageAtCursor(name);
+      })
+      .catch(console.error);
   };
 
-  // 이미지 삭제 핸들러
-  const handleImageDelete = (imageName) => {
-    setImages((prev) => prev.filter((image) => image !== imageName));
-    if (imageName == mainImage){
-      setMainImage("");
-    }
+  const insertImageAtCursor = (imageName) => {
+    const ta = document.getElementById('articleContent');
+    const pos = ta.selectionStart;
+    const tag = `<img src="${process.env.REACT_APP_BACK_URL}/image?path=${imageName}" />`;
+    setContent(prev => prev.slice(0, pos) + tag + prev.slice(pos));
+    setTimeout(() => { ta.selectionStart = ta.selectionEnd = pos + tag.length; ta.focus(); }, 0);
   };
 
-  // 메인 이미지 설정 핸들러
-  const handleSetMainImage = (imageName) => {
-    setMainImage(imageName);
+  const applyTag = (tag) => {
+    const ta = document.getElementById('articleContent');
+    const s = ta.selectionStart, e = ta.selectionEnd;
+    const selected = content.slice(s, e);
+    if (!selected) return;
+    const wrapped = `<${tag}>${selected}</${tag}>`;
+    setContent(content.slice(0, s) + wrapped + content.slice(e));
+    setTimeout(() => { ta.selectionStart = ta.selectionEnd = s + wrapped.length; ta.focus(); }, 0);
+  };
+
+  const formatDate = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
+
+  const getSectionName = (id) => (sections.find(s => s.sectionId == id) || {}).name || '';
+
+  const handleStatusChange = (s) => {
+    if (s === 'PENDING' && !window.confirm("승인 신청 시 더 이상 기사를 수정할 수 없습니다.")) return;
+    setStatus(s);
   };
 
   const handleSave = async () => {
-
-    if (images.length != 0 && mainImage == "") {
-      alert("메인 이미지를 선택하세요.");
-      return; 
-    }
-
+    if (images.length !== 0 && mainImage === '') { alert("메인 이미지를 선택하세요."); return; }
     try {
-      await axios.patch(`${process.env.REACT_APP_BACK_URL}/articles`, {
-        articleId,
-        title,
-        subtitle,
-        mainImage,
-        content,
-        sectionId,
-        status: status,
-      }, {
-        headers: {
-          Authorization: `Bearer ${cookie.accessToken}`,
-        },
-      });
-      // navigate("/article/"+articleId);
+      await axios.patch(`${process.env.REACT_APP_BACK_URL}/articles`, { articleId, title, subtitle, mainImage, content, sectionId, status }, { headers: { Authorization: `Bearer ${cookie.accessToken}` } });
       alert("수정 완료되었습니다.");
       navigate("/workspace");
-    } catch (error) {
-      console.error("기사 저장 오류:", error);
-      removeCookie('accessToken', { path: "/" }); 
-      removeCookie('userId', { path: "/" }); 
-      removeCookie('id', { path: "/" }); 
-      removeCookie('nickname', { path: "/" }); 
-      removeCookie('roles', { path: "/" }); 
+    } catch {
+      ['accessToken', 'userId', 'id', 'nickname', 'roles'].forEach(k => removeCookie(k, { path: '/' }));
       navigate("/Login");
     }
   };
+
   const handleDelete = async () => {
-
-    const isConfirmed = window.confirm("작성중인 기사를 삭제 하시겠습니까?");
-  
-    if (!isConfirmed) {
-      return; 
-    }
-
+    if (!window.confirm("작성중인 기사를 삭제 하시겠습니까?")) return;
     try {
-      await axios.delete(`${process.env.REACT_APP_BACK_URL}/articles/${articleId}`, {
-        headers: {
-          Authorization: `Bearer ${cookie.accessToken}`,
-        },
-      });
+      await axios.delete(`${process.env.REACT_APP_BACK_URL}/articles/${articleId}`, { headers: { Authorization: `Bearer ${cookie.accessToken}` } });
       alert("삭제 되었습니다.");
       navigate("/workspace");
-    } catch (error) {
-      console.error("기사 저장 오류:", error);
-      removeCookie('accessToken', { path: "/" }); 
-      removeCookie('userId', { path: "/" }); 
-      removeCookie('id', { path: "/" }); 
-      removeCookie('nickname', { path: "/" }); 
-      removeCookie('roles', { path: "/" }); 
+    } catch {
+      ['accessToken', 'userId', 'id', 'nickname', 'roles'].forEach(k => removeCookie(k, { path: '/' }));
       navigate("/Login");
-    }
-  };
-
-  const handleStatusChange = (status) => {
-    if (status === 'PENDING') {
-      if (window.confirm("승인 신청 시 더 이상 기사를 수정할 수 없습니다.")) {
-        setStatus(status);
-      }
-    } else {
-      setStatus(status);
     }
   };
 
   return (
-    <BigContainer>
-    <Container>
-      <StatusLabel>{articleStatus}</StatusLabel>
-      {
-        articleStatus == "EDITING" ?
-      
-      <RadioButtonGroup>
-        <RadioButton>
-          <input
-            type="radio"
-            id="draft"
-            name="articleStatus"
-            value="EDITING"
-            checked={status === 'EDITING'}
-            onChange={() => handleStatusChange('EDITING')}
+    <EditorLayout>
+      <EditorPanel>
+        <TopBar>
+          <StatusBadge $s={articleStatus}>{articleStatus}</StatusBadge>
+
+          {articleStatus === 'EDITING' && (
+            <StatusToggle>
+              <ToggleBtn $active={status === 'EDITING'} onClick={() => handleStatusChange('EDITING')}>기사 작성</ToggleBtn>
+              <ToggleBtn $active={status === 'PENDING'} onClick={() => handleStatusChange('PENDING')}>승인 신청</ToggleBtn>
+            </StatusToggle>
+          )}
+
+          <SectionSelect disabled={isLocked} value={sectionId} onChange={e => setSectionId(e.target.value)}>
+            {sections.map(s => <option key={s.sectionId} value={s.sectionId}>{s.name}</option>)}
+          </SectionSelect>
+
+          {!isLocked && (
+            <ButtonGroup>
+              <SaveButton onClick={handleSave}>수정 완료</SaveButton>
+              <DeleteButton onClick={handleDelete}>삭제</DeleteButton>
+            </ButtonGroup>
+          )}
+        </TopBar>
+
+        <TitleInput disabled={isLocked} placeholder="Title" value={title} onChange={e => setTitle(e.target.value)} />
+        <SubtitleInput disabled={isLocked} placeholder="Subtitle" value={subtitle} onChange={e => setSubtitle(e.target.value)} />
+
+        <Toolbar>
+          <ToolBtn onClick={() => applyTag('H1')}>H1</ToolBtn>
+          <ToolBtn onClick={() => applyTag('H2')}>H2</ToolBtn>
+          <ToolBtn onClick={() => applyTag('H3')}>H3</ToolBtn>
+          <ToolDivider />
+          <ToolBtn onClick={() => applyTag('strong')}><ToolIcon src="/images/bold.svg" /></ToolBtn>
+          <ToolBtn onClick={() => applyTag('em')}><ToolIcon src="/images/italic.svg" /></ToolBtn>
+        </Toolbar>
+
+        <DropzoneArea {...getRootProps()}>
+          <input {...getInputProps()} />
+          <ContentArea
+            id="articleContent"
+            disabled={isLocked}
+            placeholder="Write your article here... (drag & drop images to upload)"
+            value={content}
+            onChange={e => setContent(e.target.value)}
           />
-          <span>기사 작성</span>
-        </RadioButton>
-        <RadioButton>
-          <input
-            type="radio"
-            id="pending"
-            name="articleStatus"
-            value="PENDING"
-            checked={status === 'PENDING'}
-            onChange={() => handleStatusChange('PENDING')}
-          />
-          <span>승인 신청</span>
-        </RadioButton>
-      </RadioButtonGroup>:null
-}
-      <Dropdown disabled={articleStatus === 'PENDING'} value={sectionId} onChange={(e) => setSectionId(e.target.value)}>
-        {sections.map((section) => (
-          <option key={section.sectionId} value={section.sectionId}>{section.name}</option>
-        ))}
-      </Dropdown>
+        </DropzoneArea>
 
-      <InputField
-        type="text"
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        disabled={articleStatus === 'PENDING'}
-      />
-      <InputField
-        type="text"
-        placeholder="Subtitle"
-        value={subtitle}
-        onChange={(e) => setSubtitle(e.target.value)}
-        disabled={articleStatus === 'PENDING'}
-      />
+        {images.length > 0 && (
+          <ImageSection>
+            <ImageSectionLabel>Images — click to set as main</ImageSectionLabel>
+            <ImageGrid>
+              {images.map((img, i) => (
+                <ImageItem key={i}>
+                  <ImageThumb
+                    src={`https://api.thegachonherald.com/image?path=${img}`}
+                    $isMain={mainImage === img}
+                    onClick={() => !isLocked && setMainImage(img)}
+                    alt=""
+                  />
+                  {mainImage === img && <MainLabel>Main</MainLabel>}
+                  {!isLocked && (
+                    <DeleteBtn onClick={() => { setImages(prev => prev.filter(x => x !== img)); if (mainImage === img) setMainImage(''); }}>×</DeleteBtn>
+                  )}
+                </ImageItem>
+              ))}
+            </ImageGrid>
+          </ImageSection>
+        )}
+      </EditorPanel>
 
- <Tools>
-          <ToolText onClick={() => applyTagToSelection('H1')} title="h1">H1</ToolText>
-          <ToolText onClick={() => applyTagToSelection('H2')} title="h2">H2</ToolText>
-          <ToolText onClick={() => applyTagToSelection('H3')} title="h3">H3</ToolText>
-          <ToolIcon src="/images/bold.svg" onClick={() => applyTagToSelection('strong')} title="굵게" />
-          <ToolIcon src="/images/italic.svg" onClick={() => applyTagToSelection('em')} title="기울임" />
-        </Tools>
-
-      <DropzoneArea {...getRootProps()}>
-        <TextArea
-          id="articleContent"
-          placeholder="Write your article content here..."
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          disabled={articleStatus === 'PENDING'}
-        />
-      </DropzoneArea>
-
-      {/* 업로드된 이미지 미리보기 */}
-      <ImagePreviewBox>
-        {images.map((image, index) => (
-          <ImagePreviewContainer key={index}>
-            <ImagePreview
-              src={'https://api.thegachonherald.com/image?path=' + image}
-              alt={`Uploaded ${image}`}
-              onClick={() => handleSetMainImage(image)}
-              isMain={mainImage === image}  // 메인 이미지 강조
-            />
-            {mainImage === image && (
-              <MainImageLabel>메인 이미지</MainImageLabel> // 메인 이미지 레이블
-            )}
-            <DeleteButton
-              visible={true}
-              onClick={() => handleImageDelete(image)}
-            >
-              X
-            </DeleteButton>
-          </ImagePreviewContainer>
-        ))}
-      </ImagePreviewBox>
-
-      {/* 기사 저장 버튼 */}
-      {articleStatus != 'PENDING' ? 
-      <>
-      <Button onClick={handleSave}>수정완료</Button>
-      <Button style={{ backgroundColor: "#bcbcbc" }} onClick={handleDelete}>삭제하기</Button>
-      </>
-      
-      : null }
-    </Container>
-     <Container>
-          <SectionTitle>{getSectionNameById(sectionId,sections)}</SectionTitle>
-            
-            <ArticleTitle>{title}</ArticleTitle>
-            <ArticleSubTitle>{subtitle}</ArticleSubTitle>
-            {/* <Separator></Separator> */}
-            <InfoBox>
-                <ReporterBox>
-    
-    
-    
-                  {/* <ReporterImg>
-    
-                  </ReporterImg> */}
-                  <ReporterName>
-                    By {reporterName}
-                  </ReporterName>
-    
-                </ReporterBox>
-              <PublishedDate>{formatDate(publishedAt)}</PublishedDate>
-            </InfoBox>
-            <ArticleBody isOldArticle={false} dangerouslySetInnerHTML={{ __html: content }}>
-            </ArticleBody>
-        </Container>
-         </BigContainer>
+      <PreviewPanel>
+        <PreviewLabel>Preview</PreviewLabel>
+        <PreviewSection>{getSectionName(sectionId)}</PreviewSection>
+        <PreviewTitle>{title || "Article Title"}</PreviewTitle>
+        <PreviewSubtitle>{subtitle}</PreviewSubtitle>
+        <PreviewMeta>
+          <span>By {reporterName}</span>
+          <span style={{ color: '#9b9b9b', fontSize: 12 }}>{formatDate(publishedAt)}</span>
+        </PreviewMeta>
+        <PreviewBody dangerouslySetInnerHTML={{ __html: content }} />
+      </PreviewPanel>
+    </EditorLayout>
   );
 };
 

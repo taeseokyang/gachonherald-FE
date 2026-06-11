@@ -1,298 +1,166 @@
 import axios from 'axios';
 import styled from 'styled-components';
-import { useDropzone } from 'react-dropzone';
 import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
-import { useParams, useNavigate } from "react-router-dom";
-
-const Container = styled.div`
-  padding: 20px;
-  max-width: 800px;
+const Page = styled.div`
+  max-width: 740px;
   margin: 0 auto;
+  padding: 32px 20px 80px;
 `;
 
-const ImagePreviewBox = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
-  padding-bottom: 10px;
-`;
-
-const ImagePreviewContainer = styled.div`
-  position: relative;
-  display: inline-block;
-`;
-
-const ImagePreview = styled.img`
-  height: 100px;
-  object-fit: cover;
-  cursor: pointer;
-  border: 1px solid #eeeeee;
-  border-radius: 10px;
-`;
-
-const DeleteButton = styled.button`
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  background: #828282;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  font-weight: 500;
-  font-size: 12px;
-  cursor: pointer;
-  display: ${props => (props.visible ? 'block' : 'none')};
-  &:hover {
-    background: #eeeeee;
-  }
-`;
-
-const MainImageButton = styled.button`
-  position: absolute;
-  bottom: 5px;
-  left: 5px;
-  background: #000000;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px;
-  font-size: 12px;
-  cursor: pointer;
-`;
-
-const MainImageLabel = styled.div`
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
-  font-size: 12px;
-  padding: 2px 5px;
-  border-radius: 5px;
-`;
-
-const Button = styled.button`
-  padding: 10px 20px;
-  border-radius: 7px;
-  font-weight: 700;
-  font-size: 14px;
-  background-color: #3e5977;
-  color: white;
-  border: none;
-  float: right;
-  margin-left: 5px;
-  cursor: pointer;
-`;
-
-const DropzoneArea = styled.div`
-  width: 100%;
-  box-sizing: border-box;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  margin-bottom: 20px;
-  color: #828282;
-`;
-
-const InputField = styled.input`
-  width: 100%;
-  font-size: 16px;
-  box-sizing: border-box;
-  padding: 10px 0px;
-  margin-top: 10px;
-  font-weight: 500;
-  outline: none;
-  border: none;
-  border-bottom: 3px solid #eeeeee;
-
-  &::placeholder {
-    color: #bcbcbc; 
-    font-weight: 700; 
-  }
-
-  /* 비활성화 스타일 */
-  ${({ disabled }) => disabled && `
-    background-color: #ffffff;
-    // cursor: not-allowed;
-  `}
-`;
-
-const TextArea = styled.textarea`
-  margin-top: 30px;
-  width: 100%;
-  outline: none;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 150%;
-  box-sizing: border-box;
-  border: none;
-  resize: none;
-  min-height: 600px;
-
-  &::placeholder {
-    color: #bcbcbc; 
-    font-weight: 700; 
-  }
-
-  /* 비활성화 스타일 */
-  ${({ disabled }) => disabled && `
-    background-color: #ffffff;
-    // cursor: not-allowed;
-  `}
-`;
-
-const Dropdown = styled.select`
-  margin-top: 20px;
-  padding: 5px;
-  font-size: 16px;
-  color: #3E5977;
-  font-weight: 700;
-  outline: none;
-  border: 3px solid #eeeeee;
-  border-radius: 5px;
-  width: 100%;
-`;
-
-const StatusLabel = styled.div`
-  display: inline-block;
-  background: #3E5977;
-  border-radius: 5px;
-  color: #ffffff;
-  font-size: 14px;
-  padding: 5px 7px;
-  margin-bottom: 20px;
-  font-weight: 700;
-`;
-
-const RadioButtonGroup = styled.div`
-  display: flex;
-  gap: 10px;
-  margin-bottom: 20px;
-`;
-
-const RadioButton = styled.label`
+/* ─── Review bar ─── */
+const ReviewBar = styled.div`
   display: flex;
   align-items: center;
-  cursor: pointer;
-  color: #3E5977;
-  font-size: 14px;
+  gap: 12px;
+  padding: 14px 20px;
+  background: #f8f9fb;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+`;
+
+const ReviewLabel = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #9b9b9b;
+`;
+
+const STATUS_COLOR = {
+  PENDING:  { bg: '#e8f0f8', text: '#2e5a8a' },
+  APPROVED: { bg: '#eaf6ec', text: '#2a7a3a' },
+  EDITING:  { bg: '#fff8e6', text: '#b07d00' },
+  REJECTED: { bg: '#fdecea', text: '#c0392b' },
+};
+
+const StatusBadge = styled.div`
+  padding: 4px 11px;
+  border-radius: 4px;
+  font-size: 12px;
   font-weight: 700;
+  background: ${({ $s }) => (STATUS_COLOR[$s] || STATUS_COLOR.EDITING).bg};
+  color: ${({ $s }) => (STATUS_COLOR[$s] || STATUS_COLOR.EDITING).text};
+`;
 
-  input[type="radio"] {
-    appearance: none;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: #fff;
-    border: 2px solid #3E5977;
-    margin-right: 10px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-  }
+const Spacer = styled.div`flex: 1;`;
 
-  input[type="radio"]:checked {
-    background-color: #3E5977;
-    border: 2px solid #3E5977;
-  }
+const ApproveBtn = styled.button`
+  padding: 9px 22px;
+  background: #3e5977;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #2e4666; }
+`;
 
-  input[type="radio"]:hover {
-    background-color: #f0f0f0;
-    border-color: #3E5977;
-  }
+const DenyBtn = styled.button`
+  padding: 9px 18px;
+  background: #ffffff;
+  color: #d0453a;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #e8c4c4;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  &:hover { background: #fdecea; }
+`;
 
-  input[type="radio"]:checked {
-    background-color: #3E5977;
-    border: 2px solid #fff;
-  }
+/* ─── Article view ─── */
+const SectionLabel = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #3e5977;
+  margin-bottom: 10px;
+`;
 
-  span {
-    transition: all 0.3s ease;
-  }
+const ArticleTitle = styled.h1`
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.25;
+  margin: 0 0 8px;
+`;
 
-  input[type="radio"]:checked + span {
-    color: #3E5977;
-  }
+const ArticleSubtitle = styled.div`
+  font-size: 18px;
+  font-weight: 400;
+  color: #6b6b6b;
+  line-height: 1.4;
+  margin-bottom: 20px;
+`;
+
+const MetaRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 0;
+  border-top: 1px solid #e8e8e8;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 32px;
+`;
+
+const ReporterName = styled.div`
+  font-size: 13px;
+  font-weight: 500;
+  color: #555555;
+`;
+
+const DateText = styled.div`
+  font-size: 12px;
+  color: #9b9b9b;
 `;
 
 const ArticleBody = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
   font-size: 16px;
-  /* font-weight: 500; */
-  line-height: 150%;
-  color: #000000;
-  white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
+  line-height: 1.8;
+  color: #1a1a1a;
+  white-space: pre-line;
+
   & img {
-  display: block;
-  margin: 20px auto 5px auto;
-  /* border-radius: 10px; */
-  width: 100%;
-  max-height: 500px;
-  object-fit: contain;
-}
-  & strong{
-    /* margin: 10px 0px; */
+    display: block;
+    margin: 24px auto 8px;
+    width: 100%;
+    max-height: 600px;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  & h1, & h2, & h3 {
+    margin: 28px 0 8px;
+    line-height: 1.3;
   }
 `;
 
-
-const ArticleTitle = styled.div`
-  margin-top: 10px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 100%;
-`;
-const ArticleSubTitle = styled.div`
-  margin-top: 5px;
-  color: #828282;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 100%;
-`;
-const InfoBox = styled.div`
-  margin: 30px 0px;
+/* ─── Bottom action bar ─── */
+const BottomBar = styled.div`
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #eeeeee;
-
-`;
-const ReporterBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-const ReporterImg = styled.div`
-  width: 30px;
-  height: 30px;
-  border: 1px solid #eeeeee;
-  border-radius: 100px;
-
-`;
-const ReporterName = styled.div`
-  font-size: 14px;
-  /* font-weight: 500; */
-  /* margin-left: 10px; */
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #e8e8e8;
 `;
 
-const PublishedDate = styled.div`
-  font-size: 14px;
-  font-weight: 300;
-  color: #bcbcbc;
-`;
-
-const SectionTitle = styled.div`
-  font-size: 20px;
-  font-weight: 300;
-  color: #3E5977;
+const BackLink = styled(Link)`
+  padding: 9px 18px;
+  font-size: 13px;
+  color: #9b9b9b;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  transition: color 0.15s, border-color 0.15s;
+  &:hover { color: #1a1a1a; border-color: #c0c0c0; }
 `;
 
 const ArticleCheckContent = () => {
@@ -300,148 +168,100 @@ const ArticleCheckContent = () => {
   const [subtitle, setSubtitle] = useState('');
   const [content, setContent] = useState('');
   const [reporterName, setReporterName] = useState('');
-  const [sectionId, setSectionId] = useState(2);
-  const [mainImage, setMainImage] = useState('');
-  const [images, setImages] = useState([]);
+  const [sectionId, setSectionId] = useState('');
   const [sections, setSections] = useState([]);
-  const [cookie, setCookie, removeCookie] = useCookies();
+  const [articleStatus, setArticleStatus] = useState('');
+  const [publishedAt, setPublishedAt] = useState('');
+  const [cookie] = useCookies();
   const navigate = useNavigate();
   const { articleId } = useParams();
-  const [articleStatus, setArticleStatus] = useState(''); // 기사 상태
-  const [status, setStatus] = useState('');
+
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/reporter/" + articleId, {
-          headers: {
-            Authorization: `Bearer ${cookie.accessToken}`,
-          },
-        });
-        setTitle(response.data.data.title);
-        setSubtitle(response.data.data.subtitle);
-        setReporterName(response.data.data.reporterName);
-        setSectionId(response.data.data.sectionId);
-        setContent(response.data.data.content);
-        if (response.data.data.mainImage != '') {
-          setImages([response.data.data.mainImage]);
-        }
-        setMainImage(response.data.data.mainImage);
-        setArticleStatus(response.data.data.status);
-        setStatus(response.data.data.status);
-        console.log(response.data.data);
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
-    };
-    fetchData();
+    axios.get(process.env.REACT_APP_BACK_URL + "/articles/reporter/" + articleId, {
+      headers: { Authorization: `Bearer ${cookie.accessToken}` },
+    })
+      .then(r => {
+        const d = r.data.data;
+        setTitle(d.title);
+        setSubtitle(d.subtitle);
+        setReporterName(d.reporterName);
+        setSectionId(d.sectionId);
+        setContent(d.content);
+        setPublishedAt(d.publishedAt);
+        setArticleStatus(d.status);
+      })
+      .catch(console.error);
   }, [articleId]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/sections/list");
-        setSections(response.data.data.activeSections);
-      } catch (error) {
-        console.error("오류 발생:", error);
-      }
-    };
-    fetchData();
+    axios.get(process.env.REACT_APP_BACK_URL + "/sections/list")
+      .then(r => setSections(r.data.data.activeSections))
+      .catch(console.error);
   }, []);
 
-  // 이미지 업로드 핸들러
-  const handleImageUpload = (file) => {
-    const formData = new FormData();
-    formData.append('pic', file);
+  const getSectionName = (id) => (sections.find(s => s.sectionId == id) || {}).name || '';
 
-    // 이미지 업로드 API 호출
-    axios
-      .post(process.env.REACT_APP_BACK_URL + '/image', formData)
-      .then((response) => {
-        setImages((prev) => [...prev, response.data.data.imageName]);
-        handleImageDrag(response.data.data.imageName);
-      })
-      .catch((error) => console.error('이미지 업로드 실패', error));
-  };
-
-
-
-  const handleDeny = async () => {
-    try {
-      await axios.patch(`${process.env.REACT_APP_BACK_URL}/articles/deny/${articleId}`, {}, {
-        headers: {
-          Authorization: `Bearer ${cookie.accessToken}`,
-        },
-      });
-      navigate("/publish");
-    } catch (error) {
-    }
+  const formatDate = (iso) => {
+    if (!iso) return '';
+    const d = new Date(iso);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   };
 
   const handleApprove = async () => {
     try {
       await axios.patch(`${process.env.REACT_APP_BACK_URL}/articles/approve/${articleId}`, {}, {
-        headers: {
-          Authorization: `Bearer ${cookie.accessToken}`,
-        },
+        headers: { Authorization: `Bearer ${cookie.accessToken}` },
       });
       navigate("/publish");
-    } catch (error) {
-    }
+    } catch (e) { console.error(e); }
   };
 
-  function getTodayDate() {
-  const today = new Date();
-
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작하므로 +1
-  const day = String(today.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-}
-
-function getSectionNameById(sectionId, sectionList) {
-  const section = sectionList.find(item => item.sectionId == sectionId);
-  return section ? section.name : null;
-}
-
+  const handleDeny = async () => {
+    if (!window.confirm("이 기사를 거절하시겠습니까?")) return;
+    try {
+      await axios.patch(`${process.env.REACT_APP_BACK_URL}/articles/deny/${articleId}`, {}, {
+        headers: { Authorization: `Bearer ${cookie.accessToken}` },
+      });
+      navigate("/publish");
+    } catch (e) { console.error(e); }
+  };
 
   return (
-    <Container>
-      <StatusLabel>{articleStatus}</StatusLabel>
+    <Page>
+      <ReviewBar>
+        <ReviewLabel>기사 검토</ReviewLabel>
+        <StatusBadge $s={articleStatus}>{articleStatus}</StatusBadge>
+        <Spacer />
+        {articleStatus === 'PENDING' && (
+          <>
+            <DenyBtn onClick={handleDeny}>거절</DenyBtn>
+            <ApproveBtn onClick={handleApprove}>승인</ApproveBtn>
+          </>
+        )}
+      </ReviewBar>
 
-      <SectionTitle>{getSectionNameById(sectionId,sections)}</SectionTitle>
+      <SectionLabel>{getSectionName(sectionId)}</SectionLabel>
+      <ArticleTitle>{title}</ArticleTitle>
+      {subtitle && <ArticleSubtitle>{subtitle}</ArticleSubtitle>}
 
-            <ArticleTitle>{title}</ArticleTitle>
-            <ArticleSubTitle>{subtitle}</ArticleSubTitle>
-            {/* <Separator></Separator> */}
-            <InfoBox>
-                <ReporterBox>
-    
-    
-    
-                  {/* <ReporterImg>
-    
-                  </ReporterImg> */}
-                  <ReporterName>
-                    By {reporterName}
-                  </ReporterName>
-    
-                </ReporterBox>
-              <PublishedDate>{getTodayDate()}</PublishedDate>
-            </InfoBox>
+      <MetaRow>
+        <ReporterName>By {reporterName}</ReporterName>
+        <DateText>{formatDate(publishedAt)}</DateText>
+      </MetaRow>
 
-      <ArticleBody isOldArticle={false} dangerouslySetInnerHTML={{ __html: content }}>
-            </ArticleBody>
+      <ArticleBody dangerouslySetInnerHTML={{ __html: content }} />
 
-      {articleStatus == 'PENDING' ?
-        <>
-          <Button onClick={handleApprove}>승인</Button>
-          <Button style={{ backgroundColor: "#bcbcbc" }}onClick={handleDeny}>거절</Button>
-        </>
-        : null}
-    </Container>
-
+      <BottomBar>
+        <BackLink to="/publish">목록으로</BackLink>
+        {articleStatus === 'PENDING' && (
+          <>
+            <DenyBtn onClick={handleDeny}>거절</DenyBtn>
+            <ApproveBtn onClick={handleApprove}>승인</ApproveBtn>
+          </>
+        )}
+      </BottomBar>
+    </Page>
   );
 };
 

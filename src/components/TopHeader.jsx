@@ -2,92 +2,112 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useCookies } from "react-cookie";
 
-const Container = styled.div``;
-
 const Dummy = styled.div`
-  height: 30px;
+  height: 34px;
 `;
 
 const Layout = styled.div`
   position: absolute;
   left: 0;
   width: 100%;
-  height: 30px;
-  border-bottom: 1px solid #e8e8e8;
+  height: 34px;
+  background: #ffffff;
+  border-bottom: 1px solid #eeeeee;
 `;
 
 const Content = styled.div`
-  margin: 0px auto;
-  padding: 0px 20px;
+  margin: 0 auto;
+  padding: 0 20px;
   max-width: 1100px;
-  height: 30px;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const Left = styled.div`
+  font-size: 11px;
+  color: #b8b8b8;
+  letter-spacing: 0.04em;
+`;
+
+const Right = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 14px;
+`;
+
+const RoleBadge = styled(Link)`
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  background: #3e5977;
+  padding: 2px 8px;
+  border-radius: 3px;
+  transition: background 0.15s;
+  &:hover { background: #2e4666; }
+`;
+
+const NameLink = styled(Link)`
   font-size: 12px;
   font-weight: 500;
+  color: #555555;
+  transition: color 0.15s;
+  &:hover { color: #1a1a1a; }
 `;
 
-const Item = styled.div`
-  color: #9b9b9b;
-  span {
-    a {
-      color: #9b9b9b;
-      &:hover {
-        color: #1a1a1a;
-      }
-    }
-  }
+const Divider = styled.div`
+  width: 1px;
+  height: 12px;
+  background: #e0e0e0;
 `;
 
-const ItemBtn = styled.span`
-  margin-left: 10px;
+const TextBtn = styled.span`
+  font-size: 12px;
   color: #9b9b9b;
   cursor: pointer;
-  &:hover {
-    color: #1a1a1a;
-  }
-  a {
-    color: #9b9b9b;
-    &:hover {
-      color: #1a1a1a;
-    }
-  }
+  transition: color 0.15s;
+  &:hover { color: #1a1a1a; }
 `;
 
-const TopHeader = () => {
-  const [cookie, setCookie, removeCookie] = useCookies(); 
-  const navigate = useNavigate(); 
-  const handleLogout = () => {
-    removeCookie('accessToken', { path: "/" }); 
-    removeCookie('userId', { path: "/" }); 
-    removeCookie('id', { path: "/" }); 
-    removeCookie('nickname', { path: "/" }); 
-    removeCookie('roles', { path: "/" }); 
 
+const TopHeader = () => {
+  const [cookie, , removeCookie] = useCookies();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    ['accessToken', 'userId', 'id', 'nickname', 'roles'].forEach(k => removeCookie(k, { path: '/' }));
     navigate("/");
   };
 
-  return (  
-    <Container>
+  const isReporter = cookie.roles === 'REPORTER' || cookie.roles === 'ADMIN';
+
+  return (
+    <div>
       <Layout>
         <Content>
-          <Item></Item>
-          
-          <Item>
-          {/* <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ? <Link to={"/reporter/manage"}>{cookie.nickname} </Link> : cookie.nickname : null}</span> */}
-            <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ?<><Link to={"/workspace"}>{"["+cookie.roles+"] "} </Link><Link to={"/reporter/manage"}>{cookie.nickname} </Link></>  : cookie.nickname : null}</span>
-            <ItemBtn>
-              {cookie.nickname != null ? 
-                <span onClick={handleLogout}>Logout</span> : 
-               null
-              }
-            </ItemBtn>
-          </Item>
+          <Left>The Gachon Herald</Left>
+
+          <Right>
+            {cookie.nickname ? (
+              <>
+                {isReporter && (
+                  <RoleBadge to="/workspace">{cookie.roles}</RoleBadge>
+                )}
+                <NameLink to={isReporter ? "/reporter/manage" : "#"}>
+                  {cookie.nickname}
+                </NameLink>
+                <Divider />
+                <TextBtn onClick={handleLogout}>Logout</TextBtn>
+              </>
+            ) : null}
+          </Right>
         </Content>
       </Layout>
-      <Dummy></Dummy>
-    </Container>
+      <Dummy />
+    </div>
   );
 };
 
