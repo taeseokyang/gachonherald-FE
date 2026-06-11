@@ -1,123 +1,60 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Container, Content, Block1, Block2, BlockBox, ImageBox, Image, Section, Title1, SubTitle1, Reporter1, Copy, Date, BackgroundImage, Overlay  } from "./StyledComponents";
-import HorizontalLine from "./homeContents/HorizontalLine2";
-import { useState, useEffect } from 'react';
+import { Container, Content } from "./StyledComponents";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-const ReporterBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 50px;
-`;
-const ReporterImg = styled.div`
-  width: 70px;
-  height: 70px;
-  border: 2px solid #eeeeee;
-  border-radius: 100px;
-
-`;
-const ReporterTextBox = styled.div`
+const PageTitle = styled.div`
   font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+  padding-bottom: 14px;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #3e5977;
+`;
+
+const Box = styled.div`
+  margin-bottom: 48px;
+`;
+
+const ReporterItem = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+`;
+
+const Position = styled.div`
+  font-size: 11px;
   font-weight: 600;
-  margin-left: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #3e5977;
+  min-width: 100px;
+  flex-shrink: 0;
 `;
 
 const ReporterName = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555555;
+  transition: color 0.15s;
+
+  &:hover {
+    color: #3e5977;
+  }
 `;
-const ReporterIntro= styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  color: #bcbcbc;
-`;
-
-const Box= styled.div`
-
-  margin-bottom: 50px;
-  
-`;
-
-const Info = styled.div`
-  font-size: 16px;
-  font-weight: 400;
-  padding-bottom: 30px;
-`;
-
-const InfoName = styled.div`
-font-weight: 700;
-margin-right: 10px;
-margin-bottom: 5px;
-`;
-
-
-
-const Title= styled.div`
-    font-size: 23px;
-  font-weight: 700;
-  color: #3E5977;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #eeeeee;
-  margin-bottom: 30px;
-`;
-
-const Pages = styled.div`
-  margin-top: 50px;
-  width: 100%;
-  /* height: 50px; */
-  /* background: #eeeeee; */
-  display: flex;
-  justify-content: center; /* 가운데 정렬 */
-  align-items: center;
-  gap:15px;
-`;
-
-const PageNumber = styled.div`
-  font-weight: ${({ isOn }) => (isOn ? '700' : '500')};
-  
-  color: ${({ isOn }) => (isOn ? '#3E5977' : '#bcbcbc')};
-  display: flex;
-  justify-content: center; /* 숫자 중앙 정렬 */
-  align-items: center; 
-  cursor: pointer;
-`;
-
-const TextBox = styled.div`
-  width: 100%;
-  background: #f5f5f5;
-  border-radius: 17px;
-`;
-
-const Text = styled.div`
-  font-size: 16px;
-  font-weight: 500;
-  color: #828282;
-  /* padding: 0px 150px; */
-  max-width: 800px;
-  margin: 0px auto;
-  padding: 70px 20px;
-  text-align: center;
-  line-height: 200%;
-  /* background: #eeeeee; */
-`;
-
 
 const AboutUsContent = () => {
   const [reporters, setReporters] = useState([]);
 
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/account/reporters", {
-        });
+        const response = await axios.get(
+          process.env.REACT_APP_BACK_URL + "/account/reporters"
+        );
         setReporters(response.data.data.reporters);
-        // console.log(response.data.data);
-
       } catch (error) {
         console.error("오류 발생:", error);
       }
@@ -125,38 +62,20 @@ const AboutUsContent = () => {
     fetchData();
   }, []);
 
-  // 페이지 번호 클릭 핸들러
-  const handlePageClick = (number) => {
-    setPage(number - 1); // 페이지 번호는 1부터 시작하므로 0으로 변환
-  };
-
   return (
     <Container>
       <Content>
-        {/* <Box>
-            <Title>The Gachon Herald</Title>
-            <TextBox>
-              <Text>
-              The Gachon Herald is an English newspaper based at Gachon University.
-              </Text>
-            
-            </TextBox>
-        </Box> */}
         <Box>
-            <Title>Our Reporters</Title>
-            {reporters.map((reporter, index) => (
-            <Info><InfoName>{reporter.position}</InfoName>
-             <Link to={"/reporter/" + reporter.reporterId} key={index}>
-             {reporter.nickname}
-             </Link>
-            </Info>
-              
-               
-
+          <PageTitle>Our Reporters</PageTitle>
+          {reporters.map((reporter, index) => (
+            <ReporterItem key={index}>
+              <Position>{reporter.position}</Position>
+              <Link to={"/reporter/" + reporter.reporterId}>
+                <ReporterName>{reporter.nickname}</ReporterName>
+              </Link>
+            </ReporterItem>
           ))}
         </Box>
-
-        
       </Content>
     </Container>
   );

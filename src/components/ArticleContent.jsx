@@ -50,18 +50,15 @@ const ReporterBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
-const ReporterImg = styled.div`
-  width: 30px;
-  height: 30px;
-  border: 1px solid #eeeeee;
-  border-radius: 100px;
-
+  transition: opacity 0.15s;
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 const ReporterName = styled.div`
   font-size: 13px;
   font-weight: 500;
-  color: #1a1a1a;
+  color: #555555;
 `;
 
 const PublishedDate = styled.div`

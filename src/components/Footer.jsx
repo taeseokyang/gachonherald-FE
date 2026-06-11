@@ -11,7 +11,7 @@ const Layout = styled.div`
     position: absolute;
     left: 0;
     width: 100%;
-    border-top: 1px solid #e8e8e8;
+    border-top: 2px solid #3e5977;
     background: #ffffff;
 `;
 const Content = styled.div`

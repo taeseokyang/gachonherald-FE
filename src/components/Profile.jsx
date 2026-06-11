@@ -1,95 +1,161 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { Container, Content, Block1, Block2, BlockBox, ImageBox, Image, Section, Title1, SubTitle1, Reporter1, Copy, Date, BackgroundImage, Overlay  } from "./StyledComponents";
-import HorizontalLine from "./homeContents/HorizontalLine2";
-import { useState, useEffect } from 'react';
+import { Container, Content } from "./StyledComponents";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
-const ReporterBox = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  margin-top: 10px;
-  margin-bottom: 50px;
-`;
-const ReporterImg = styled.div`
-  width: 70px;
-  height: 70px;
-  border: 2px solid #eeeeee;
-  border-radius: 100px;
-
-`;
-const ReporterTextBox = styled.div`
-  font-size: 20px;
-  font-weight: 600;
-  /* margin-left: 10px; */
+/* ── Reporter header ── */
+const ReporterHeader = styled.div`
+  padding: 28px 0 28px;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 32px;
 `;
 
 const ReporterName = styled.div`
-  font-size: 20px;
+  font-size: 26px;
   font-weight: 700;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+`;
+
+const ReporterIntro = styled.div`
+  font-size: 14px;
+  color: #6b6b6b;
+  line-height: 1.6;
+`;
+
+/* ── Section block ── */
+const Block = styled.div`
+  margin-bottom: 44px;
+`;
+
+const PageTitle = styled.div`
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a1a;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #3e5977;
+`;
+
+/* ── About info ── */
+const InfoRow = styled.div`
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f5f5f5;
+`;
+
+const InfoLabel = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #3e5977;
+  min-width: 80px;
+  flex-shrink: 0;
+`;
+
+const InfoValue = styled.div`
+  font-size: 14px;
+  color: #444444;
+`;
+
+/* ── Article list ── */
+const ArticleItem = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: start;
+  padding: 18px 0;
+  border-bottom: 1px solid #f0f0f0;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const TextBlock = styled.div``;
+
+const ArticleDate = styled.div`
+  font-size: 12px;
+  color: #9b9b9b;
   margin-bottom: 5px;
 `;
-const ReporterIntro= styled.div`
+
+const ArticleTitle = styled.div`
   font-size: 16px;
-  font-weight: 500;
-  color: #bcbcbc;
+  font-weight: 600;
+  line-height: 1.35;
+  color: #1a1a1a;
+  margin-bottom: 5px;
+  transition: color 0.15s;
+  &:hover {
+    color: #3e5977;
+  }
 `;
 
-const Box= styled.div`
-
-  margin-bottom: 50px;
-  
+const ArticleSubtitle = styled.div`
+  font-size: 13px;
+  color: #6b6b6b;
+  line-height: 1.4;
 `;
 
-const Info = styled.div`
-    display: flex;
-  flex-direction: row;
-  align-items: center;
-  font-size: 16px;
-  font-weight: 500;
-  padding-bottom: 10px;
+const ImageBox = styled.div`
+  width: 130px;
+  height: 90px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: #f0f0f0;
+  flex-shrink: 0;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+
+  &:hover img {
+    transform: scale(1.04);
+  }
+
+  @media (max-width: 600px) {
+    width: 100%;
+    height: 180px;
+  }
 `;
 
-const InfoName = styled.div`
-font-weight: 700;
-margin-right: 10px;
-`;
-
-
-
-const Title= styled.div`
-    font-size: 23px;
-  font-weight: 700;
-  color: #3E5977;
-  padding-bottom: 10px;
-  border-bottom: 2px solid #eeeeee;
-  margin-bottom: 30px;
-`;
-
+/* ── Pagination ── */
 const Pages = styled.div`
-  margin-top: 50px;
-  width: 100%;
-  /* height: 50px; */
-  /* background: #eeeeee; */
+  margin-top: 40px;
   display: flex;
-  justify-content: center; /* 가운데 정렬 */
+  justify-content: center;
   align-items: center;
-  gap:15px;
+  gap: 6px;
 `;
 
 const PageNumber = styled.div`
-  font-weight: ${({ isOn }) => (isOn ? '700' : '500')};
-  
-  color: ${({ isOn }) => (isOn ? '#3E5977' : '#bcbcbc')};
+  width: 32px;
+  height: 32px;
   display: flex;
-  justify-content: center; /* 숫자 중앙 정렬 */
-  align-items: center; 
+  justify-content: center;
+  align-items: center;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: ${({ $on }) => ($on ? 700 : 400)};
+  color: ${({ $on }) => ($on ? "#ffffff" : "#555555")};
+  background: ${({ $on }) => ($on ? "#3e5977" : "transparent")};
   cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: ${({ $on }) => ($on ? "#3e5977" : "#f0f0f0")};
+    color: ${({ $on }) => ($on ? "#ffffff" : "#3e5977")};
+  }
 `;
-
-
-
 
 const Profile = () => {
   const { reporterId } = useParams();
@@ -99,17 +165,24 @@ const Profile = () => {
   const [articles, setArticles] = useState([]);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const fetchData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/list/reporter/"+reporterId+"?pageNumber="+page, {
-        });
-        setArticles(response.data.data.articles);
-        setPageNumbers(Array.from({ length: response.data.data.pageCount }, (_, index) => index + 1));
-
-        const response2 = await axios.get(process.env.REACT_APP_BACK_URL + "/account/"+reporterId, {
-        });
-        setReporter(response2.data.data);
-        console.log(response2.data.data);
+        const [res1, res2] = await Promise.all([
+          axios.get(
+            process.env.REACT_APP_BACK_URL +
+              "/articles/list/reporter/" +
+              reporterId +
+              "?pageNumber=" +
+              page
+          ),
+          axios.get(process.env.REACT_APP_BACK_URL + "/account/" + reporterId),
+        ]);
+        setArticles(res1.data.data.articles);
+        setPageNumbers(
+          Array.from({ length: res1.data.data.pageCount }, (_, i) => i + 1)
+        );
+        setReporter(res2.data.data);
       } catch (error) {
         console.error("오류 발생:", error);
       }
@@ -117,81 +190,82 @@ const Profile = () => {
     fetchData();
   }, [reporterId, page]);
 
-  // 페이지 번호 클릭 핸들러
-  const handlePageClick = (number) => {
-    setPage(number - 1); // 페이지 번호는 1부터 시작하므로 0으로 변환
-  };
-
   return (
     <Container>
       <Content>
-        <ReporterBox>
-          {/* <ReporterImg>
-          </ReporterImg> */}
-          <ReporterTextBox>
-            <ReporterName>
-            {reporter.nickname}
-              </ReporterName>
-              <ReporterIntro>
-                {reporter.intro}
-              </ReporterIntro>
-          </ReporterTextBox>
-        </ReporterBox>
-        <Box>
-            <Title>About</Title>
-            {reporter.position != null ? <Info><InfoName>Position</InfoName>{reporter.position}</Info> : null }
-            {reporter.major != null ? <Info><InfoName>Major</InfoName>{reporter.major}</Info> : null }
-            {reporter.email != null ? <Info><InfoName>Email</InfoName>{reporter.email}</Info> : null }
-        </Box>
+        <ReporterHeader>
+          <ReporterName>{reporter.nickname}</ReporterName>
+          {reporter.intro && <ReporterIntro>{reporter.intro}</ReporterIntro>}
+        </ReporterHeader>
 
-        <Box>
-            <Title>Latest</Title>
-            
-            {articles.map((article) => (
-          <div key={article.articleId}>
-          <BlockBox>
-            <Block2>
-              <Date>{article.publishedAt.slice(0,10)}</Date>
-              <Link to={"/article/" + article.articleId}>
-                <Title1>{article.title}</Title1>
-              </Link>
-              <SubTitle1>{article.subtitle}</SubTitle1>
-              <Link to={"/reporter/" + article.reporterId}>
-                <Reporter1>By {article.reporterName}</Reporter1>
-              </Link>
-            </Block2>
-              {
-                article.mainImage !== "" ?
-                <Block1>
+        {(reporter.position || reporter.major || reporter.email) && (
+          <Block>
+            <PageTitle>About</PageTitle>
+            {reporter.position && (
+              <InfoRow>
+                <InfoLabel>Position</InfoLabel>
+                <InfoValue>{reporter.position}</InfoValue>
+              </InfoRow>
+            )}
+            {reporter.major && (
+              <InfoRow>
+                <InfoLabel>Major</InfoLabel>
+                <InfoValue>{reporter.major}</InfoValue>
+              </InfoRow>
+            )}
+            {reporter.email && (
+              <InfoRow>
+                <InfoLabel>Email</InfoLabel>
+                <InfoValue>{reporter.email}</InfoValue>
+              </InfoRow>
+            )}
+          </Block>
+        )}
+
+        <Block>
+          <PageTitle>Latest Articles</PageTitle>
+
+          {articles.map((article) => (
+            <ArticleItem key={article.articleId}>
+              <TextBlock>
+                <ArticleDate>{article.publishedAt.slice(0, 10)}</ArticleDate>
                 <Link to={"/article/" + article.articleId}>
-                <ImageBox>
-                  <BackgroundImage src={process.env.REACT_APP_BACK_URL + "/image?path=" + article.mainImage} />
-                  <Overlay />
-                  <Image src={process.env.REACT_APP_BACK_URL + "/image?path=" + article.mainImage}></Image>
-                </ImageBox>
+                  <ArticleTitle>{article.title}</ArticleTitle>
                 </Link>
-                {/* <Copy>Provided by NYT</Copy> */}
-                </Block1>
-                : 
-                null
-              }
-          </BlockBox>
-          <HorizontalLine></HorizontalLine>
-          </div>
-        ))}
+                <ArticleSubtitle>{article.subtitle}</ArticleSubtitle>
+              </TextBlock>
 
-        <Pages>
-          {pageNumbers.map((number) => (
-            <PageNumber 
-              key={number} 
-              isOn={page + 1 === number} 
-              onClick={() => handlePageClick(number)} // 페이지 번호 클릭 핸들러
-            >
-              {number}
-            </PageNumber>
+              {article.mainImage && (
+                <Link to={"/article/" + article.articleId}>
+                  <ImageBox>
+                    <img
+                      src={
+                        process.env.REACT_APP_BACK_URL +
+                        "/image?path=" +
+                        article.mainImage
+                      }
+                      alt={article.title}
+                    />
+                  </ImageBox>
+                </Link>
+              )}
+            </ArticleItem>
           ))}
-        </Pages>
-        </Box>
+
+          {pageNumbers.length > 1 && (
+            <Pages>
+              {pageNumbers.map((number) => (
+                <PageNumber
+                  key={number}
+                  $on={page + 1 === number}
+                  onClick={() => setPage(number - 1)}
+                >
+                  {number}
+                </PageNumber>
+              ))}
+            </Pages>
+          )}
+        </Block>
       </Content>
     </Container>
   );
