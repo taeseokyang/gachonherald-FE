@@ -1,237 +1,265 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
-import { Container, ArticleItem, Block1, Block2, BlockBox } from "../StyledComponents";
-import VerticalLine from "./VerticalLine";
+import { Container } from "../StyledComponents";
 import { Link } from "react-router-dom";
-import axios from "axios";
 
-const Text1 = styled.div`
-  font-size: 18px;
-  font-weight: 600;
-  margin-left: 20px;
-  color: #ffffff;
-  line-height: 1.3;
-  @media screen and (max-width: 600px) {
-    font-size: 14px;
-    margin-left: 10px;
-  }
-`;
-const Text2 = styled.div`
-  font-size: 13px;
-  font-weight: 400;
-  color: rgba(255, 255, 255, 0.8);
-  margin-left: 20px;
-  margin-top: 4px;
-  line-height: 1.4;
-  @media screen and (max-width: 600px) {
-    font-size: 11px;
-    margin-left: 10px;
+const Wrapper = styled.div`
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px 40px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 32px;
+  align-items: start;
+
+  @media (max-width: 700px) {
+    grid-template-columns: 1fr;
   }
 `;
 
-const Section = styled.div`
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.85);
-  margin-left: 20px;
-  margin-bottom: 4px;
-  @media screen and (max-width: 600px) {
-    font-size: 9px;
-    margin-left: 10px;
-  }
-`;
-const Text3 = styled.div`
-  font-size: 14px;
-  font-weight: ${({ isActive }) => (isActive ? 600 : 400)};
-  margin-bottom: 14px;
-  color: ${({ isActive }) => (isActive ? "#1a1a1a" : "#9b9b9b")};
-  line-height: 1.35;
-  transition: color 0.2s;
-  display: flex;
-  align-items: flex-start;
-  cursor: pointer;
-`;
-
-const Point = styled.div`
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background-color: #3e5977;
-  flex-shrink: 0;
-  margin-right: 10px;
-  margin-top: 5px;
-`;
-
-const EditorsPickArticleTitle = styled.div`
-
-`;
+/* ─── Left: article list ─── */
+const LeftPanel = styled.div``;
 
 const EditorsPick = styled.div`
-  color: #3e5977;
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin-bottom: 18px;
+  color: #3e5977;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
-`;
-
-const EditorsPickText = styled.div`
-  display: inline-block;
-  /* flex: 1; */
+  gap: 10px;
 `;
 
 const UnderLine = styled.div`
-  display: inline-block;
   flex: 1;
   height: 1px;
-  margin-left: 10px;
   background: linear-gradient(to right, #3e5977, transparent);
-  align-self: center;
 `;
 
+const ArticleRow = styled(Link)`
+  display: block;
+  padding: 8px 0 8px 14px;
+  border-left: 2px solid ${({ $active }) => ($active ? '#3e5977' : '#eeeeee')};
+  margin-bottom: 1px;
+  transition: border-color 0.25s;
+  cursor: pointer;
 
-const BigImageBox = styled.div`
-  width: 100%;
-  height: 350px;
-  position: relative;
-  border-radius: 10px;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  @media screen and (max-width: 600px) {
-    height: 200px;
+  &:hover {
+    border-left-color: #3e5977;
   }
 `;
 
-const BackgroundImage = styled.img`
+const RowSection = styled.div`
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: ${({ $active }) => ($active ? '#3e5977' : '#cccccc')};
+  margin-bottom: 3px;
+  transition: color 0.25s;
+`;
+
+const RowTitle = styled.div`
+  font-size: 13px;
+  font-weight: 500;
+  color: ${({ $active }) => ($active ? '#1a1a1a' : '#aaaaaa')};
+  line-height: 1.4;
+  transition: color 0.25s;
+`;
+
+/* ─── Right: featured image ─── */
+const ImageBox = styled.div`
+  position: relative;
+  width: 100%;
+  height: 360px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #e0e0e0;
+
+  @media (max-width: 700px) {
+    height: 220px;
+  }
+`;
+
+const BlurBg = styled.img`
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: blur(10px);
-  z-index: 1;
-  opacity: ${({ fade }) => (fade ? 0 : 1)};
-  transition: opacity 0.5s;
+  filter: blur(18px);
+  transform: scale(1.1);
+  opacity: ${({ $fade }) => ($fade ? 0 : 1)};
+  transition: opacity 0.22s ease;
 `;
 
-const Overlay = styled.div`
+const BgOverlay = styled.div`
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 1;
+`;
+
+const CoverImg = styled.img`
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(255, 255, 255, 0.5);
-  z-index: 2;
-`;
-
-const BigImage = styled.img`
-  width: 100%;
-  max-height: 100%;
   object-fit: contain;
-  z-index: 3;
-  position: relative;
-  opacity: ${({ fade }) => (fade ? 0 : 1)};
-  transition: opacity 0.5s;
+  z-index: 2;
+  opacity: ${({ $fade }) => ($fade ? 0 : 1)};
+  transition: opacity 0.22s ease;
 `;
 
-const BigImageTextBox = styled.div`
+const Gradient = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65) 0%,
+    rgba(0, 0, 0, 0.1) 50%,
+    transparent 100%
+  );
+  z-index: 3;
+`;
+
+const TextBox = styled.div`
   position: absolute;
   bottom: 0;
-  width: 100%;
-  padding: 30px 0px;
-  background: linear-gradient(to top, #595959, transparent);
-  z-index: 3;
-  opacity: ${({ fade }) => (fade ? 0 : 1)};
-  transition: opacity 0.5s;
-  @media screen and (max-width: 600px) {
-    padding: 10px 0px;
+  left: 0;
+  right: 0;
+  padding: 24px 22px;
+  z-index: 4;
+  opacity: ${({ $fade }) => ($fade ? 0 : 1)};
+  transition: opacity 0.22s ease;
+`;
+
+const SectionLabel = styled.div`
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 6px;
+`;
+
+const FeaturedTitle = styled.div`
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.3;
+  margin-bottom: 5px;
+
+  @media (max-width: 600px) {
+    font-size: 15px;
   }
 `;
 
+const FeaturedSubtitle = styled.div`
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.4;
+
+  @media (max-width: 600px) {
+    font-size: 11px;
+  }
+`;
+
+/* ─────────────────────────────── */
+
 const TopBlock = ({ articles }) => {
-  // const [articles, setArticles] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [fade, setFade] = useState(false);
+  const timerRef = useRef(null);
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/list/section/5?pageNumber=0");
-  //       setArticles(response.data.data.articles.slice(5, 10));
-  //       console.log(response.data.data.articles);
-  //     } catch (error) {
-  //       console.error("오류 발생:", error);
-  //     }
-  //   };
-  //   fetchData();
-  // }, []);
+  const goTo = (index) => {
+    if (index === currentIndex) return;
+    setFade(true);
+    setTimeout(() => {
+      setCurrentIndex(index);
+      setFade(false);
+    }, 220);
+  };
 
-  useEffect(() => {
-    const interval = setInterval(() => {
+  const resetAutoplay = () => {
+    clearInterval(timerRef.current);
+    timerRef.current = setInterval(() => {
       setFade(true);
       setTimeout(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % articles.length);
+        setCurrentIndex(prev => (prev + 1) % articles.length);
         setFade(false);
-      }, 300);
-    }, 10000);
+      }, 220);
+    }, 8000);
+  };
 
-    return () => clearInterval(interval);
+  useEffect(() => {
+    if (!articles.length) return;
+    resetAutoplay();
+    return () => clearInterval(timerRef.current);
   }, [articles]);
 
-  // 마우스 오버 시 현재 인덱스 변경
-  const handleMouseEnter = (index) => {
-    setFade(true);
-    setCurrentIndex(index);
-    setFade(false);
-  };
+  const current = articles[currentIndex];
 
   return (
     <Container>
-      <ArticleItem>
-        <BlockBox>
-           <Block1>
-            <EditorsPick><EditorsPickText>Editor's Picks</EditorsPickText><UnderLine></UnderLine></EditorsPick>
-            {articles.map((article, index) => (
-              <Link to={"/article/" + article.articleId} key={article.articleId}>
-                <Text3 
-                  isActive={index === currentIndex} 
-                  onMouseEnter={() => handleMouseEnter(index)} // 마우스 오버 시 인덱스 변경
-                >
-                 <Point/><EditorsPickArticleTitle>{article.title}</EditorsPickArticleTitle>
-                </Text3>
-              </Link>
-            ))}
-          </Block1>
-          <Block2>
-            <BigImageBox>
-              {articles.length > 0 && articles[currentIndex]?.mainImage ? (
-                <>
-                  <BackgroundImage src={ "https://api.thegachonherald.com/image?path=" + articles[currentIndex].mainImage} fade={fade} />
-                  <Overlay />
-                  <BigImage src={"https://api.thegachonherald.com/image?path=" + articles[currentIndex].mainImage} fade={fade} />
-                  
-                  <BigImageTextBox fade={fade}>
-                    {/* <Section>{articles[currentIndex].sectionName}</Section> */}
-                    <Link to={"/section/" + articles[currentIndex].sectionId + "?page=1"} ><Section>{articles[currentIndex].sectionName}</Section></Link>
-                    <Link to={"/article/" + articles[currentIndex].articleId} ><Text1>{articles[currentIndex].title}</Text1></Link>
-                    <Link to={"/article/" + articles[currentIndex].articleId} ><Text2>{articles[currentIndex].subtitle}</Text2></Link>
-                  </BigImageTextBox>
-                </>
-              ) : null}
-            </BigImageBox>
-          </Block2>
-          {/* <VerticalLine /> */}
-         
-        </BlockBox>
-      </ArticleItem>
+      <Wrapper>
+        {/* Left list */}
+        <LeftPanel>
+          <EditorsPick>
+            Editor's Picks
+            {/* <UnderLine /> */}
+          </EditorsPick>
+
+          {articles.map((article, index) => (
+            <ArticleRow
+              to={"/article/" + article.articleId}
+              key={article.articleId}
+              $active={index === currentIndex}
+              onMouseEnter={() => { goTo(index); resetAutoplay(); }}
+            >
+              <RowSection $active={index === currentIndex}>
+                {article.sectionName}
+              </RowSection>
+              <RowTitle $active={index === currentIndex}>
+                {article.title}
+              </RowTitle>
+            </ArticleRow>
+          ))}
+        </LeftPanel>
+
+        {/* Right image */}
+        <ImageBox>
+          {current?.mainImage && (
+            <>
+              <BlurBg
+                src={"https://api.thegachonherald.com/image?path=" + current.mainImage}
+                $fade={fade}
+                alt=""
+              />
+              <BgOverlay />
+              <CoverImg
+                src={"https://api.thegachonherald.com/image?path=" + current.mainImage}
+                $fade={fade}
+                alt={current.title}
+              />
+              <Gradient />
+              <TextBox $fade={fade}>
+                <Link to={"/section/" + current.sectionId + "?page=1"}>
+                  <SectionLabel>{current.sectionName}</SectionLabel>
+                </Link>
+                <Link to={"/article/" + current.articleId}>
+                  <FeaturedTitle>{current.title}</FeaturedTitle>
+                </Link>
+                <Link to={"/article/" + current.articleId}>
+                  <FeaturedSubtitle>{current.subtitle}</FeaturedSubtitle>
+                </Link>
+              </TextBox>
+            </>
+          )}
+        </ImageBox>
+      </Wrapper>
     </Container>
   );
 };
