@@ -18,7 +18,7 @@ const Layout = styled.div`
 const Content = styled.div`
   margin: 0 auto;
   padding: 0 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   height: 100%;
   display: flex;
   justify-content: space-between;

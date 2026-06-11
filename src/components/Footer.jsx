@@ -16,7 +16,7 @@ const Layout = styled.div`
 `;
 const Content = styled.div`
   padding: 40px 20px 30px 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0px auto;
 `;
 const Item = styled.div`

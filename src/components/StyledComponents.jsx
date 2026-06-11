@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   margin: 0px auto;
   padding: 10px 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   min-height: 800px;
 `;
 
@@ -22,7 +22,7 @@ export const ContentFit = styled.div`
 export const ArticleItem = styled.div`
   margin: 0px auto;
   padding: 10px 20px;
-  max-width: 1100px;
+  max-width: 1200px;
 `;
 
 export const BlockBox = styled.div`
@@ -194,7 +194,7 @@ export const ThinContainer = styled.div`
 
 export const BoxContainer = styled.div`
     margin: 0px auto;
-    max-width: 1100px;
+    max-width: 1200px;
     padding: 0px 20px;
 `;
 

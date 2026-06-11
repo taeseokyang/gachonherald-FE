@@ -44,7 +44,7 @@ const FeaturedLink = styled(Link)`
 
 const CardImageBox = styled.div`
   width: 100%;
-  height: 220px;
+  height: 260px;
   border-radius: 4px;
   overflow: hidden;
   background: #f0f0f0;
@@ -59,7 +59,7 @@ const CardImageBox = styled.div`
     transform: scale(1.03);
   }
   @media (max-width: 600px) {
-    height: 200px;
+    height: 230px;
   }
 `;
 

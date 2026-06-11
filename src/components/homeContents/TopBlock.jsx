@@ -4,7 +4,7 @@ import { Container } from "../StyledComponents";
 import { Link } from "react-router-dom";
 
 const Wrapper = styled.div`
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px 40px;
   display: grid;

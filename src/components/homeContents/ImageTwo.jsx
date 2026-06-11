@@ -14,7 +14,7 @@ const Grid = styled.div`
 
 const CardImageBox = styled.div`
   width: 100%;
-  height: 170px;
+  height: 210px;
   border-radius: 4px;
   overflow: hidden;
   background: #f0f0f0;
@@ -27,7 +27,7 @@ const CardImageBox = styled.div`
     transition: transform 0.35s ease;
   }
   @media (max-width: 600px) {
-    height: 200px;
+    height: 230px;
   }
 `;
 

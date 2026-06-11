@@ -30,7 +30,7 @@ const NavWrapper = styled.nav`
 const Inner = styled.div`
   margin: 0 auto;
   padding: 0 20px;
-  max-width: 1100px;
+  max-width: 1200px;
   display: flex;
   align-items: center;
 `;
@@ -93,7 +93,7 @@ const DropPanel = styled.div`
 `;
 
 const DropInner = styled.div`
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 13px 34px 15px;
   display: flex;
