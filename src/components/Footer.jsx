@@ -62,7 +62,7 @@ const Footer = () => {
             </Line>
            
             <Line style={{justifyContent: "space-between"}}>
-            <Item><Link to={"/Login"}>ⓒ</Link> 2025 The Gachon Herald</Item>
+            <Item><Link to={"/Login"}>ⓒ</Link> 2026 The Gachon Herald</Item>
             <a href={"https://yangsoft.co.kr"}>
             <ClickItem >POWERED BY YANGSOFT</ClickItem>
             </a>
