@@ -392,6 +392,7 @@ const AddArticleContent = () => {
   };
 
   const handleSave = async () => {
+    if (title.trim() === '') { alert("제목을 입력하세요."); return; }
     if (images.length !== 0 && mainImage === '') { alert("메인 이미지를 선택하세요."); return; }
     try {
       await axios.post(`${process.env.REACT_APP_BACK_URL}/articles`, { title, subtitle, content, mainImage, sectionId, status: articleStatus }, { headers: { Authorization: `Bearer ${cookie.accessToken}` } });

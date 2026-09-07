@@ -439,6 +439,7 @@ const UpdateArticleContent = () => {
   };
 
   const handleSave = async () => {
+    if (title.trim() === '') { alert("제목을 입력하세요."); return; }
     if (images.length !== 0 && mainImage === '') { alert("메인 이미지를 선택하세요."); return; }
     try {
       await axios.patch(`${process.env.REACT_APP_BACK_URL}/articles`, { articleId, title, subtitle, mainImage, content, sectionId, status }, { headers: { Authorization: `Bearer ${cookie.accessToken}` } });
