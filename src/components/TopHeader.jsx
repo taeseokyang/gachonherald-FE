@@ -46,6 +46,23 @@ const ItemBtn = styled.span`
   }
 `;
 
+const RoleBadge = styled.span`
+  display: inline-block;
+  padding: 2px 6px;
+  margin-right: 6px;
+  border-radius: 4px;
+  background: #3e5977;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  vertical-align: middle;
+
+  a {
+    color: #ffffff;
+  }
+`;
+
 const TopHeader = () => {
   const [cookie, setCookie, removeCookie] = useCookies(); 
   const navigate = useNavigate(); 
@@ -67,7 +84,7 @@ const TopHeader = () => {
           
           <Item>
           {/* <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ? <Link to={"/reporter/manage"}>{cookie.nickname} </Link> : cookie.nickname : null}</span> */}
-            <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ?<><Link to={"/workspace"}>{"["+cookie.roles+"] "} </Link><Link to={"/reporter/manage"}>{cookie.nickname} </Link></>  : cookie.nickname : null}</span>
+            <span>{cookie.nickname != null ? (cookie.roles == 'REPORTER' || cookie.roles == 'ADMIN' )  ?<><Link to={"/workspace"}><RoleBadge>{cookie.roles}</RoleBadge></Link><Link to={"/reporter/manage"}>{cookie.nickname} </Link></>  : cookie.nickname : null}</span>
             <ItemBtn>
               {cookie.nickname != null ? 
                 <span onClick={handleLogout}>Logout</span> : 

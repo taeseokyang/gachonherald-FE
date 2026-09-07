@@ -368,7 +368,13 @@ const AddArticleContent = () => {
     fetchData();
   }, []);
 
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
+
   const handleImageUpload = (file) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      alert('JPEG, PNG 형식의 이미지만 업로드할 수 있습니다.');
+      return;
+    }
     const formData = new FormData();
     formData.append('pic', file);
     axios
@@ -381,12 +387,18 @@ const AddArticleContent = () => {
   };
 
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
+    onDrop: (acceptedFiles, fileRejections) => {
+      if (fileRejections.length > 0) {
+        alert('JPEG, PNG 형식의 이미지만 업로드할 수 있습니다.');
+      }
       acceptedFiles.forEach((file) => {
         handleImageUpload(file);
       });
     },
-    accept: 'image/*', // 이미지 파일만 업로드 가능
+    accept: {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+    }, // JPEG, PNG 이미지만 업로드 가능
   });
 
   

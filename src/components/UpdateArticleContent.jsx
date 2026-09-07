@@ -435,8 +435,14 @@ function getSectionNameById(sectionId, sectionList) {
   return section ? section.name : null;
 }
 
+  const ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png'];
+
   // 이미지 업로드 핸들러
   const handleImageUpload = (file) => {
+    if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+      alert('JPEG, PNG 형식의 이미지만 업로드할 수 있습니다.');
+      return;
+    }
     const formData = new FormData();
     formData.append('pic', file);
 
@@ -452,12 +458,18 @@ function getSectionNameById(sectionId, sectionList) {
 
   // react-dropzone 설정
   const { getRootProps, getInputProps } = useDropzone({
-    onDrop: (acceptedFiles) => {
+    onDrop: (acceptedFiles, fileRejections) => {
+      if (fileRejections.length > 0) {
+        alert('JPEG, PNG 형식의 이미지만 업로드할 수 있습니다.');
+      }
       acceptedFiles.forEach((file) => {
         handleImageUpload(file);
       });
     },
-    accept: 'image/*', // 이미지 파일만 업로드 가능
+    accept: {
+      'image/jpeg': ['.jpg', '.jpeg'],
+      'image/png': ['.png'],
+    }, // JPEG, PNG 이미지만 업로드 가능
   });
 
   // 이미지 이름을 커서 위치에 삽입하는 함수

@@ -14,9 +14,10 @@ const Container = styled.div`
 `;
 
 const Button = styled.div`
-  margin-top: 10px;
-  padding: 20px 0px;
-  border-radius: 10px;
+  margin-top: 8px;
+  padding: 11px 0px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 700;
   background-color: #eeeeee;
   text-align: center;
@@ -46,14 +47,27 @@ const Article = styled.li`
   padding-bottom: 5px;
 `;
 
+const STATUS_COLORS = {
+  PENDING: '#e59500',
+  APPROVED: '#2e9e5b',
+  READY: '#2e9e5b',
+  DENIED: '#d64545',
+  REJECTED: '#d64545',
+  EDITING: '#828282',
+  DRAFT: '#828282',
+};
+
+const getStatusColor = (status) => STATUS_COLORS[status] || '#3E5977';
+
 const Status = styled.span`
-  /* background: #3E5977; */
+  display: inline-block;
   border-radius: 5px;
-  color: #3E5977;
-  font-size: 14px;
-  /* padding: 5px 7px; */
+  padding: 2px 6px;
   margin-right: 10px;
+  font-size: 12px;
   font-weight: 700;
+  color: #ffffff;
+  background: ${props => props.color};
 `;
 const Info = styled.span`
   /* background: #3E5977; */
@@ -93,7 +107,7 @@ const WorkSpaceContent = () => {
         {articles.map((article) => (
           <Article key={article.articleId}>
             <Link to={"/edit/" + article.articleId}>
-              <Status>{article.status}</Status>{article.title}
+              <Status color={getStatusColor(article.status)}>{article.status}</Status>{article.title}
               <Info> {article.sectionName}</Info>
             </Link>
           </Article>

@@ -89,9 +89,10 @@ const EditorsPick = styled.div`
   border-radius: 50%;
   border: 2px solid #828282;
   background-color: ${props => props.checked ? '#3E5977' : 'white'};
-  cursor: pointer;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  opacity: ${props => props.disabled ? 0.35 : 1};
   transition: background-color 0.3s ease, border-color 0.3s ease;
-  
+
   ::before {
     content: '';
     width: 12px;
@@ -103,6 +104,37 @@ const EditorsPick = styled.div`
     left: 50%;
     transform: translate(-50%, -50%);
   }
+`;
+
+const Guide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0px 15px 0px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #828282;
+`;
+
+const GuideDot = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #3E5977;
+  background-color: #3E5977;
+  flex-shrink: 0;
+`;
+
+const ImageBadge = styled.div`
+  flex-shrink: 0;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  margin-right: 10px;
+  white-space: nowrap;
+  background-color: #eeeeee;
+  color: #828282;
 `;
 
 const Pages = styled.div`
@@ -119,14 +151,49 @@ const PageNumber = styled.div`
   color: ${({ isOn }) => (isOn ? '#3E5977' : '#bcbcbc')};
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   cursor: pointer;
 `;
+
+const Ellipsis = styled.div`
+  color: #bcbcbc;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+`;
+
+const Arrow = styled.div`
+  color: ${({ disabled }) => (disabled ? '#e5e5e5' : '#3E5977')};
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+`;
+
+const PAGE_WINDOW = 5;
+
+const getVisiblePages = (current, total) => {
+  if (total <= 0) return [];
+  let start = Math.max(1, current - Math.floor(PAGE_WINDOW / 2));
+  let end = Math.min(total, start + PAGE_WINDOW - 1);
+  start = Math.max(1, end - PAGE_WINDOW + 1);
+  const pages = [];
+  for (let i = start; i <= end; i++) pages.push(i);
+  return pages;
+};
+
+const hasImageInArticle = (data) =>
+  (data.mainImage !== undefined && data.mainImage !== null && data.mainImage !== "") ||
+  /<img[\s>]/i.test(data.content || "");
 
 const PublishArticleManageContent = () => {
   const [cookie] = useCookies();
   const [articles, setArticles] = useState([]);
-  const [pageNumbers, setPageNumbers] = useState([]);
+  // 한 페이지에 보여줄 기사 수
+  const UI_PAGE_SIZE = 20;
+  const [uiPageCount, setUiPageCount] = useState(0);
+  // articleId -> true(이미지 있음)
+  const [imageMap, setImageMap] = useState({});
   const queryParams = new URLSearchParams(location.search);
   const page = queryParams.get('page'); // page 쿼리 파라미터 가져오기
 
@@ -146,18 +213,77 @@ const PublishArticleManageContent = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    const base = process.env.REACT_APP_BACK_URL + "/articles/list/all?pageNumber=";
+    const current = Number(page) || 1;
     const fetchData = async () => {
       try {
-        const response = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/list/all?pageNumber=" + (page - 1));
-        setArticles(response.data.data.articles);
-        console.log(response.data.data.articles);
-        setPageNumbers(Array.from({ length: response.data.data.pageCount }, (_, index) => index + 1));
+        // 백엔드 페이지 크기 / 전체 개수 파악
+        const first = await axios.get(base + "0");
+        const backendSize = first.data.data.articles.length;
+        const backendCount = first.data.data.pageCount;
+        if (backendSize === 0) {
+          setArticles([]);
+          setUiPageCount(0);
+          return;
+        }
+
+        let lastLen = backendSize;
+        if (backendCount > 1) {
+          const last = await axios.get(base + (backendCount - 1));
+          lastLen = last.data.data.articles.length;
+        }
+        const totalItems = backendSize * (backendCount - 1) + lastLen;
+        setUiPageCount(Math.ceil(totalItems / UI_PAGE_SIZE));
+
+        // 현재 UI 페이지에 필요한 백엔드 페이지들만 조회
+        const startIdx = (current - 1) * UI_PAGE_SIZE;
+        const endIdx = startIdx + UI_PAGE_SIZE; // exclusive
+        const startBackend = Math.floor(startIdx / backendSize);
+        const endBackend = Math.floor((endIdx - 1) / backendSize);
+
+        const chunks = [];
+        for (let p = startBackend; p <= endBackend && p < backendCount; p++) {
+          if (p === 0) {
+            chunks.push(first.data.data.articles);
+          } else {
+            const r = await axios.get(base + p);
+            chunks.push(r.data.data.articles);
+          }
+        }
+        const flat = chunks.flat();
+        const offset = startIdx - startBackend * backendSize;
+        setArticles(flat.slice(offset, offset + UI_PAGE_SIZE));
       } catch (error) {
         console.error("오류 발생:", error);
       }
     };
     fetchData();
   }, [page]);
+
+  // 각 기사 본문을 확인해 이미지 포함 여부 판별
+  useEffect(() => {
+    if (articles.length === 0) return;
+    let cancelled = false;
+    const checkImages = async () => {
+      const entries = await Promise.all(
+        articles.map(async (article) => {
+          try {
+            const res = await axios.get(
+              process.env.REACT_APP_BACK_URL + "/articles/" + article.articleId
+            );
+            return [article.articleId, hasImageInArticle(res.data.data)];
+          } catch (error) {
+            return [article.articleId, null];
+          }
+        })
+      );
+      if (!cancelled) setImageMap(Object.fromEntries(entries));
+    };
+    checkImages();
+    return () => {
+      cancelled = true;
+    };
+  }, [articles]);
 
   // 상태 변경 처리 함수
   const handleStatusChange = async (articleId, newStatus) => {
@@ -183,9 +309,13 @@ const PublishArticleManageContent = () => {
   };
 
   const toggleCheck = async (articleId) => {
+    // 이미지가 있는 기사만 메인 슬라이드(에디터 픽)로 선택 가능
+    if (imageMap[articleId] !== true) {
+      return;
+    }
     try {
       // API 호출해서 체크 상태 변경
-      const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/editor-pick/"+articleId, 
+      const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/editor-pick/"+articleId,
         {}, 
         {
           headers: {
@@ -212,6 +342,10 @@ const PublishArticleManageContent = () => {
   return (
     <Container>
       <Title>기사</Title>
+      <Guide>
+        <GuideDot />
+        오른쪽 원을 켜면 해당 기사가 메인 페이지 상단 슬라이드(에디터 픽)에 노출됩니다.
+      </Guide>
       <List>
         {articles.map((article) => (
           <Article key={article.articleId}>
@@ -228,18 +362,25 @@ const PublishArticleManageContent = () => {
                 ))}
               </select>
             </Status>
+            {imageMap[article.articleId] === true && (
+              <ImageBadge title="본문에 이미지가 포함된 기사입니다">이미지</ImageBadge>
+            )}
             <ArticleInfo>
-              
+
               <Link to={"/edit/" + article.articleId}>
-                <ArticleTitle>{article.title}</ArticleTitle>
+                <ArticleTitle title={article.title}>{article.title}</ArticleTitle>
               </Link>
             </ArticleInfo>
-           
+
             <Info>{article.reporterName+", "}</Info>
             <Info>{article.sectionName+", "}</Info>
              <Info>{formatDate(article.publishedAt)}</Info>
 
             <EditorsPick
+              title={imageMap[article.articleId] === true
+                ? '메인 슬라이드(에디터 픽) 노출 여부'
+                : '이미지가 있는 기사만 메인 슬라이드로 선택할 수 있습니다'}
+              disabled={imageMap[article.articleId] !== true}
               checked={article.isEditorsPick}
               onClick={() => toggleCheck(article.articleId)}
             />
@@ -247,11 +388,55 @@ const PublishArticleManageContent = () => {
         ))}
       </List>
       <Pages>
-        {pageNumbers.map((number) => (
-          <Link to={"/publish/article?page=" + number} key={number}>
-            <PageNumber isOn={page == number}>{number}</PageNumber>
-          </Link>
-        ))}
+        {(() => {
+          const total = uiPageCount;
+          const current = Number(page) || 1;
+          const visible = getVisiblePages(current, total);
+          if (total === 0) return null;
+          return (
+            <>
+              {current > 1 ? (
+                <Link to={"/publish/article?page=" + (current - 1)}>
+                  <Arrow>‹</Arrow>
+                </Link>
+              ) : (
+                <Arrow disabled>‹</Arrow>
+              )}
+
+              {visible[0] > 1 && (
+                <>
+                  <Link to={"/publish/article?page=1"}>
+                    <PageNumber isOn={current === 1}>1</PageNumber>
+                  </Link>
+                  {visible[0] > 2 && <Ellipsis>…</Ellipsis>}
+                </>
+              )}
+
+              {visible.map((number) => (
+                <Link to={"/publish/article?page=" + number} key={number}>
+                  <PageNumber isOn={current === number}>{number}</PageNumber>
+                </Link>
+              ))}
+
+              {visible[visible.length - 1] < total && (
+                <>
+                  {visible[visible.length - 1] < total - 1 && <Ellipsis>…</Ellipsis>}
+                  <Link to={"/publish/article?page=" + total}>
+                    <PageNumber isOn={current === total}>{total}</PageNumber>
+                  </Link>
+                </>
+              )}
+
+              {current < total ? (
+                <Link to={"/publish/article?page=" + (current + 1)}>
+                  <Arrow>›</Arrow>
+                </Link>
+              ) : (
+                <Arrow disabled>›</Arrow>
+              )}
+            </>
+          );
+        })()}
       </Pages>
     </Container>
   );

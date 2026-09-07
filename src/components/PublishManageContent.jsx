@@ -13,9 +13,10 @@ const Container = styled.div`
 `;
 
 const Button = styled.div`
-  margin-top: 10px;
-  padding: 20px 0px;
-  border-radius: 10px;
+  margin-top: 8px;
+  padding: 11px 0px;
+  border-radius: 8px;
+  font-size: 13px;
   font-weight: 700;
   background-color: #eeeeee;
   text-align: center;
@@ -39,6 +40,25 @@ const List = styled.ul`
   margin-bottom: 200px;
 `;
 
+const Guide = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0px 15px 0px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #828282;
+`;
+
+const GuideDot = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #3E5977;
+  background-color: #3E5977;
+  flex-shrink: 0;
+`;
+
 const Article = styled.li`
   padding-bottom: 5px;
   display: flex;
@@ -52,12 +72,28 @@ const ArticleInfo = styled.div`
   overflow: hidden;
 `;
 
+const STATUS_COLORS = {
+  PENDING: '#e59500',
+  APPROVED: '#2e9e5b',
+  READY: '#2e9e5b',
+  DENIED: '#d64545',
+  REJECTED: '#d64545',
+  EDITING: '#828282',
+  DRAFT: '#828282',
+};
+
+const getStatusColor = (status) => STATUS_COLORS[status] || '#3E5977';
+
 const Status = styled.div`
+  flex-shrink: 0;
+  display: inline-block;
   border-radius: 5px;
-  color: #3E5977;
-  font-size: 14px;
+  padding: 2px 6px;
+  font-size: 12px;
   margin-right: 10px;
   font-weight: 700;
+  color: #ffffff;
+  background: ${props => props.color};
 `;
 
 const Info = styled.div`
@@ -76,6 +112,18 @@ const ArticleTitle = styled.div`
   white-space: nowrap;
   text-overflow: ellipsis;
 `;
+
+const ImageBadge = styled.div`
+  flex-shrink: 0;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 6px;
+  margin-right: 10px;
+  white-space: nowrap;
+  background-color: #eeeeee;
+  color: #828282;
+`;
 const EditorsPick = styled.div`
   margin-left: 10px;
   width: 20px;
@@ -83,7 +131,8 @@ const EditorsPick = styled.div`
   border-radius: 50%;
   border: 2px solid #828282;
   background-color: ${props => props.checked ? '#3E5977' : 'white'};
-  cursor: pointer;
+  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
+  opacity: ${props => props.disabled ? 0.35 : 1};
   transition: background-color 0.3s ease, border-color 0.3s ease;
   
   /* Inner circle for the "checked" state */
@@ -100,9 +149,15 @@ const EditorsPick = styled.div`
   }
 `;
 
+const hasImageInArticle = (data) =>
+  (data.mainImage !== undefined && data.mainImage !== null && data.mainImage !== "") ||
+  /<img[\s>]/i.test(data.content || "");
+
 const PublishManageContent = () => {
   const [cookie] = useCookies();
   const [articles, setArticles] = useState([]);
+  // articleId -> true(있음) / false(없음) / undefined(확인중)
+  const [imageMap, setImageMap] = useState({});
   const navigate = useNavigate();
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -122,8 +177,38 @@ const PublishManageContent = () => {
     fetchData();
   }, [cookie.accessToken]);
 
+  // 각 기사 본문을 확인해 이미지 포함 여부 판별
+  useEffect(() => {
+    if (articles.length === 0) return;
+    let cancelled = false;
+    const checkImages = async () => {
+      const entries = await Promise.all(
+        articles.map(async (article) => {
+          try {
+            const res = await axios.get(
+              process.env.REACT_APP_BACK_URL + "/articles/reporter/" + article.articleId,
+              { headers: { Authorization: `Bearer ${cookie.accessToken}` } }
+            );
+            return [article.articleId, hasImageInArticle(res.data.data)];
+          } catch (error) {
+            return [article.articleId, null];
+          }
+        })
+      );
+      if (!cancelled) setImageMap(Object.fromEntries(entries));
+    };
+    checkImages();
+    return () => {
+      cancelled = true;
+    };
+  }, [articles, cookie.accessToken]);
+
   // 체크박스 상태 변경 함수
   const toggleCheck = async (articleId) => {
+    // 이미지가 있는 기사만 메인 슬라이드(에디터 픽)로 선택 가능
+    if (imageMap[articleId] !== true) {
+      return;
+    }
     try {
       // API 호출해서 체크 상태 변경
       const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/editor-pick/"+articleId, 
@@ -151,10 +236,22 @@ const PublishManageContent = () => {
 
   const publish = async () => {
 
-    const isConfirmed = window.confirm("현재 발간되어 있는 기사들이, 현재 승인된 기사들로 대체됩니다.\n최소 한개의 기사를 에디터 픽으로 설정하여주세요.\n정말 발간 하시겠습니까?");
-  
+    const pendingCount = articles.filter(article => article.status === "PENDING").length;
+    if (pendingCount > 0) {
+      window.alert(`아직 승인 대기중(PENDING)인 기사가 ${pendingCount}건 있습니다.\n발간 전에 해당 기사들을 승인 또는 거절하여 주세요.`);
+      return;
+    }
+
+    const editorsPickCount = articles.filter(article => article.isEditorsPick).length;
+    if (editorsPickCount === 0) {
+      window.alert("에디터 픽으로 선택된 기사가 없습니다.\n메인 슬라이드에 노출할 기사를 최소 한 개 선택하여 주세요.");
+      return;
+    }
+
+    const isConfirmed = window.confirm("현재 발간되어 있는 기사들이, 현재 승인된 기사들로 대체됩니다.\n정말 발간 하시겠습니까?");
+
     if (!isConfirmed) {
-      return; 
+      return;
     }
     try {
       const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/publish", 
@@ -185,13 +282,20 @@ const PublishManageContent = () => {
   return (
     <Container>
       <Title>편집중인 기사 {articles.length}</Title>
+      <Guide>
+        <GuideDot />
+        오른쪽 원을 켜면 해당 기사가 메인 페이지 상단 슬라이드(에디터 픽)에 노출됩니다.
+      </Guide>
       <List>
         {articles.map((article) => (
           <Article key={article.articleId}>
-            <Status>{article.status}</Status>
+            <Status color={getStatusColor(article.status)}>{article.status}</Status>
+            {imageMap[article.articleId] === true && (
+              <ImageBadge title="본문에 이미지가 포함된 기사입니다">이미지</ImageBadge>
+            )}
             <ArticleInfo>
               <Link to={"/check/" + article.articleId}>
-                <ArticleTitle>{article.title}</ArticleTitle>
+                <ArticleTitle title={article.title}>{article.title}</ArticleTitle>
               </Link>
             </ArticleInfo>
             <Info>{article.reporterName+", "}</Info>
@@ -199,6 +303,10 @@ const PublishManageContent = () => {
              <Info>{formatDate(article.publishedAt)}</Info>
 
             <EditorsPick
+              title={imageMap[article.articleId] === true
+                ? '메인 슬라이드(에디터 픽) 노출 여부'
+                : '이미지가 있는 기사만 메인 슬라이드로 선택할 수 있습니다'}
+              disabled={imageMap[article.articleId] !== true}
               checked={article.isEditorsPick}
               onClick={() => toggleCheck(article.articleId)}
             />
@@ -208,8 +316,8 @@ const PublishManageContent = () => {
 
       
       {/* <HorizontalLine /> */}
-      <Link to={"/publish/article?page=1"}><Button>발간 수정</Button></Link>
       <Button style={{ backgroundColor: "#3e5977", color:"#ffffff" }} onClick={publish}>발간 하기</Button>
+      <Link to={"/publish/article?page=1"}><Button>발간 수정</Button></Link>
     </Container>
   );
 };
