@@ -18,7 +18,7 @@ const ArticleCheck = () => {
       <TopHeader></TopHeader>
         <Title></Title>
         <Nav></Nav>
-        <BackButton to="/publish"></BackButton>
+        <BackButton to="/publish" width="740px"></BackButton>
         <ArticleCheckContent></ArticleCheckContent>
         <Footer></Footer>
     </PageContainer>

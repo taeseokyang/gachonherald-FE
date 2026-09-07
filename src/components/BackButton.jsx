@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
+// 각 페이지 콘텐츠의 max-width / 좌우 padding 에 맞춰 정렬한다.
 const Wrapper = styled.div`
-  max-width: ${props => (props.$fluid ? "none" : "800px")};
-  margin: 15px auto 0px auto;
-  padding: 0px 20px;
+  max-width: ${props => props.$width};
+  margin: 0 auto;
+  padding: 18px ${props => props.$pad} 0;
 `;
 
 const Button = styled.button`
@@ -13,24 +14,28 @@ const Button = styled.button`
   gap: 4px;
   background: none;
   border: none;
-  padding: 6px 0px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #3e5977;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6b6b6b;
   cursor: pointer;
+  transition: color 0.15s;
 
   &:hover {
-    text-decoration: underline;
+    color: #1a1a1a;
   }
 `;
 
-// to: 이 화면에 들어오기 전 단계의 경로 (브라우저 히스토리가 아니라 논리적 상위 단계)
-// fluid: 본문이 800px 중앙정렬이 아니라 전체 너비일 때 (기사 작성/수정 화면)
-const BackButton = ({ to = "/workspace", label = "뒤로가기", fluid = false }) => {
+// to:    이 화면에 들어오기 전 단계의 경로 (브라우저 히스토리가 아니라 논리적 상위 단계)
+// width: 해당 페이지 콘텐츠 컨테이너의 max-width
+// pad:   해당 페이지 콘텐츠 컨테이너의 좌우 padding
+const BackButton = ({ to = "/workspace", label = "뒤로가기", width = "900px", pad = "20px" }) => {
   const navigate = useNavigate();
   return (
-    <Wrapper $fluid={fluid}>
-      <Button onClick={() => navigate(to)}>{label}</Button>
+    <Wrapper $width={width} $pad={pad}>
+      <Button onClick={() => navigate(to)}>
+        <span aria-hidden>‹</span> {label}
+      </Button>
     </Wrapper>
   );
 };

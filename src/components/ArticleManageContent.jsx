@@ -9,7 +9,7 @@ import HorizontalLine from './homeContents/HorizontalLine2';
 
 const Container = styled.div`
   padding: 20px;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
 `;
 

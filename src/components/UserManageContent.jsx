@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
 
 const Container = styled.div`
-  max-width: 960px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 32px 20px 80px;
 `;

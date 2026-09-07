@@ -18,7 +18,7 @@ const UpdateArticle = () => {
       <TopHeader></TopHeader>
         <Title></Title>
         <Nav></Nav>
-        <BackButton fluid></BackButton>
+        <BackButton width="100%" pad="32px"></BackButton>
         <UpdateArticleContent></UpdateArticleContent>
         <Footer></Footer>
     </PageContainer>
