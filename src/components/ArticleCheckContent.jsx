@@ -134,7 +134,6 @@ const ArticleBody = styled.div`
     width: 100%;
     max-height: 600px;
     object-fit: contain;
-    border-radius: 4px;
   }
 
   & h1, & h2, & h3 {

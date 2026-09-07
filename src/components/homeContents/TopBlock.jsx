@@ -74,7 +74,6 @@ const ImageBox = styled.div`
   position: relative;
   width: 100%;
   height: 360px;
-  border-radius: 8px;
   overflow: hidden;
   background: #e0e0e0;
 

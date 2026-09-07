@@ -125,7 +125,6 @@ const ArticleSubtitle = styled.div`
 const ImageBox = styled.div`
   width: 130px;
   height: 90px;
-  border-radius: 4px;
   overflow: hidden;
   background: #f0f0f0;
   flex-shrink: 0;

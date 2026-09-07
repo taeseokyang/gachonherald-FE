@@ -49,7 +49,6 @@ export const ImageBox = styled.div`
   width: 100%;
   height: 210px;
   position: relative;
-  border-radius: 4px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -101,7 +100,6 @@ export const BigImageBox = styled.div`
   width: 100%;
   /* height: 450px; */
   /* background: #eeeeee; */
-  border-radius: 7px;
   position: relative;
   overflow: hidden;
   &:hover{

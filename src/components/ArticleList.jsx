@@ -66,8 +66,6 @@ const ArticleReporter = styled.div`
 const ImageBox = styled.div`
   width: 140px;
   height: 100px;
-  border-radius: 4px;
-  overflow: hidden;
   background: #f0f0f0;
   flex-shrink: 0;
   & img {

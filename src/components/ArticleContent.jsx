@@ -33,7 +33,6 @@ const ArticleBody = styled.div`
     width: 100%;
     max-height: 700px;
     object-fit: contain;
-    border-radius: 4px;
   }
 `;
 

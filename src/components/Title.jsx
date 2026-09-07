@@ -5,11 +5,11 @@ import NavBar from "./NavBar";
 
 export const Content = styled.div`
   margin: 0px auto;
-  padding: 28px 20px;
+  padding: 44px 20px;
   max-width: 1200px;
   text-align: center;
   @media screen and (max-width: 600px) {
-    padding: 16px 20px;
+    padding: 24px 20px;
     }
 `;
 
@@ -25,6 +25,19 @@ export const TitleImg = styled.object`
     }
 `;
 
+export const Since = styled.div`
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #9b9b9b;
+  @media screen and (max-width: 600px) {
+    font-size: 10px;
+    margin-top: 6px;
+  }
+`;
+
 const Title = () => {
   return (
     <Container>
@@ -33,7 +46,7 @@ const Title = () => {
         <TitleImgBox>
         <TitleImg data="/images/gachonherald.svg"></TitleImg>
         </TitleImgBox>
-          
+        <Since>Since 1984</Since>
         </Link>
       </Content>
     </Container>

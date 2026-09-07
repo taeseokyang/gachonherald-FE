@@ -34,8 +34,7 @@ const Cell = styled.div`
 
 const CardImageBox = styled.div`
   width: 100%;
-  height: 185px;
-  border-radius: 4px;
+  height: 230px;
   overflow: hidden;
   background: #f0f0f0;
   margin-bottom: 10px;
@@ -50,7 +49,7 @@ const CardImageBox = styled.div`
     transform: scale(1.04);
   }
   @media (max-width: 600px) {
-    height: 150px;
+    height: 160px;
   }
 `;
 

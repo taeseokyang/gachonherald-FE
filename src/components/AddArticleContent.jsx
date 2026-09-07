@@ -217,7 +217,6 @@ const ImageItem = styled.div`
 const ImageThumb = styled.img`
   height: 90px;
   width: auto;
-  border-radius: 6px;
   border: 2px solid ${({ $isMain }) => ($isMain ? '#3e5977' : '#e8e8e8')};
   cursor: pointer;
   object-fit: cover;

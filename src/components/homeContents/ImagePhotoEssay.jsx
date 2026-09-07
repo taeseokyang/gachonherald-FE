@@ -4,7 +4,6 @@ import { Container, ArticleItem, Section } from "../StyledComponents";
 
 const FullImageBox = styled.div`
   width: 100%;
-  border-radius: 4px;
   overflow: hidden;
   background: #f0f0f0;
   margin-bottom: 12px;
