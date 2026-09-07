@@ -1,87 +1,79 @@
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { ThinContainer, Container, Content, Block1, Block2, BlockBox, ImageBox, Image, Section, Title1, SubTitle1, Reporter1, Copy, Date } from "./StyledComponents";
-import HorizontalLine from "./homeContents/HorizontalLine2";
+import { ThinContainer, Content } from "./StyledComponents";
 import { useState, useEffect } from 'react';
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { Helmet } from "react-helmet-async";
 
 
 const ArticleTitle = styled.div`
   margin-top: 10px;
-  color: #000000;
-  font-size: 24px;
-  font-weight: 500;
-  line-height: 100%;
+  color: #1a1a1a;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.25;
 `;
 const ArticleSubTitle = styled.div`
-  margin-top: 5px;
-  color: #828282;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 100%;
+  margin-top: 8px;
+  color: #6b6b6b;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.4;
 `;
 
 const ArticleBody = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
   font-size: 16px;
-  /* font-weight: 500; */
-  line-height: 150%;
-  color: #000000;
+  line-height: 1.8;
+  color: #1a1a1a;
   white-space: ${props => props.isOldArticle ? 'normal' : 'pre-line'};
   & img {
-  display: block;
-  margin: 20px auto 5px auto;
-  /* border-radius: 10px; */
-  width: 100%;
-  max-height: 700px;
-  object-fit: contain;
-}
-  & strong{
-    /* font-weight: 500; */
-    /* margin: 10px 0px; */
+    display: block;
+    margin: 24px auto 6px auto;
+    width: 100%;
+    max-height: 700px;
+    object-fit: contain;
+    border-radius: 4px;
   }
 `;
 
 const InfoBox = styled.div`
-  margin: 30px 0px;
+  margin: 20px 0px 30px 0px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
   padding-bottom: 20px;
-  border-bottom: 1px solid #eeeeee;
-
+  border-bottom: 1px solid #e8e8e8;
 `;
 const ReporterBox = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
-`;
-const ReporterImg = styled.div`
-  width: 30px;
-  height: 30px;
-  border: 1px solid #eeeeee;
-  border-radius: 100px;
-
+  transition: opacity 0.15s;
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 const ReporterName = styled.div`
-  font-size: 14px;
-  /* font-weight: 500; */
-  /* margin-left: 10px; */
+  font-size: 13px;
+  font-weight: 500;
+  color: #555555;
 `;
 
 const PublishedDate = styled.div`
-  font-size: 14px;
-  font-weight: 300;
-  color: #bcbcbc;
+  font-size: 12px;
+  font-weight: 400;
+  color: #9b9b9b;
 `;
 
 const SectionTitle = styled.div`
-  font-size: 20px;
-  font-weight: 300;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: #3E5977;
+  margin-bottom: 4px;
 `;
 
 
@@ -107,6 +99,10 @@ const ArticleContent = () => {
 
   return (
     <ThinContainer>
+      <Helmet>
+        <title>{article.title ? `${article.title} | The Gachon Herald (가천헤럴드)` : "The Gachon Herald"}</title>
+        {article.subtitle && <meta name="description" content={article.subtitle} />}
+      </Helmet>
       <Content>
       <Link to={"/section/" + article.sectionId+"?page=1"}>
       <SectionTitle>{article.sectionName}</SectionTitle>

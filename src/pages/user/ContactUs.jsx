@@ -1,32 +1,27 @@
-import { Link, useParams } from "react-router-dom";
-import styled from "styled-components";
-import { useState, useEffect } from 'react';
-import ArticleHeader from "../../components/ArticleHeader";
+import { useEffect } from 'react';
 import { PageContainer } from "../../components/StyledComponents";
 import Footer from "../../components/Footer";
 import Title from "../../components/Title";
 import Nav from "../../components/Nav";
 import TopHeader from "../../components/TopHeader";
-import Profile from "../../components/Profile";
 import ContactUsContent from "../../components/ContactUsContent";
-
-const ContentBox = styled.div`
-  
-`;
+import { Helmet } from "react-helmet-async";
 
 const ContactUs = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+  useEffect(() => { window.scrollTo(0, 0); }, []);
 
   return (
     <PageContainer>
-      <TopHeader></TopHeader>
-        <Title></Title>
-        <Nav></Nav>
-
-        <ContactUsContent/>
-        <Footer></Footer>
+      <Helmet>
+        <title>연락처 | The Gachon Herald (가천헤럴드)</title>
+        <meta name="description" content="가천헤럴드(The Gachon Herald) 연락처 및 위치 정보입니다." />
+        <link rel="canonical" href="https://thegachonherald.com/contactus" />
+      </Helmet>
+      <TopHeader />
+      <Title />
+      <Nav />
+      <ContactUsContent />
+      <Footer />
     </PageContainer>
   );
 };

@@ -5,171 +5,175 @@ import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
 
 const Container = styled.div`
-  padding: 20px;
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
+  padding: 32px 20px 80px;
 `;
 
-const Button = styled.div`
-  margin-top: 10px;
-  padding: 20px 0px;
-  border-radius: 10px;
-  font-weight: 700;
-  background-color: #eeeeee;
-  text-align: center;
-  color: #828282;
-  border: none;
-  cursor: pointer;
-`;
-
-const Title = styled.div`
-  padding: 5px 0px;
-  font-weight: 700;
-  font-size: 16px;
-  border-bottom: 3px solid #3e5977;
-  color: #3e5977;
-  cursor: pointer;
-`;
-
-const List = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin-bottom: 50px;
-`;
-
-const Article = styled.li`
-  padding-bottom: 5px;
+const Header = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #3e5977;
 `;
 
-const ArticleInfo = styled.div`
-  flex: 1;
-  display: flex;
-  white-space: nowrap;
-  overflow: hidden;
-`;
-
-const Status = styled.div`
-  
-  font-size: 14px;
-  margin-right: 10px;
+const PageTitle = styled.div`
+  font-size: 20px;
   font-weight: 700;
-  & select{
-    font-size: 12px;
-    font-weight: 500;
-    border: none;
-    outline: none;
-    background: #eeeeee;
-    border-radius: 5px;
-    padding: 2px 5px;
-  }
+  color: #1a1a1a;
 `;
 
-const Info = styled.div`
-  border-radius: 5px;
-  color: #828282;
+/* ─── Table ─── */
+const TableHeader = styled.div`
+  display: grid;
+  grid-template-columns: 110px 1fr 100px 100px 96px 36px;
+  gap: 12px;
+  padding: 8px 12px;
+  background: #f8f8f8;
+  border: 1px solid #e8e8e8;
+  border-radius: 6px;
+  margin-bottom: 4px;
+`;
+
+const ColLabel = styled.div`
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #9b9b9b;
+`;
+
+const Row = styled.div`
+  display: grid;
+  grid-template-columns: 110px 1fr 100px 100px 96px 36px;
+  gap: 12px;
+  padding: 12px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  align-items: center;
+
+  &:hover { background: #fafafa; }
+`;
+
+const StatusSelect = styled.select`
+  padding: 4px 8px;
   font-size: 12px;
-  font-weight: 500;
-  margin-left: 10px;
+  font-weight: 600;
+  border: 1px solid #d8d8d8;
+  border-radius: 4px;
+  outline: none;
   cursor: pointer;
+  background: ${({ $published }) => ($published ? '#3e5977' : '#ffffff')};
+  color: ${({ $published }) => ($published ? '#ffffff' : '#555555')};
+  transition: background 0.15s;
 `;
 
-const ArticleTitle = styled.div`
-  width: 400px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-`;
-
-const EditorsPick = styled.div`
-  margin-left: 10px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 2px solid #828282;
-  background-color: ${props => props.checked ? '#3E5977' : 'white'};
-  cursor: ${props => props.disabled ? 'not-allowed' : 'pointer'};
-  opacity: ${props => props.disabled ? 0.35 : 1};
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-
-  ::before {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background-color: ${props => props.checked ? 'white' : 'transparent'};
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-`;
-
-const Guide = styled.div`
+const TitleCell = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 10px 0px 15px 0px;
-  font-size: 12px;
+  min-width: 0;
+`;
+
+const ArticleTitleLink = styled(Link)`
+  font-size: 14px;
   font-weight: 500;
-  color: #828282;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  transition: color 0.15s;
+  &:hover { color: #3e5977; }
 `;
 
-const GuideDot = styled.div`
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  border: 2px solid #3E5977;
-  background-color: #3E5977;
+const ImageBadge = styled.span`
   flex-shrink: 0;
-`;
-
-const ImageBadge = styled.div`
-  flex-shrink: 0;
-  border-radius: 5px;
-  font-size: 11px;
+  border-radius: 4px;
+  font-size: 10px;
   font-weight: 700;
   padding: 2px 6px;
-  margin-right: 10px;
   white-space: nowrap;
-  background-color: #eeeeee;
+  background: #eeeeee;
   color: #828282;
 `;
 
+const MetaText = styled.div`
+  font-size: 12px;
+  color: #9b9b9b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const StarBtn = styled.button`
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  cursor: ${({ $disabled }) => ($disabled ? 'not-allowed' : 'pointer')};
+  opacity: ${({ $disabled }) => ($disabled ? 0.3 : 1)};
+  font-size: 18px;
+  color: ${({ $on }) => ($on ? '#f5a623' : '#d8d8d8')};
+  transition: color 0.15s, transform 0.1s;
+  padding: 0;
+  &:hover { color: ${({ $on }) => ($on ? '#e8951a' : '#aaaaaa')}; transform: ${({ $disabled }) => ($disabled ? 'none' : 'scale(1.15)')}; }
+`;
+
+/* ─── Pagination ─── */
 const Pages = styled.div`
-  /* margin-top: 50px; */
-  width: 100%;
+  margin-top: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 6px;
 `;
 
 const PageNumber = styled.div`
-  font-weight: ${({ isOn }) => (isOn ? '700' : '500')};
-  color: ${({ isOn }) => (isOn ? '#3E5977' : '#bcbcbc')};
+  width: 32px;
+  height: 32px;
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: ${({ $on }) => ($on ? 700 : 400)};
+  color: ${({ $on }) => ($on ? '#ffffff' : '#555555')};
+  background: ${({ $on }) => ($on ? '#3e5977' : 'transparent')};
   cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  &:hover { background: ${({ $on }) => ($on ? '#3e5977' : '#f0f0f0')}; color: ${({ $on }) => ($on ? '#ffffff' : '#3e5977')}; }
 `;
 
 const Ellipsis = styled.div`
-  color: #bcbcbc;
-  font-weight: 500;
+  width: 20px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  color: #bcbcbc;
+  font-size: 13px;
 `;
 
 const Arrow = styled.div`
-  color: ${({ disabled }) => (disabled ? '#e5e5e5' : '#3E5977')};
-  font-weight: 700;
+  width: 28px;
+  height: 32px;
   display: flex;
   align-items: center;
-  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: ${({ $disabled }) => ($disabled ? '#e0e0e0' : '#3e5977')};
+  cursor: ${({ $disabled }) => ($disabled ? 'default' : 'pointer')};
 `;
 
+const statusOptions = ['PUBLISHED', 'ARCHIVED'];
+
+// 한 페이지에 보여줄 기사 수
+const UI_PAGE_SIZE = 20;
 const PAGE_WINDOW = 5;
 
 const getVisiblePages = (current, total) => {
@@ -189,27 +193,16 @@ const hasImageInArticle = (data) =>
 const PublishArticleManageContent = () => {
   const [cookie] = useCookies();
   const [articles, setArticles] = useState([]);
-  // 한 페이지에 보여줄 기사 수
-  const UI_PAGE_SIZE = 20;
   const [uiPageCount, setUiPageCount] = useState(0);
   // articleId -> true(이미지 있음)
   const [imageMap, setImageMap] = useState({});
   const queryParams = new URLSearchParams(location.search);
-  const page = queryParams.get('page'); // page 쿼리 파라미터 가져오기
+  const page = queryParams.get('page');
 
-  // 상태 리스트 (예시로 'draft', 'published' 등)
-  const statusOptions = ['PUBLISHED', 'ARCHIVED'];
-
-  const formatDate = (isoString) => {
-  const date = new Date(isoString);
-
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 0부터 시작이라 +1
-  const day = String(date.getDate()).padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
+  const formatDate = (iso) => {
+    const d = new Date(iso);
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -268,9 +261,7 @@ const PublishArticleManageContent = () => {
       const entries = await Promise.all(
         articles.map(async (article) => {
           try {
-            const res = await axios.get(
-              process.env.REACT_APP_BACK_URL + "/articles/" + article.articleId
-            );
+            const res = await axios.get(process.env.REACT_APP_BACK_URL + "/articles/" + article.articleId);
             return [article.articleId, hasImageInArticle(res.data.data)];
           } catch (error) {
             return [article.articleId, null];
@@ -280,164 +271,134 @@ const PublishArticleManageContent = () => {
       if (!cancelled) setImageMap(Object.fromEntries(entries));
     };
     checkImages();
-    return () => {
-      cancelled = true;
-    };
+    return () => { cancelled = true; };
   }, [articles]);
 
-  // 상태 변경 처리 함수
   const handleStatusChange = async (articleId, newStatus) => {
     try {
-      const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/status/" + articleId+"?status="+newStatus, {}, {
-        headers: {
-          Authorization: `Bearer ${cookie.accessToken}`,
-        },
-      });
-
-      if (response.status === 200) {
-        setArticles(prevArticles =>
-          prevArticles.map(article =>
-            article.articleId === articleId
-              ? { ...article, status: newStatus }
-              : article
-          )
-        );
+      const r = await axios.patch(
+        process.env.REACT_APP_BACK_URL + "/articles/status/" + articleId + "?status=" + newStatus,
+        {},
+        { headers: { Authorization: `Bearer ${cookie.accessToken}` } }
+      );
+      if (r.status === 200) {
+        setArticles(prev => prev.map(a => a.articleId === articleId ? { ...a, status: newStatus } : a));
       }
-    } catch (error) {
-      console.error("상태 변경 오류:", error);
-    }
+    } catch (e) { console.error(e); }
   };
 
-  const toggleCheck = async (articleId) => {
+  const toggleEditorsPick = async (articleId) => {
     // 이미지가 있는 기사만 메인 슬라이드(에디터 픽)로 선택 가능
-    if (imageMap[articleId] !== true) {
-      return;
-    }
+    if (imageMap[articleId] !== true) return;
     try {
-      // API 호출해서 체크 상태 변경
-      const response = await axios.patch(process.env.REACT_APP_BACK_URL + "/articles/editor-pick/"+articleId,
-        {}, 
-        {
-          headers: {
-            Authorization: `Bearer ${cookie.accessToken}`,
-          },
-        });
-
-      // 응답 처리
-      if (response.status === 200) {
-        setArticles(prevArticles => 
-          prevArticles.map(article => 
-            article.articleId === articleId 
-              ? { ...article, isEditorsPick: response.data.data.isEditorsPick } // 상태 업데이트
-              : article
-          )
-        );
+      const r = await axios.patch(
+        process.env.REACT_APP_BACK_URL + "/articles/editor-pick/" + articleId,
+        {},
+        { headers: { Authorization: `Bearer ${cookie.accessToken}` } }
+      );
+      if (r.status === 200) {
+        setArticles(prev => prev.map(a =>
+          a.articleId === articleId ? { ...a, isEditorsPick: r.data.data.isEditorsPick } : a
+        ));
       }
-    } catch (error) {
-      console.error("체크 상태 변경 오류:", error);
-    }
+    } catch (e) { console.error(e); }
   };
 
+  const current = Number(page) || 1;
+  const visible = getVisiblePages(current, uiPageCount);
+  const pageHref = (n) => "/publish/article?page=" + n;
 
   return (
     <Container>
-      <Title>기사</Title>
-      <Guide>
-        <GuideDot />
-        오른쪽 원을 켜면 해당 기사가 메인 페이지 상단 슬라이드(에디터 픽)에 노출됩니다.
-      </Guide>
-      <List>
-        {articles.map((article) => (
-          <Article key={article.articleId}>
-            <Status>
-              <select
-                style={{ backgroundColor: article.status == "PUBLISHED" ?"#3e5977" : "#eeeeee", color: article.status == "PUBLISHED" ?"#ffffff" : "#000000"}}
-                value={article.status}
-                onChange={(e) => handleStatusChange(article.articleId, e.target.value)}
-              >
-                {statusOptions.map((status) => (
-                  <option key={status} value={status}>
-                    {status}
-                  </option>
-                ))}
-              </select>
-            </Status>
-            {imageMap[article.articleId] === true && (
-              <ImageBadge title="본문에 이미지가 포함된 기사입니다">이미지</ImageBadge>
-            )}
-            <ArticleInfo>
+      <Header>
+        <PageTitle>기사 관리</PageTitle>
+      </Header>
 
-              <Link to={"/edit/" + article.articleId}>
-                <ArticleTitle title={article.title}>{article.title}</ArticleTitle>
-              </Link>
-            </ArticleInfo>
+      <TableHeader>
+        <ColLabel>상태</ColLabel>
+        <ColLabel>제목</ColLabel>
+        <ColLabel>기자</ColLabel>
+        <ColLabel>섹션</ColLabel>
+        <ColLabel>날짜</ColLabel>
+        <ColLabel>EP</ColLabel>
+      </TableHeader>
 
-            <Info>{article.reporterName+", "}</Info>
-            <Info>{article.sectionName+", "}</Info>
-             <Info>{formatDate(article.publishedAt)}</Info>
+      {articles.map(article => {
+        const hasImage = imageMap[article.articleId] === true;
+        return (
+          <Row key={article.articleId}>
+            <StatusSelect
+              $published={article.status === 'PUBLISHED'}
+              value={article.status}
+              onChange={e => handleStatusChange(article.articleId, e.target.value)}
+            >
+              {statusOptions.map(s => <option key={s} value={s}>{s}</option>)}
+            </StatusSelect>
 
-            <EditorsPick
-              title={imageMap[article.articleId] === true
-                ? '메인 슬라이드(에디터 픽) 노출 여부'
-                : '이미지가 있는 기사만 메인 슬라이드로 선택할 수 있습니다'}
-              disabled={imageMap[article.articleId] !== true}
-              checked={article.isEditorsPick}
-              onClick={() => toggleCheck(article.articleId)}
-            />
-          </Article>
-        ))}
-      </List>
-      <Pages>
-        {(() => {
-          const total = uiPageCount;
-          const current = Number(page) || 1;
-          const visible = getVisiblePages(current, total);
-          if (total === 0) return null;
-          return (
+            <TitleCell>
+              <ArticleTitleLink to={"/edit/" + article.articleId} title={article.title}>
+                {article.title}
+              </ArticleTitleLink>
+              {hasImage && (
+                <ImageBadge title="본문에 이미지가 포함된 기사입니다">이미지</ImageBadge>
+              )}
+            </TitleCell>
+
+            <MetaText>{article.reporterName}</MetaText>
+            <MetaText>{article.sectionName}</MetaText>
+            <MetaText>{formatDate(article.publishedAt)}</MetaText>
+
+            <StarBtn
+              $on={article.isEditorsPick}
+              $disabled={!hasImage}
+              onClick={() => toggleEditorsPick(article.articleId)}
+              title={hasImage
+                ? "메인 슬라이드(에디터 픽) 노출 여부"
+                : "이미지가 있는 기사만 메인 슬라이드로 선택할 수 있습니다"}
+            >
+              ★
+            </StarBtn>
+          </Row>
+        );
+      })}
+
+      {uiPageCount > 1 && (
+        <Pages>
+          {current > 1 ? (
+            <Link to={pageHref(current - 1)}><Arrow>‹</Arrow></Link>
+          ) : (
+            <Arrow $disabled>‹</Arrow>
+          )}
+
+          {visible[0] > 1 && (
             <>
-              {current > 1 ? (
-                <Link to={"/publish/article?page=" + (current - 1)}>
-                  <Arrow>‹</Arrow>
-                </Link>
-              ) : (
-                <Arrow disabled>‹</Arrow>
-              )}
-
-              {visible[0] > 1 && (
-                <>
-                  <Link to={"/publish/article?page=1"}>
-                    <PageNumber isOn={current === 1}>1</PageNumber>
-                  </Link>
-                  {visible[0] > 2 && <Ellipsis>…</Ellipsis>}
-                </>
-              )}
-
-              {visible.map((number) => (
-                <Link to={"/publish/article?page=" + number} key={number}>
-                  <PageNumber isOn={current === number}>{number}</PageNumber>
-                </Link>
-              ))}
-
-              {visible[visible.length - 1] < total && (
-                <>
-                  {visible[visible.length - 1] < total - 1 && <Ellipsis>…</Ellipsis>}
-                  <Link to={"/publish/article?page=" + total}>
-                    <PageNumber isOn={current === total}>{total}</PageNumber>
-                  </Link>
-                </>
-              )}
-
-              {current < total ? (
-                <Link to={"/publish/article?page=" + (current + 1)}>
-                  <Arrow>›</Arrow>
-                </Link>
-              ) : (
-                <Arrow disabled>›</Arrow>
-              )}
+              <Link to={pageHref(1)}><PageNumber $on={current === 1}>1</PageNumber></Link>
+              {visible[0] > 2 && <Ellipsis>…</Ellipsis>}
             </>
-          );
-        })()}
-      </Pages>
+          )}
+
+          {visible.map(number => (
+            <Link to={pageHref(number)} key={number}>
+              <PageNumber $on={current === number}>{number}</PageNumber>
+            </Link>
+          ))}
+
+          {visible[visible.length - 1] < uiPageCount && (
+            <>
+              {visible[visible.length - 1] < uiPageCount - 1 && <Ellipsis>…</Ellipsis>}
+              <Link to={pageHref(uiPageCount)}>
+                <PageNumber $on={current === uiPageCount}>{uiPageCount}</PageNumber>
+              </Link>
+            </>
+          )}
+
+          {current < uiPageCount ? (
+            <Link to={pageHref(current + 1)}><Arrow>›</Arrow></Link>
+          ) : (
+            <Arrow $disabled>›</Arrow>
+          )}
+        </Pages>
+      )}
     </Container>
   );
 };

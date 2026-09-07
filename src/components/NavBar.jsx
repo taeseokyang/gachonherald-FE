@@ -1,122 +1,161 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { Container } from "./StyledComponents";
+import { useState, useRef } from "react";
 
-const Content = styled.div` 
-    margin: 0px auto;
-  padding: 0px 20px;
-  max-width: 1000px;
-    display: flex;
-    align-items: center; 
-    flex-direction: row;
-    position: relative;
-    overflow: hidden;
-    background: #eeeeee;
-    @media screen and (max-width: 600px) {
-      /* height: 40px; */
-    }
-    margin-bottom: 10px;
+const SECTIONS = [
+  { name: "Cover Story",  desc: "In-depth reporting on the most important stories of the issue" },
+  { name: "Feature",      desc: "Long-form articles exploring complex topics and current affairs" },
+  { name: "World Wide",   desc: "News and perspectives from around the globe" },
+  { name: "Brief",        desc: "Quick updates on current events and campus news" },
+  { name: "Gachonian",    desc: "Stories about Gachon University students and alumni" },
+  { name: "Campus Talk",  desc: "Conversations and opinions from the Gachon community" },
+  { name: "Book",         desc: "Reviews and discussions of noteworthy books" },
+  { name: "Drama",        desc: "Coverage of Korean and international drama series" },
+  { name: "Movie",        desc: "Film reviews and industry insights" },
+  { name: "Experience",   desc: "Personal stories and cultural experiences from our reporters" },
+  { name: "Editorial",    desc: "Opinion pieces and editorials from the editorial staff" },
+];
+
+const NavWrapper = styled.nav`
+  position: relative;
+  background: #ffffff;
+  border-top: 2px solid #3e5977;
+  border-bottom: 1px solid #e8e8e8;
+  z-index: 100;
+`;
+
+const Inner = styled.div`
+  margin: 0 auto;
+  padding: 0 20px;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
 `;
 
 const SectionBar = styled.div`
-    height: 100%;
-    width: 100%;
-    color: #ffffff;
-    /* background: #f8f8f8;
-    padding: 5px 5px;
-    border-radius: 7px; */
-    padding-bottom: 10px;
-    @media screen and (max-width: 600px) {
-        padding-bottom: 5px;
-    }
-    border-bottom: 1.5px solid #000000;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  ::-webkit-scrollbar { display: none; }
+  scrollbar-width: none;
+`;
 
-    display: flex;
-    align-items: center; 
-    gap: 10px;
-    @media screen and (max-width: 600px) {
-        gap: 5px;
-    }
-    /* width: 80%; */
-    overflow-x: auto;
+const SectionItem = styled.div`
+  flex-shrink: 0;
+`;
 
-    ::-webkit-scrollbar {
-    display: none;
-    }
-    scrollbar-width: none;
-    /* padding-right: 70px; */
+const SectionLink = styled(Link)`
+  display: block;
+  padding: 12px 14px;
+  font-size: 13px;
+  font-weight: 400;
+  color: ${({ $active }) => ($active ? "#3e5977" : "#555555")};
+  white-space: nowrap;
+  transition: color 0.15s ease;
+  border-bottom: 2px solid ${({ $active }) => ($active ? "#3e5977" : "transparent")};
+  margin-bottom: -1px;
+
+  &:hover {
+    color: #3e5977;
+  }
+
+  @media (max-width: 600px) {
+    padding: 10px 10px;
+    font-size: 12px;
+  }
 `;
-const SectionTitle = styled.div`
-    position: relative;
-    color: #000000;
-    font-weight: 500;
-    font-size: 16px;
-    /* line-height: 40px; */
-    white-space: nowrap;
+
+const DropPanel = styled.div`
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+  border-bottom: 1px solid #e8e8e8;
+  opacity: ${({ $show }) => ($show ? 1 : 0)};
+  transform: translateY(${({ $show }) => ($show ? "0px" : "-5px")});
+  pointer-events: ${({ $show }) => ($show ? "auto" : "none")};
+  transition: opacity 0.18s ease, transform 0.18s ease;
+  z-index: 99;
 `;
-const UnderBar = styled.div`
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 2px;
-    border-radius: 7px;
-    background: #ffffff;
+
+const DropInner = styled.div`
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 14px 34px 16px;
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
 `;
-const Section = styled.div`
-    height: 100%;
-    position: relative;
-    display: flex;
-    align-items: center; 
-    border-radius: 7px;
-    padding: 5px 10px;
-    @media screen and (max-width: 600px) {
-        padding: 5px 5px;
-    }
-    &:hover{
-        background: #f0f0f0;
-    }
+
+const DropName = styled.div`
+  font-size: 13px;
+  font-weight: 700;
+  color: #3e5977;
+  white-space: nowrap;
 `;
-const GradationBar = styled.div`
-    position: absolute;
-    right: 0px;
-    width: 50px;
-    height: 100%;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0), #ffffff);
+
+const DropDivider = styled.div`
+  width: 1px;
+  height: 12px;
+  background: #d0d0d0;
+  flex-shrink: 0;
+`;
+
+const DropDesc = styled.div`
+  font-size: 12.5px;
+  color: #888888;
+  line-height: 1.5;
 `;
 
 const NavBar = () => {
-    const sections = [
-        "Cover Story",
-        "Feature",
-        "World Wide",
-        "Brief",
-        "Gachonian",
-        "Campus Talk",
-        "Book",
-        "Drama",
-        "Movie",
-        "Experience",
-        "Editorial"
-    ];
+  const [hovered, setHovered] = useState(null);
+  const lastHovered = useRef(null);
+  const hideTimer = useRef(null);
 
-    return (
-        <Container>
-            <Content>
-                <SectionBar>
-                    {sections.map((section, index) => (
-                        <Section>
-                            <Link to={"/section/" + section}>
-                                <SectionTitle>{section}</SectionTitle>
-                                {/* <UnderBar></UnderBar> */}
-                            </Link>
-                        </Section>
-                    ))}
-                </SectionBar>
-                {/* <GradationBar></GradationBar> */}
-            </Content>
-        </Container>
-    );
+  const onEnter = (name) => {
+    clearTimeout(hideTimer.current);
+    setHovered(name);
+    lastHovered.current = name;
+  };
+
+  const onLeave = () => {
+    hideTimer.current = setTimeout(() => setHovered(null), 120);
+  };
+
+  const displaySection = SECTIONS.find(
+    (s) => s.name === (hovered || lastHovered.current)
+  );
+
+  return (
+    <NavWrapper onMouseLeave={onLeave}>
+      <Inner>
+        <SectionBar>
+          {SECTIONS.map((s) => (
+            <SectionItem key={s.name} onMouseEnter={() => onEnter(s.name)}>
+              <SectionLink to={"/section/" + s.name} $active={hovered === s.name}>
+                {s.name}
+              </SectionLink>
+            </SectionItem>
+          ))}
+        </SectionBar>
+      </Inner>
+
+      <DropPanel $show={!!hovered}>
+        <DropInner>
+          {displaySection && (
+            <>
+              <DropName>{displaySection.name}</DropName>
+              <DropDivider />
+              <DropDesc>{displaySection.desc}</DropDesc>
+            </>
+          )}
+        </DropInner>
+      </DropPanel>
+    </NavWrapper>
+  );
 };
 
 export default NavBar;
