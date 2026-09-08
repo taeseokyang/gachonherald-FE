@@ -18,7 +18,7 @@ const ArticleTitle = styled.div`
   }
 `;
 const ArticleSubTitle = styled.div`
-  margin-top: 8px;
+  margin-top: 3px;
   color: #6b6b6b;
   font-size: 17px;
   font-weight: 400;
