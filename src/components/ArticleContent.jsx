@@ -13,6 +13,9 @@ const ArticleTitle = styled.div`
   font-size: 26px;
   font-weight: 700;
   line-height: 1.25;
+  @media screen and (max-width: 600px) {
+    font-size: 21px;
+  }
 `;
 const ArticleSubTitle = styled.div`
   margin-top: 8px;
@@ -20,6 +23,9 @@ const ArticleSubTitle = styled.div`
   font-size: 17px;
   font-weight: 400;
   line-height: 1.4;
+  @media screen and (max-width: 600px) {
+    font-size: 15px;
+  }
 `;
 
 const ArticleBody = styled.div`

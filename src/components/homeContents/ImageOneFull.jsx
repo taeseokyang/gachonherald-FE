@@ -9,7 +9,7 @@ const Grid = styled.div`
   align-items: center;
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 8px;
   }
 `;
 
@@ -17,6 +17,16 @@ const TextBlock = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  @media (max-width: 600px) {
+    order: 2;
+  }
+`;
+
+const ImageLink = styled(Link)`
+  display: block;
+  @media (max-width: 600px) {
+    order: 1;
+  }
 `;
 
 const FeaturedTitle = styled.div`
@@ -26,6 +36,12 @@ const FeaturedTitle = styled.div`
   color: #1a1a1a;
   margin-bottom: 8px;
   transition: color 0.2s;
+  @media (max-width: 600px) {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
 `;
 
 const FeaturedSubtitle = styled.div`
@@ -33,6 +49,10 @@ const FeaturedSubtitle = styled.div`
   font-weight: 400;
   color: #6b6b6b;
   line-height: 1.5;
+  @media (max-width: 600px) {
+    font-size: 13px;
+    line-height: 1.4;
+  }
 `;
 
 const FeaturedLink = styled(Link)`
@@ -76,11 +96,11 @@ const ImageOneFull = ({ sectionId, sectionName, article }) => {
               <FeaturedSubtitle>{article.subtitle}</FeaturedSubtitle>
             </FeaturedLink>
           </TextBlock>
-          <Link to={"/article/" + article.articleId}>
+          <ImageLink to={"/article/" + article.articleId}>
             <CardImageBox>
               <img src={"https://api.thegachonherald.com/image?path=" + article.mainImage} alt={article.title} />
             </CardImageBox>
-          </Link>
+          </ImageLink>
         </Grid>
       </ArticleItem>
     </Container>
