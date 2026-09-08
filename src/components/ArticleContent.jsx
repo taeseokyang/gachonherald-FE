@@ -48,7 +48,7 @@ const InfoBox = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border-bottom: 1px solid #e8e8e8;
 `;
 const ReporterBox = styled.div`
