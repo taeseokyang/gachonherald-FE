@@ -56,6 +56,9 @@ const Footer = () => {
             <Link to={"/aboutus"}>
             <ClickItem>About Us</ClickItem>
             </Link>
+            <Link to={"/archive"}>
+            <ClickItem>Archive</ClickItem>
+            </Link>
             </Line>
            
             <Line style={{justifyContent: "space-between"}}>

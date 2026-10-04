@@ -170,6 +170,7 @@ const WorkSpaceContent = () => {
           <AdminLinks>
             <AdminLink to="/publish">발간 관리</AdminLink>
             <AdminLink to="/manage/user?page=1">유저 관리</AdminLink>
+            <AdminLink to="/manage/section">섹션 관리</AdminLink>
           </AdminLinks>
         </>
       )}

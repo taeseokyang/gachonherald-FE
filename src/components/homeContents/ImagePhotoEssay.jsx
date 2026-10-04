@@ -2,23 +2,45 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container, ArticleItem, Section } from "../StyledComponents";
 
+// Editor's Pick과 같은 방식: 흐린 배경 위에 원본 비율 그대로(잘림 없이) 표시
 const FullImageBox = styled.div`
   width: 100%;
+  height: 480px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: #e0e0e0;
   margin-bottom: 12px;
   position: relative;
-  & img {
-    width: 100%;
-    height: auto;
-    max-height: 500px;
-    object-fit: cover;
-    display: block;
-    transition: transform 0.4s ease;
+
+  @media (max-width: 700px) {
+    height: 260px;
   }
-  &:hover img {
-    transform: scale(1.02);
-  }
+`;
+
+const BlurBg = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(18px);
+  transform: scale(1.1);
+`;
+
+const BgOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.35);
+  z-index: 1;
+`;
+
+const PhotoImg = styled.img`
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+  transition: transform 0.4s ease;
 `;
 
 const Caption = styled.div`
@@ -41,11 +63,15 @@ const ArticleLink = styled(Link)`
   &:hover ${Caption} {
     color: #3e5977;
   }
+  &:hover ${PhotoImg} {
+    transform: scale(1.02);
+  }
 `;
 
 const ImagePhotoEssay = ({ sectionId, sectionName, imageArticles }) => {
   const article = imageArticles[0];
   if (!article) return null;
+  const imageUrl = "https://api.thegachonherald.com/image?path=" + article.mainImage;
 
   return (
     <Container>
@@ -55,10 +81,9 @@ const ImagePhotoEssay = ({ sectionId, sectionName, imageArticles }) => {
         </Link>
         <ArticleLink to={"/article/" + article.articleId}>
           <FullImageBox>
-            <img
-              src={"https://api.thegachonherald.com/image?path=" + article.mainImage}
-              alt={article.title}
-            />
+            <BlurBg src={imageUrl} alt="" aria-hidden="true" />
+            <BgOverlay />
+            <PhotoImg src={imageUrl} alt={article.title} />
           </FullImageBox>
           <Caption>{article.title}</Caption>
           <Subcaption>{article.subtitle}</Subcaption>

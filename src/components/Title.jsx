@@ -28,7 +28,7 @@ export const TitleImg = styled.object`
 export const Since = styled.div`
   margin-top: 8px;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 300;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #9b9b9b;

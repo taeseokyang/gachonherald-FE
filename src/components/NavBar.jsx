@@ -5,14 +5,10 @@ import { useState, useRef } from "react";
 const SECTIONS = [
   { name: "Cover Story",  desc: "In-depth reporting on the most important stories of the issue" },
   { name: "Feature",      desc: "Long-form articles exploring complex topics and current affairs" },
-  { name: "World Wide",   desc: "News and perspectives from around the globe" },
   { name: "Brief",        desc: "Quick updates on current events and campus news" },
-  { name: "Gachonian",    desc: "Stories about Gachon University students and alumni" },
-  { name: "Campus Talk",  desc: "Conversations and opinions from the Gachon community" },
-  { name: "Book",         desc: "Reviews and discussions of noteworthy books" },
-  { name: "Drama",        desc: "Coverage of Korean and international drama series" },
-  { name: "Movie",        desc: "Film reviews and industry insights" },
+  { name: "Culture",      desc: "Reviews and discussions of movies, books, and dramas" },
   { name: "Experience",   desc: "Personal stories and cultural experiences from our reporters" },
+  { name: "Photo Essay",  desc: "Visual storytelling through photography" },
   { name: "Editorial",    desc: "Opinion pieces and editorials from the editorial staff" },
 ];
 

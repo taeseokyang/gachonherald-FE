@@ -3,21 +3,6 @@ import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-const SECTION_DESCS = {
-  "Cover Story":  "In-depth reporting on the most important stories of the issue",
-  "Feature":      "Long-form articles exploring complex topics and current affairs",
-  "World Wide":   "News and perspectives from around the globe",
-  "Brief":        "Quick updates on current events and campus news",
-  "Gachonian":    "Stories about Gachon University students and alumni",
-  "Campus Talk":  "Conversations and opinions from the Gachon community",
-  "Book":         "Reviews and discussions of noteworthy books",
-  "Drama":        "Coverage of Korean and international drama series",
-  "Movie":        "Film reviews and industry insights",
-  "Experience":   "Personal stories and cultural experiences from our reporters",
-  "Photo Essay":  "Visual storytelling through photography",
-  "Editorial":    "Opinion pieces and editorials from the editorial staff",
-};
-
 const NavWrapper = styled.nav`
   position: relative;
   background: #ffffff;
@@ -46,6 +31,10 @@ const SectionBar = styled.div`
 
 const SectionItem = styled.div`
   flex-shrink: 0;
+
+  /* 넘칠 때 왼쪽이 잘리지 않도록 justify-content 대신 auto margin으로 가운데 정렬 */
+  &:first-child { margin-left: auto; }
+  &:last-child { margin-right: auto; }
 `;
 
 const SectionLink = styled(Link)`
@@ -69,14 +58,6 @@ const SectionLink = styled(Link)`
   }
 `;
 
-const Divider = styled.div`
-  width: 1px;
-  height: 14px;
-  background: #d8d8d8;
-  margin: 0 4px;
-  flex-shrink: 0;
-`;
-
 const DropPanel = styled.div`
   position: absolute;
   top: 100%;
@@ -98,6 +79,7 @@ const DropInner = styled.div`
   padding: 13px 34px 15px;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 14px;
 `;
 
@@ -170,17 +152,6 @@ const Nav = () => {
               </SectionLink>
             </SectionItem>
           ))}
-
-          {sections.length > 0 && (
-            <>
-              <Divider />
-              <SectionItem onMouseEnter={() => setHovered(null)}>
-                <SectionLink to="/archive" $active={false}>
-                  Archive
-                </SectionLink>
-              </SectionItem>
-            </>
-          )}
         </SectionBar>
       </Inner>
 
@@ -189,11 +160,12 @@ const Nav = () => {
           {displaySection && (
             <>
               <DropName>{displaySection.name}</DropName>
-              <DropDivider />
-              <DropDesc>
-                {SECTION_DESCS[displaySection.name] ??
-                  "Browse articles in this section"}
-              </DropDesc>
+              {displaySection.description && (
+                <>
+                  <DropDivider />
+                  <DropDesc>{displaySection.description}</DropDesc>
+                </>
+              )}
             </>
           )}
         </DropInner>
