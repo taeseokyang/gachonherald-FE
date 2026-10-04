@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container, ArticleItem, Section } from "../StyledComponents";
+import TextCard from "./TextCard";
 
 const Grid = styled.div`
   display: grid;
@@ -124,18 +125,20 @@ const SectionGroup = ({ sections }) => {
                 <Link to={"/section/" + section.sectionId + "?page=1"}>
                   <Section>{section.sectionName}</Section>
                 </Link>
-                <MainLink to={"/article/" + mainArticle.articleId}>
-                  {hasImage && (
+                {hasImage ? (
+                  <MainLink to={"/article/" + mainArticle.articleId}>
                     <CardImageBox>
                       <img
                         src={"https://api.thegachonherald.com/image?path=" + mainArticle.mainImage}
                         alt={mainArticle.title}
                       />
                     </CardImageBox>
-                  )}
-                  <CardTitle>{mainArticle.title}</CardTitle>
-                  <CardSubtitle>{mainArticle.subtitle}</CardSubtitle>
-                </MainLink>
+                    <CardTitle>{mainArticle.title}</CardTitle>
+                    <CardSubtitle>{mainArticle.subtitle}</CardSubtitle>
+                  </MainLink>
+                ) : (
+                  <TextCard article={mainArticle} />
+                )}
                 {extraArticles.map((article, i) => (
                   <ExtraItem key={i}>
                     <ExtraLink to={"/article/" + article.articleId}>

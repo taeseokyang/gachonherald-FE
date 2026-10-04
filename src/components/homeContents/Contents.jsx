@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import TopBlock from "./TopBlock";
-import ImageNo from "./ImageNo";
 import ImageOneFull from "./ImageOneFull";
-import ImageOne from "./ImageOne";
-import ImageTwo from "./ImageTwo";
-import ImageThree from "./ImageThree";
 import HorizontalLine from "./HorizontalLine";
 import SectionGroup from "./SectionGroup";
 import ImagePhotoEssay from "./ImagePhotoEssay";
+import CardSection from "./CardSection";
 import { Container } from "../StyledComponents";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -72,14 +69,8 @@ function renderSection(section) {
 
   if (articles.length === 0 && imageArticles.length === 1)
     return <ImageOneFull sectionId={sectionId} sectionName={sectionName} article={imageArticles[0]} />;
-  if (articles.length > 0 && imageArticles.length === 1)
-    return <ImageOne sectionId={sectionId} sectionName={sectionName} imageArticles={imageArticles} articles={articles} />;
-  if (imageArticles.length === 2)
-    return <ImageTwo sectionId={sectionId} sectionName={sectionName} imageArticles={imageArticles} articles={articles} />;
-  if (imageArticles.length === 3)
-    return <ImageThree sectionId={sectionId} sectionName={sectionName} imageArticles={imageArticles} articles={articles} />;
-  if (articles.length > 0 && imageArticles.length === 0)
-    return <ImageNo sectionId={sectionId} sectionName={sectionName} articles={articles} />;
+  if (imageArticles.length + articles.length > 0)
+    return <CardSection sectionId={sectionId} sectionName={sectionName} imageArticles={imageArticles} articles={articles} />;
   return null;
 }
 

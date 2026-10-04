@@ -3,26 +3,12 @@ import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
+import AdminHeading from "./AdminHeading";
 
 const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
   padding: 32px 20px 80px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 32px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #3e5977;
-`;
-
-const PageTitle = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1a1a;
 `;
 
 const NewArticleBtn = styled(Link)`
@@ -144,10 +130,9 @@ const WorkSpaceContent = () => {
 
   return (
     <Container>
-      <Header>
-        <PageTitle>Workspace</PageTitle>
+      <AdminHeading title="Workspace">
         <NewArticleBtn to="/edit">+ 새 기사 작성</NewArticleBtn>
-      </Header>
+      </AdminHeading>
 
       <ArticleList>
         {articles.length === 0 ? (

@@ -2,25 +2,12 @@ import axios from 'axios';
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
+import AdminHeading from "./AdminHeading";
 
 const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
   padding: 32px 20px 80px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #3e5977;
-`;
-
-const PageTitle = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1a1a;
 `;
 
 const GroupTitle = styled.div`
@@ -266,9 +253,7 @@ const SectionManageContent = () => {
 
   return (
     <Container>
-      <Header>
-        <PageTitle>섹션 관리</PageTitle>
-      </Header>
+      <AdminHeading title="섹션 관리" />
 
       <GroupTitle>새 섹션</GroupTitle>
       <AddBox>

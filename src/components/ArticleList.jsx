@@ -4,41 +4,45 @@ import { Container, Content } from "./StyledComponents";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Helmet } from "react-helmet-async";
-
-const SectionTitle = styled.div`
-  font-size: 22px;
-  font-weight: 700;
-  color: #1a1a1a;
-  padding-bottom: 14px;
-  margin-bottom: 28px;
-  border-bottom: 2px solid #3e5977;
-`;
+import PageHeading from "./PageHeading";
 
 const ArticleItem = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 20px;
-  align-items: start;
-  padding: 20px 0;
+  gap: 28px;
+  align-items: center;
+  padding: 22px 0;
   border-bottom: 1px solid #f0f0f0;
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 `;
 
-const TextBlock = styled.div``;
+const TextBlock = styled.div`
+  min-width: 0;
+`;
 
-const ArticleDate = styled.div`
+const Meta = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 12px;
   color: #9b9b9b;
-  margin-bottom: 6px;
+`;
+
+const MetaDot = styled.span`
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #c4c4c4;
 `;
 
 const ArticleTitle = styled.div`
-  font-size: 17px;
+  font-size: 16px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.4;
   color: #1a1a1a;
   margin-bottom: 6px;
   transition: color 0.15s;
@@ -48,14 +52,17 @@ const ArticleTitle = styled.div`
 `;
 
 const ArticleSubtitle = styled.div`
-  font-size: 13px;
+  font-size: 14px;
   color: #6b6b6b;
-  line-height: 1.4;
-  margin-bottom: 8px;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 `;
 
-const ArticleReporter = styled.div`
-  font-size: 12px;
+const ArticleReporter = styled.span`
   color: #9b9b9b;
   transition: color 0.15s;
   &:hover {
@@ -64,8 +71,9 @@ const ArticleReporter = styled.div`
 `;
 
 const ImageBox = styled.div`
-  width: 140px;
-  height: 100px;
+  width: 168px;
+  height: 112px;
+  overflow: hidden;
   background: #f0f0f0;
   flex-shrink: 0;
   & img {
@@ -85,6 +93,13 @@ const ImageBox = styled.div`
   }
 `;
 
+const EmptyState = styled.div`
+  padding: 80px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #9b9b9b;
+`;
+
 const Pages = styled.div`
   margin-top: 48px;
   margin-bottom: 24px;
@@ -95,22 +110,21 @@ const Pages = styled.div`
 `;
 
 const PageNumber = styled.div`
-  width: 32px;
-  height: 32px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
   font-size: 13px;
-  font-weight: ${({ $on }) => ($on ? 700 : 400)};
-  color: ${({ $on }) => ($on ? "#ffffff" : "#555555")};
-  background: ${({ $on }) => ($on ? "#3e5977" : "transparent")};
+  font-weight: ${({ $on }) => ($on ? 600 : 400)};
+  color: ${({ $on }) => ($on ? "#3e5977" : "#9b9b9b")};
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.15s;
 
   &:hover {
-    background: ${({ $on }) => ($on ? "#3e5977" : "#f0f0f0")};
-    color: ${({ $on }) => ($on ? "#ffffff" : "#3e5977")};
+    color: ${({ $on }) => ($on ? "#3e5977" : "#1a1a1a")};
   }
 `;
 
@@ -121,6 +135,8 @@ const ArticleList = () => {
   const [pageNumbers, setPageNumbers] = useState([]);
   const [articles, setArticles] = useState([]);
   const [sectionName, setSectionName] = useState("");
+  const [sectionDesc, setSectionDesc] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -144,8 +160,11 @@ const ArticleList = () => {
           )
         );
         setSectionName(res2.data.data.name);
+        setSectionDesc(res2.data.data.description || "");
       } catch (error) {
         console.error("오류 발생:", error);
+      } finally {
+        setLoaded(true);
       }
     };
     fetchData();
@@ -157,19 +176,26 @@ const ArticleList = () => {
         <title>{sectionName ? `${sectionName} | The Gachon Herald (가천헤럴드)` : "The Gachon Herald"}</title>
       </Helmet>
       <Content>
-        <SectionTitle>{sectionName}</SectionTitle>
+        <PageHeading title={sectionName} description={sectionDesc} />
+
+        {loaded && articles.length === 0 && (
+          <EmptyState>No articles yet.</EmptyState>
+        )}
 
         {articles.map((article) => (
           <ArticleItem key={article.articleId}>
             <TextBlock>
-              <ArticleDate>{article.publishedAt.slice(0, 10)}</ArticleDate>
               <Link to={"/article/" + article.articleId}>
                 <ArticleTitle>{article.title}</ArticleTitle>
               </Link>
               <ArticleSubtitle>{article.subtitle}</ArticleSubtitle>
-              <Link to={"/reporter/" + article.reporterId}>
-                <ArticleReporter>By {article.reporterName}</ArticleReporter>
-              </Link>
+              <Meta>
+                <Link to={"/reporter/" + article.reporterId}>
+                  <ArticleReporter>By {article.reporterName}</ArticleReporter>
+                </Link>
+                <MetaDot />
+                <span>{article.publishedAt.slice(0, 10).replaceAll("-", ".")}</span>
+              </Meta>
             </TextBlock>
 
             {article.mainImage && (

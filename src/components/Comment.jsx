@@ -130,22 +130,21 @@ const Pages = styled.div`
 `;
 
 const PageNumber = styled.div`
-  width: 30px;
-  height: 30px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
   font-size: 13px;
-  font-weight: ${({ $on }) => ($on ? 700 : 400)};
-  color: ${({ $on }) => ($on ? "#ffffff" : "#555555")};
-  background: ${({ $on }) => ($on ? "#3e5977" : "transparent")};
+  font-weight: ${({ $on }) => ($on ? 600 : 400)};
+  color: ${({ $on }) => ($on ? "#3e5977" : "#9b9b9b")};
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.15s;
 
   &:hover {
-    background: ${({ $on }) => ($on ? "#3e5977" : "#f0f0f0")};
-    color: ${({ $on }) => ($on ? "#ffffff" : "#3e5977")};
+    color: ${({ $on }) => ($on ? "#3e5977" : "#1a1a1a")};
   }
 `;
 

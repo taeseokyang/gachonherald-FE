@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import AdminHeading from "./AdminHeading";
 
 const Container = styled.div`
   max-width: 900px;
@@ -11,33 +12,11 @@ const Container = styled.div`
   padding: 32px 20px 80px;
 `;
 
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #3e5977;
-  flex-wrap: wrap;
-  gap: 12px;
-`;
-
-const PageTitle = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1a1a;
-`;
-
 const Count = styled.span`
   font-size: 14px;
   font-weight: 400;
   color: #9b9b9b;
   margin-left: 8px;
-`;
-
-const ActionGroup = styled.div`
-  display: flex;
-  gap: 10px;
 `;
 
 const OutlineBtn = styled(Link)`
@@ -280,13 +259,10 @@ const PublishManageContent = () => {
 
   return (
     <Container>
-      <Header>
-        <PageTitle>발간 관리<Count>{articles.length}건</Count></PageTitle>
-        <ActionGroup>
-          <OutlineBtn to="/publish/article?page=1">발간 수정</OutlineBtn>
-          <PublishBtn onClick={publish}>발간하기</PublishBtn>
-        </ActionGroup>
-      </Header>
+      <AdminHeading title={<>발간 관리<Count>{articles.length}건</Count></>}>
+        <OutlineBtn to="/publish/article?page=1">발간 수정</OutlineBtn>
+        <PublishBtn onClick={publish}>발간하기</PublishBtn>
+      </AdminHeading>
 
       {articles.length === 0 ? (
         <EmptyState>승인된 기사가 없습니다.</EmptyState>

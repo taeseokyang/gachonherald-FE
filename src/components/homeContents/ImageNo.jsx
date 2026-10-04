@@ -1,11 +1,26 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Container, ArticleItem, Section } from "../StyledComponents";
+import TextCard from "./TextCard";
+
+const MAX_CARDS = 3;
+const MAX_EXTRA = 3;
+
+const CardGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+`;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0 20px;
+  margin-top: 16px;
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
   }
@@ -48,8 +63,14 @@ const ImageNo = ({ sectionId, sectionName, articles }) => {
         <Link to={"/section/" + sectionId + "?page=1"}>
           <Section>{sectionName}</Section>
         </Link>
+        <CardGrid>
+          {articles.slice(0, MAX_CARDS).map((article) => (
+            <TextCard key={article.articleId} article={article} />
+          ))}
+        </CardGrid>
+        {articles.length > MAX_CARDS && (
         <Grid>
-          {articles.map((article, index) => (
+          {articles.slice(MAX_CARDS, MAX_CARDS + MAX_EXTRA).map((article, index) => (
             <TextItem key={index}>
               <TextLink to={"/article/" + article.articleId}>
                 <TextTitle>{article.title}</TextTitle>
@@ -58,6 +79,7 @@ const ImageNo = ({ sectionId, sectionName, articles }) => {
             </TextItem>
           ))}
         </Grid>
+        )}
       </ArticleItem>
     </Container>
   );

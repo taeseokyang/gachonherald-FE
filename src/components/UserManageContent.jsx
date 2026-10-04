@@ -3,25 +3,12 @@ import { Link } from "react-router-dom";
 import styled from 'styled-components';
 import { useState, useEffect } from 'react';
 import { useCookies } from "react-cookie";
+import AdminHeading from "./AdminHeading";
 
 const Container = styled.div`
   max-width: 900px;
   margin: 0 auto;
   padding: 32px 20px 80px;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 28px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #3e5977;
-`;
-
-const PageTitle = styled.div`
-  font-size: 20px;
-  font-weight: 700;
-  color: #1a1a1a;
 `;
 
 /* ─── Table ─── */
@@ -104,19 +91,22 @@ const Pages = styled.div`
 `;
 
 const PageNumber = styled.div`
-  width: 32px;
-  height: 32px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
   display: flex;
-  align-items: center;
   justify-content: center;
-  border-radius: 4px;
+  align-items: center;
   font-size: 13px;
-  font-weight: ${({ $on }) => ($on ? 700 : 400)};
-  color: ${({ $on }) => ($on ? '#ffffff' : '#555555')};
-  background: ${({ $on }) => ($on ? '#3e5977' : 'transparent')};
+  font-weight: ${({ $on }) => ($on ? 600 : 400)};
+  color: ${({ $on }) => ($on ? "#3e5977" : "#9b9b9b")};
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
-  &:hover { background: ${({ $on }) => ($on ? '#3e5977' : '#f0f0f0')}; color: ${({ $on }) => ($on ? '#ffffff' : '#3e5977')}; }
+  transition: color 0.15s;
+
+  &:hover {
+    color: ${({ $on }) => ($on ? "#3e5977" : "#1a1a1a")};
+  }
 `;
 
 const statusOptions = ['Editor In Chief', 'Head Of Administration', 'Education Director', 'Regular Reporter', 'Intern Reporter', 'Pending'];
@@ -173,9 +163,7 @@ const UserManageContent = () => {
 
   return (
     <Container>
-      <Header>
-        <PageTitle>기자 관리</PageTitle>
-      </Header>
+      <AdminHeading title="기자 관리" />
 
       <TableHeader>
         <ColLabel>직책</ColLabel>

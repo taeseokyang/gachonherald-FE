@@ -7,90 +7,105 @@ import { Helmet } from "react-helmet-async";
 
 /* ── Reporter header ── */
 const ReporterHeader = styled.div`
-  padding: 28px 0 28px;
-  border-bottom: 1px solid #e8e8e8;
-  margin-bottom: 32px;
+  padding: 8px 0 0;
+  margin-bottom: 28px;
 `;
 
-const ReporterName = styled.div`
-  font-size: 26px;
+const ReporterName = styled.h1`
+  margin: 0;
+  font-size: 24px;
   font-weight: 700;
+  letter-spacing: -0.01em;
   color: #1a1a1a;
-  margin-bottom: 6px;
+
+  @media (max-width: 600px) {
+    font-size: 20px;
+  }
 `;
 
-const ReporterIntro = styled.div`
+const ReporterPosition = styled.div`
+  margin-top: 4px;
+  font-size: 13px;
+  color: #9b9b9b;
+`;
+
+const ReporterIntro = styled.p`
+  margin: 14px 0 0;
+  max-width: 680px;
   font-size: 14px;
-  color: #6b6b6b;
-  line-height: 1.6;
-`;
-
-/* ── Section block ── */
-const Block = styled.div`
-  margin-bottom: 44px;
-`;
-
-const PageTitle = styled.div`
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
-  padding-bottom: 12px;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #3e5977;
+  color: #555555;
+  line-height: 1.7;
 `;
 
 /* ── About info ── */
+const InfoList = styled.div`
+  margin-bottom: 44px;
+`;
+
 const InfoRow = styled.div`
-  display: flex;
-  align-items: baseline;
+  display: grid;
+  grid-template-columns: 120px 1fr;
   gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid #f5f5f5;
+  padding: 12px 0;
+  border-bottom: 1px solid #ececec;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
 `;
 
 const InfoLabel = styled.div`
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #3e5977;
-  min-width: 80px;
-  flex-shrink: 0;
+  font-size: 13px;
+  color: #9b9b9b;
 `;
 
 const InfoValue = styled.div`
   font-size: 14px;
-  color: #444444;
+  color: #1a1a1a;
+  word-break: break-all;
+
+  & a:hover {
+    color: #3e5977;
+  }
 `;
 
 /* ── Article list ── */
+const Block = styled.div`
+  margin-bottom: 44px;
+`;
+
+const BlockTitle = styled.div`
+  font-size: 13px;
+  font-weight: 600;
+  color: #1a1a1a;
+  padding-bottom: 4px;
+`;
+
 const ArticleItem = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 20px;
-  align-items: start;
-  padding: 18px 0;
+  gap: 28px;
+  align-items: center;
+  padding: 22px 0;
   border-bottom: 1px solid #f0f0f0;
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
+    gap: 14px;
   }
 `;
 
-const TextBlock = styled.div``;
-
-const ArticleDate = styled.div`
-  font-size: 12px;
-  color: #9b9b9b;
-  margin-bottom: 5px;
+const TextBlock = styled.div`
+  min-width: 0;
 `;
 
 const ArticleTitle = styled.div`
   font-size: 16px;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.4;
   color: #1a1a1a;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   transition: color 0.15s;
   &:hover {
     color: #3e5977;
@@ -98,14 +113,34 @@ const ArticleTitle = styled.div`
 `;
 
 const ArticleSubtitle = styled.div`
-  font-size: 13px;
+  font-size: 14px;
   color: #6b6b6b;
-  line-height: 1.4;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+`;
+
+const Meta = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #9b9b9b;
+`;
+
+const MetaDot = styled.span`
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #c4c4c4;
 `;
 
 const ImageBox = styled.div`
-  width: 130px;
-  height: 90px;
+  width: 168px;
+  height: 112px;
   overflow: hidden;
   background: #f0f0f0;
   flex-shrink: 0;
@@ -124,8 +159,15 @@ const ImageBox = styled.div`
 
   @media (max-width: 600px) {
     width: 100%;
-    height: 180px;
+    height: 200px;
   }
+`;
+
+const EmptyState = styled.div`
+  padding: 60px 0;
+  text-align: center;
+  font-size: 14px;
+  color: #9b9b9b;
 `;
 
 /* ── Pagination ── */
@@ -138,22 +180,21 @@ const Pages = styled.div`
 `;
 
 const PageNumber = styled.div`
-  width: 32px;
-  height: 32px;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 4px;
+  box-sizing: border-box;
   display: flex;
   justify-content: center;
   align-items: center;
-  border-radius: 4px;
   font-size: 13px;
-  font-weight: ${({ $on }) => ($on ? 700 : 400)};
-  color: ${({ $on }) => ($on ? "#ffffff" : "#555555")};
-  background: ${({ $on }) => ($on ? "#3e5977" : "transparent")};
+  font-weight: ${({ $on }) => ($on ? 600 : 400)};
+  color: ${({ $on }) => ($on ? "#3e5977" : "#9b9b9b")};
   cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  transition: color 0.15s;
 
   &:hover {
-    background: ${({ $on }) => ($on ? "#3e5977" : "#f0f0f0")};
-    color: ${({ $on }) => ($on ? "#ffffff" : "#3e5977")};
+    color: ${({ $on }) => ($on ? "#3e5977" : "#1a1a1a")};
   }
 `;
 
@@ -163,6 +204,7 @@ const Profile = () => {
   const [page, setPage] = useState(0);
   const [pageNumbers, setPageNumbers] = useState([]);
   const [articles, setArticles] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -185,6 +227,8 @@ const Profile = () => {
         setReporter(res2.data.data);
       } catch (error) {
         console.error("오류 발생:", error);
+      } finally {
+        setLoaded(true);
       }
     };
     fetchData();
@@ -198,18 +242,12 @@ const Profile = () => {
       <Content>
         <ReporterHeader>
           <ReporterName>{reporter.nickname}</ReporterName>
+          {reporter.position && <ReporterPosition>{reporter.position}</ReporterPosition>}
           {reporter.intro && <ReporterIntro>{reporter.intro}</ReporterIntro>}
         </ReporterHeader>
 
-        {(reporter.position || reporter.major || reporter.email) && (
-          <Block>
-            <PageTitle>About</PageTitle>
-            {reporter.position && (
-              <InfoRow>
-                <InfoLabel>Position</InfoLabel>
-                <InfoValue>{reporter.position}</InfoValue>
-              </InfoRow>
-            )}
+        {(reporter.major || reporter.email) && (
+          <InfoList>
             {reporter.major && (
               <InfoRow>
                 <InfoLabel>Major</InfoLabel>
@@ -219,34 +257,44 @@ const Profile = () => {
             {reporter.email && (
               <InfoRow>
                 <InfoLabel>Email</InfoLabel>
-                <InfoValue>{reporter.email}</InfoValue>
+                <InfoValue>
+                  <a href={"mailto:" + reporter.email}>{reporter.email}</a>
+                </InfoValue>
               </InfoRow>
             )}
-          </Block>
+          </InfoList>
         )}
 
         <Block>
-          <PageTitle>Latest Articles</PageTitle>
+          <BlockTitle>Articles</BlockTitle>
+
+          {loaded && articles.length === 0 && (
+            <EmptyState>No articles yet.</EmptyState>
+          )}
 
           {articles.map((article) => (
             <ArticleItem key={article.articleId}>
               <TextBlock>
-                <ArticleDate>{article.publishedAt.slice(0, 10)}</ArticleDate>
                 <Link to={"/article/" + article.articleId}>
                   <ArticleTitle>{article.title}</ArticleTitle>
                 </Link>
                 <ArticleSubtitle>{article.subtitle}</ArticleSubtitle>
+                <Meta>
+                  {article.sectionName && (
+                    <>
+                      <span>{article.sectionName}</span>
+                      <MetaDot />
+                    </>
+                  )}
+                  <span>{article.publishedAt.slice(0, 10).replaceAll("-", ".")}</span>
+                </Meta>
               </TextBlock>
 
               {article.mainImage && (
                 <Link to={"/article/" + article.articleId}>
                   <ImageBox>
                     <img
-                      src={
-                        process.env.REACT_APP_BACK_URL +
-                        "/image?path=" +
-                        article.mainImage
-                      }
+                      src={"https://api.thegachonherald.com/image?path=" + article.mainImage}
                       alt={article.title}
                     />
                   </ImageBox>
